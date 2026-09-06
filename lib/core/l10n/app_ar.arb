@@ -1,0 +1,186 @@
+{
+  "@@locale": "ar",
+
+  "appName": "تطبيق الأذكار",
+
+  "navHome": "الرئيسية",
+  "navReminders": "التذكيرات",
+  "navFavorites": "المفضلة",
+  "navProgress": "التقدّم",
+
+  "titleHome": "الأذكار",
+  "titleReminders": "التذكيرات",
+  "titleFavorites": "المفضلة",
+  "titleProgress": "التقدّم",
+
+  "catMorning": "أذكار الصباح",
+  "catEvening": "أذكار المساء",
+  "catSleep": "أذكار النوم",
+  "catWake": "أذكار الاستيقاظ",
+  "catAfterPrayer": "أذكار بعد الصلاة",
+  "catMisc": "أذكار متفرقة",
+  "catTasbih": "السبحة",
+
+  "nextReminder": "التذكير القادم",
+  "edit": "تعديل",
+  "inHours": "بعد {hours} ساعات و{minutes} دقيقة",
+  "@inHours": {
+    "placeholders": { "hours": { "type": "String" }, "minutes": { "type": "String" } }
+  },
+  "prayerBased": "محسوب على مواقيت اليوم",
+
+  "schedFixed": "مجدولة يومياً — لا تحتاج فتح التطبيق",
+  "schedPrayer": "مجدولة حتى {date} ({days} يوماً)",
+  "@schedPrayer": {
+    "placeholders": { "date": { "type": "String" }, "days": { "type": "String" } }
+  },
+
+  "tasbihTitle": "السبحة",
+  "tasbihSub": "عدّاد حر — انقر على الشاشة للتسبيح",
+
+  "dayUnit": "يوم",
+  "dayUnitPl": "يوماً",
+  "sessions": "جلسة",
+
+  "fixedMode": "وقت ثابت",
+  "prayerMode": "حسب مواقيت الصلاة",
+
+  "exactTitle": "التنبيهات الدقيقة غير مسموحة",
+  "exactBody": "قد تتأخر التذكيرات بضع دقائق. يمكنك السماح بها من إعدادات النظام.",
+  "exactAllow": "السماح بالتنبيهات الدقيقة",
+
+  "daily": "يومياً · يتكرر تلقائياً",
+  "off": "معطّل",
+
+  "slotWake": "أذكار الاستيقاظ",
+  "slotMorning": "أذكار الصباح",
+  "slotEvening": "أذكار المساء",
+  "slotSleep": "أذكار النوم",
+
+  "slotPrayerWake": "قبل الفجر بـ ١٥ دقيقة",
+  "slotPrayerMorning": "بعد الفجر بـ ٣٠ دقيقة",
+  "slotPrayerEvening": "بعد العصر بـ ٤٥ دقيقة",
+  "slotPrayerSleep": "وقت ثابت دائماً",
+
+  "todayTimes": "مواقيت اليوم",
+  "fajr": "الفجر",
+  "asr": "العصر",
+  "maghrib": "المغرب",
+
+  "windowLabel": "النافذة المجدولة",
+  "windowText": "الأيام المجدولة: {days} · التنبيهات المعلّقة: {pending} من {cap}",
+  "@windowText": {
+    "placeholders": { "days": { "type": "String" }, "pending": { "type": "String" }, "cap": { "type": "String" } }
+  },
+
+  "method": "طريقة الحساب",
+  "madhab": "المذهب في العصر",
+  "location": "الموقع",
+  "methodUmmAlQura": "أم القرى",
+  "methodMwl": "رابطة العالم الإسلامي",
+  "methodEgypt": "الهيئة المصرية",
+  "madhabStandard": "الجمهور",
+  "madhabHanafi": "الحنفي",
+
+  "oemTitle": "التذكيرات لا تصل؟",
+  "oemHintOn": "الجهاز مستثنى من موفّر البطارية ✓",
+  "oemHintOff": "دليل خاص بجهازك — {vendor}",
+  "@oemHintOff": { "placeholders": { "vendor": { "type": "String" } } },
+  "oemBody": "أنظمة بعض الشركات توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات التالية مرة واحدة.",
+  "openBattery": "فتح إعدادات البطارية",
+  "batteryOn": "التطبيق مستثنى حالياً ✓",
+  "batteryOff": "التطبيق غير مستثنى",
+
+  "favEmptyTitle": "لا توجد أذكار محفوظة بعد",
+  "favEmptyBody": "اضغط على القلب أثناء القراءة لحفظ الذكر هنا.",
+
+  "currentStreak": "تتابع مستمر",
+  "longest": "أطول تتابع",
+  "totalSessions": "إجمالي الجلسات",
+  "last14": "آخر ١٤ يوماً",
+  "byCategory": "حسب الفئة — هذا الأسبوع",
+
+  "countOf": "من",
+  "once": "مرة واحدة",
+  "tapHint": "انقر في أي مكان للعد · الشاشة تبقى مضاءة",
+  "completedToday": "أُكملت اليوم",
+  "athkarCount": "{count} أذكار",
+  "@athkarCount": { "placeholders": { "count": { "type": "String" } } },
+
+  "prev": "السابق",
+  "reset": "تصفير",
+  "next": "التالي",
+
+  "donePrefix": "تمّت",
+  "doneTitle": "تمّت — {category}",
+  "@doneTitle": { "placeholders": { "category": { "type": "String" } } },
+  "doneStreak": "تتابعك الآن {days} يوماً. التذكير القادم {time}.",
+  "@doneStreak": {
+    "placeholders": { "days": { "type": "String" }, "time": { "type": "String" } }
+  },
+  "shareAsImage": "مشاركة كصورة",
+  "backHome": "العودة للرئيسية",
+  "shareTitle": "مشاركة الذكر",
+  "saveImage": "حفظ كصورة",
+  "share": "مشاركة",
+
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "appearance": "المظهر",
+  "light": "فاتح",
+  "dark": "غامق",
+  "system": "النظام",
+  "themeLabel": "لون التطبيق",
+  "themeTeal": "أخضر حجري",
+  "themeIndigo": "نيلي",
+  "themeOlive": "زيتوني",
+  "fontSize": "حجم الخط",
+  "fontSizeSmall": "صغير",
+  "fontSizeMedium": "متوسط",
+  "fontSizeLarge": "كبير",
+  "quranFont": "الخط القرآني",
+  "done": "تم",
+
+  "saveReschedule": "حفظ وإعادة الجدولة",
+  "timeOf": "وقت {slot}",
+  "@timeOf": { "placeholders": { "slot": { "type": "String" } } },
+  "repeatsDaily": "يتكرر يومياً",
+  "am": "ص",
+  "pm": "م",
+
+  "onb1Title": "اذكر الله في وقته",
+  "onb1Body": "تذكيرات لطيفة لأذكار الصباح والمساء والنوم والاستيقاظ — تعمل بالكامل دون إنترنت.",
+  "onb1NoteLabel": "بدون حساب",
+  "onb1Note": "لا تسجيل دخول ولا بيانات تُرسل. كل شيء محفوظ على جهازك.",
+  "onb1Primary": "لنبدأ",
+  "onb1Secondary": "تخطي التهيئة",
+
+  "onb2Title": "نحتاج إذن التنبيهات",
+  "onb2Body": "التذكيرات تُجدول على جهازك مباشرة، لذلك لا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.",
+  "onb2NoteLabel": "لماذا الآن",
+  "onb2Note": "يمكنك السماح لاحقاً من الإعدادات، ولكن التذكيرات ستبقى معطلة حتى ذلك الحين.",
+  "onb2Primary": "السماح بالتنبيهات",
+  "onb2Secondary": "ليس الآن",
+
+  "onb3Title": "وقت دقيق للتذكير",
+  "onb3Body": "ليصل التذكير في وقته بالضبط، يحتاج التطبيق إذن «التنبيهات الدقيقة» من نظام أندرويد.",
+  "onb3NoteLabel": "إن رفضت",
+  "onb3Note": "سيستمر التطبيق في العمل، لكن قد يتأخر التذكير بضع دقائق، وسنخبرك بذلك في الإعدادات.",
+  "onb3Primary": "السماح",
+  "onb3Secondary": "المتابعة بدون دقة",
+
+  "onb4Title": "حرّر التطبيق من موفّر البطارية",
+  "onb4Body": "أنظمة بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات المجدولة. استثناء واحد يحل المشكلة نهائياً.",
+  "onb4NoteLabel": "خطوة واحدة",
+  "onb4Note": "سنفتح لك شاشة الإعدادات الصحيحة لجهازك، ثم ننتهي.",
+  "onb4Primary": "استثناء التطبيق",
+  "onb4Secondary": "لاحقاً",
+
+  "notifTitleMorning": "وقت أذكار الصباح",
+  "notifTitleEvening": "وقت أذكار المساء",
+  "notifTitleSleep": "وقت أذكار النوم",
+  "notifTitleWake": "وقت أذكار الاستيقاظ",
+  "notifActionStart": "ابدأ",
+  "notifActionSnooze": "تأجيل ١٥ د",
+  "notifChannelName": "تذكيرات الأذكار"
+}
