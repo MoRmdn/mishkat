@@ -122,6 +122,28 @@ void main() {
     );
   });
 
+  testWidgets('reminders — prayer mode with computed times', (tester) async {
+    final prayer = AppHarness();
+    await prayer.pump(
+      tester,
+      palette: 'teal',
+      appearance: 'light',
+      language: 'ar',
+      extraPrefs: {
+        'reminders.mode': 'prayer',
+        'prayer.useDeviceLocation': false,
+        'prayer.manualCity': 'makkah',
+      },
+    );
+    await tester.tap(find.text('التذكيرات').last);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('الفجر'), 200);
+    await expectLater(
+      find.byType(MishkatApp),
+      matchesGoldenFile('images/reminders_prayer_ar.png'),
+    );
+  });
+
   testWidgets('onboarding — permission rationale, teal Arabic', (tester) async {
     await harness.pump(
       tester,

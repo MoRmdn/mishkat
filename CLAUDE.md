@@ -51,6 +51,12 @@ settings fires before dependents recompute, so reading the schedule inside it
 returns the previous value and the app schedules the configuration the user
 just replaced.
 
+**Location is optional, never required.** `adhan` is a solar calculation, so
+prayer times are computed offline; only the position lookup touches the
+platform. Declining location falls back to a named city from `kPrayerCities`,
+and no position at all falls back to the fixed clock times with the UI saying
+so. Coarse accuracy only — prayer times shift by seconds across a city.
+
 **Anything that reads the wall clock goes through `clockProvider`.** Never call
 `DateTime.now()` in a widget or service. The countdown and Hijri header already
 do this; M3's scheduler depends on it, since its correctness is entirely about
@@ -73,7 +79,7 @@ catches an error here.
 | M2 | `feat/athkar-reader` | Content, home screen, reader, tasbih | ✅ done |
 | M3 | `feat/notification-engine` | Scheduler, permissions ladder, onboarding, deep links | ✅ done |
 | M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | ✅ done |
-| M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | |
+| M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | ✅ done |
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | |
 | M7 | `feat/firebase`, `chore/release-prep` | Crashlytics, Analytics, icons, store prep | |
 

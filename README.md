@@ -101,13 +101,13 @@ deliberate act rather than a quiet one.
 | M2 | Athkar content, home screen, counting reader, tasbih | ✅ |
 | M3 | Scheduler, notification service, permission ladder, onboarding | ✅ |
 | M4 | Reminders tab, slot time sheet, OEM guidance | ✅ |
-| M5 | Prayer times (`adhan`), calculation method, rolling window | — |
+| M5 | Prayer times (`adhan`), calculation method, rolling window | ✅ |
 | M6 | Favourites, streaks and progress, share-as-image | — |
 | M7 | Crashlytics and Analytics, icons, store preparation | — |
 
-Prayer mode is selectable today but has no prayer-time source until M5; it says
-so plainly and falls back to the fixed clock times rather than scheduling
-nothing.
+Prayer times are computed on-device and offline. If location is declined the
+app uses a city chosen from a list; if there is no position at all it falls
+back to the fixed clock times and says so rather than scheduling nothing.
 
 ## Licences
 

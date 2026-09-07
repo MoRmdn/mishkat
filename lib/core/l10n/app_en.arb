@@ -56,6 +56,12 @@
   "slotPrayerEvening": "45 min after Asr",
   "slotPrayerSleep": "Always a fixed time",
 
+  "cityAuto": "{city} · automatic",
+  "cityManual": "{city} · manual",
+  "locationPending": "Finding your location…",
+  "chooseCity": "Choose a city",
+  "useMyLocation": "Use my device location",
+  "todayTimesFor": "Today’s times — {city}",
   "todayTimes": "Today’s times",
   "fajr": "Fajr",
   "asr": "Asr",

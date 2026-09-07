@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/theme/palettes.dart';
 import '../models/app_settings.dart';
+import '../models/prayer_settings.dart';
 import '../models/reminder_settings.dart';
 
 /// Reads and writes [AppSettings] to shared preferences.
@@ -22,6 +23,32 @@ class SettingsStore {
   static const _kOnboarding = 'settings.onboardingComplete';
   static const _kReminderMode = 'reminders.mode';
   static String _slotKey(ReminderSlotId id) => 'reminders.slot.${id.key}';
+  static const _kPrayerMethod = 'prayer.method';
+  static const _kPrayerMadhab = 'prayer.madhab';
+  static const _kPrayerUseDevice = 'prayer.useDeviceLocation';
+  static const _kPrayerCity = 'prayer.manualCity';
+  static const _kPrayerLat = 'prayer.latitude';
+  static const _kPrayerLng = 'prayer.longitude';
+
+  PrayerSettings readPrayer() => PrayerSettings(
+    method: PrayerCalculationMethod.fromName(_prefs.getString(_kPrayerMethod)),
+    madhab: AsrMadhab.fromName(_prefs.getString(_kPrayerMadhab)),
+    useDeviceLocation: _prefs.getBool(_kPrayerUseDevice) ?? true,
+    manualCityId: _prefs.getString(_kPrayerCity) ?? 'makkah',
+    latitude: _prefs.getDouble(_kPrayerLat),
+    longitude: _prefs.getDouble(_kPrayerLng),
+  );
+
+  Future<void> writePrayer(PrayerSettings p) async {
+    await _prefs.setString(_kPrayerMethod, p.method.name);
+    await _prefs.setString(_kPrayerMadhab, p.madhab.name);
+    await _prefs.setBool(_kPrayerUseDevice, p.useDeviceLocation);
+    await _prefs.setString(_kPrayerCity, p.manualCityId);
+    // Caching the last fix means prayer mode still works before, or without, a
+    // fresh position.
+    if (p.latitude != null) await _prefs.setDouble(_kPrayerLat, p.latitude!);
+    if (p.longitude != null) await _prefs.setDouble(_kPrayerLng, p.longitude!);
+  }
 
   AppSettings read() => AppSettings(
     palette: AppPalette.fromName(_prefs.getString(_kPalette)),

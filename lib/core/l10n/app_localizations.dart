@@ -349,6 +349,42 @@ abstract class L {
   /// **'وقت ثابت دائماً'**
   String get slotPrayerSleep;
 
+  /// No description provided for @cityAuto.
+  ///
+  /// In ar, this message translates to:
+  /// **'{city} · تلقائي'**
+  String cityAuto(String city);
+
+  /// No description provided for @cityManual.
+  ///
+  /// In ar, this message translates to:
+  /// **'{city} · يدوي'**
+  String cityManual(String city);
+
+  /// No description provided for @locationPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ تحديد الموقع…'**
+  String get locationPending;
+
+  /// No description provided for @chooseCity.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر المدينة'**
+  String get chooseCity;
+
+  /// No description provided for @useMyLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدام موقع الجهاز'**
+  String get useMyLocation;
+
+  /// No description provided for @todayTimesFor.
+  ///
+  /// In ar, this message translates to:
+  /// **'مواقيت اليوم — {city}'**
+  String todayTimesFor(String city);
+
   /// No description provided for @todayTimes.
   ///
   /// In ar, this message translates to:

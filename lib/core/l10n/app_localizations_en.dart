@@ -140,6 +140,30 @@ class LEn extends L {
   String get slotPrayerSleep => 'Always a fixed time';
 
   @override
+  String cityAuto(String city) {
+    return '$city · automatic';
+  }
+
+  @override
+  String cityManual(String city) {
+    return '$city · manual';
+  }
+
+  @override
+  String get locationPending => 'Finding your location…';
+
+  @override
+  String get chooseCity => 'Choose a city';
+
+  @override
+  String get useMyLocation => 'Use my device location';
+
+  @override
+  String todayTimesFor(String city) {
+    return 'Today’s times — $city';
+  }
+
+  @override
   String get todayTimes => 'Today’s times';
 
   @override

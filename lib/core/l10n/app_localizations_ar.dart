@@ -140,6 +140,30 @@ class LAr extends L {
   String get slotPrayerSleep => 'وقت ثابت دائماً';
 
   @override
+  String cityAuto(String city) {
+    return '$city · تلقائي';
+  }
+
+  @override
+  String cityManual(String city) {
+    return '$city · يدوي';
+  }
+
+  @override
+  String get locationPending => 'جارٍ تحديد الموقع…';
+
+  @override
+  String get chooseCity => 'اختر المدينة';
+
+  @override
+  String get useMyLocation => 'استخدام موقع الجهاز';
+
+  @override
+  String todayTimesFor(String city) {
+    return 'مواقيت اليوم — $city';
+  }
+
+  @override
   String get todayTimes => 'مواقيت اليوم';
 
   @override

@@ -6,6 +6,7 @@ import '../../services/notification_service.dart';
 import '../../services/permission_service.dart';
 import '../../services/reminder_scheduler.dart';
 import '../settings/settings_controller.dart';
+import 'prayer_controller.dart';
 
 final notificationServiceProvider = Provider<NotificationService>(
   (ref) => NotificationService(),
@@ -103,9 +104,15 @@ final permissionsProvider =
       PermissionController.new,
     );
 
-/// Prayer times come online in M5; until then this resolver is null and prayer
-/// mode falls back to the fixed clock times, which [buildSchedule] reports.
-final prayerTimesResolverProvider = Provider<PrayerTimesForDay?>((ref) => null);
+/// Resolves prayer times for the scheduler.
+///
+/// Null while prayer mode has no position to compute from, which is what makes
+/// [buildSchedule] fall back to the fixed clock times and say so.
+final prayerTimesResolverProvider = Provider<PrayerTimesForDay?>((ref) {
+  final settings = ref.watch(prayerSettingsProvider);
+  if (settings.effectiveCoordinates == null) return null;
+  return ref.watch(prayerTimeServiceProvider).resolver(settings);
+});
 
 /// The schedule the app believes it should have. Pure — derived from settings
 /// and the clock, nothing else.

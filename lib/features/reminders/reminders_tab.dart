@@ -9,9 +9,9 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_icons.dart';
 import '../../core/widgets/segmented_control.dart';
 import '../../data/models/reminder_settings.dart';
-import '../../services/reminder_scheduler.dart';
 import '../settings/settings_controller.dart';
 import 'oem_sheet.dart';
+import 'prayer_panel.dart';
 import 'reminder_controller.dart';
 import 'slot_time_sheet.dart';
 
@@ -57,6 +57,10 @@ class RemindersTab extends ConsumerWidget {
         ],
         const SizedBox(height: 14),
         const _SlotList(),
+        if (settings.mode == ReminderMode.prayer) ...[
+          const SizedBox(height: 14),
+          const PrayerPanel(),
+        ],
         const SizedBox(height: 14),
         const _OemCard(),
       ],
@@ -300,14 +304,17 @@ class _ScheduleStateRow extends ConsumerWidget {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
     final schedule = ref.watch(currentScheduleProvider);
-    final pending = ref.watch(pendingCountProvider).value;
 
     final through = schedule.scheduledThrough;
     final text = schedule.usedFixedFallback
         ? l.prayerFallbackNotice
         : through == null
         ? l.schedFixed
-        : l.scheduleThroughShort(DateFormat.MMMd(lang).format(through));
+        : l.scheduleThroughShort(
+            // DateFormat emits Latin digits even under `ar`, and the rest of
+            // this sentence is Arabic-Indic.
+            localizeDigits(DateFormat.MMMd(lang).format(through), lang),
+          );
 
     return Container(
       width: double.infinity,
@@ -334,21 +341,6 @@ class _ScheduleStateRow extends ConsumerWidget {
                   text,
                   style: TextStyle(fontSize: 12.5, height: 1.6, color: t.muted),
                 ),
-                if (pending != null && !schedule.repeatsForever) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    l.windowText(
-                      localizeDigits(kScheduleWindowDays, lang),
-                      localizeDigits(pending, lang),
-                      localizeDigits(kIosPendingCap, lang),
-                    ),
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      height: 1.6,
-                      color: t.muted,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
