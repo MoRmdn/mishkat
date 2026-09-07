@@ -23,7 +23,8 @@
 
   "nextReminder": "Next reminder",
   "edit": "Edit",
-  "inHours": "in {hours} hours {minutes} minutes",
+  "minutesLabel": "{minutesCount, plural, =1{1 minute} other{{minutes} minutes}}",
+  "inHours": "{hoursCount, plural, =0{in {minutesText}} =1{in 1 hour {minutesText}} other{in {hours} hours {minutesText}}}",
   "prayerBased": "Computed from today’s prayer times",
 
   "schedFixed": "Repeats daily — no need to open the app",
@@ -117,6 +118,7 @@
   "doneStreak": "Your streak is now {days} days. Next reminder at {time}.",
   "shareAsImage": "Share as image",
   "backHome": "Back to home",
+  "shareCardLabel": "ذِكْر",
   "shareTitle": "Share this thikr",
   "saveImage": "Save image",
   "share": "Share",

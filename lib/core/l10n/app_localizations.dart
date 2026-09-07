@@ -205,11 +205,17 @@ abstract class L {
   /// **'تعديل'**
   String get edit;
 
+  /// No description provided for @minutesLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'{minutesCount, plural, =1{دقيقة} =2{دقيقتين} few{{minutes} دقائق} other{{minutes} دقيقة}}'**
+  String minutesLabel(num minutesCount, String minutes);
+
   /// No description provided for @inHours.
   ///
   /// In ar, this message translates to:
-  /// **'بعد {hours} ساعات و{minutes} دقيقة'**
-  String inHours(String hours, String minutes);
+  /// **'{hoursCount, plural, =0{بعد {minutesText}} =1{بعد ساعة و{minutesText}} =2{بعد ساعتين و{minutesText}} few{بعد {hours} ساعات و{minutesText}} other{بعد {hours} ساعة و{minutesText}}}'**
+  String inHours(num hoursCount, String hours, String minutesText);
 
   /// No description provided for @prayerBased.
   ///
@@ -666,6 +672,12 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'العودة للرئيسية'**
   String get backHome;
+
+  /// No description provided for @shareCardLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ذِكْر'**
+  String get shareCardLabel;
 
   /// No description provided for @shareTitle.
   ///

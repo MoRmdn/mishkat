@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// `show` because intl also exports a TextDirection that shadows Flutter's.
+import 'package:intl/intl.dart' show DateFormat;
 
 import '../../core/clock.dart';
 import '../../core/format/numerals.dart';
@@ -8,9 +10,13 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_icons.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
+import '../../data/repositories/progress_providers.dart';
 import '../reader/reader_controller.dart';
+import '../reminders/reminder_controller.dart';
+import '../reminders/reminders_tab.dart' show slotLabel;
 import '../reader/reader_screen.dart';
 import '../settings/settings_controller.dart';
+import '../shell/app_shell.dart';
 
 class HomeTab extends ConsumerWidget {
   const HomeTab({super.key});
@@ -40,14 +46,9 @@ class HomeTab extends ConsumerWidget {
 
 /// The next reminder, as the design's gradient card.
 ///
-/// The slot shown is the design's default (morning, 6:30, fixed mode). M4 wires
-/// this to real reminder settings and M5 to computed prayer times; until then
-/// only the countdown is live.
+/// Reads the real schedule, so what it shows is what the OS was asked to do.
 class _NextReminderCard extends ConsumerWidget {
   const _NextReminderCard();
-
-  static const int _slotHour = 6;
-  static const int _slotMinute = 30;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,9 +57,13 @@ class _NextReminderCard extends ConsumerWidget {
     final lang = ref.watch(settingsProvider).language.name;
 
     final now = ref.watch(clockProvider)();
-    var next = DateTime(now.year, now.month, now.day, _slotHour, _slotMinute);
-    if (!next.isAfter(now)) next = next.add(const Duration(days: 1));
-    final until = next.difference(now);
+    final schedule = ref.watch(currentScheduleProvider);
+    final entry = schedule.entries.firstOrNull;
+
+    // With every slot switched off there is no next reminder to describe.
+    if (entry == null) return const _NoRemindersCard();
+
+    final until = entry.at.difference(now);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -112,7 +117,13 @@ class _NextReminderCard extends ConsumerWidget {
             spacing: 10,
             children: [
               Text(
-                formatClock(_slotHour, _slotMinute, lang, am: l.am, pm: l.pm),
+                formatClock(
+                  entry.at.hour,
+                  entry.at.minute,
+                  lang,
+                  am: l.am,
+                  pm: l.pm,
+                ),
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w600,
@@ -123,7 +134,7 @@ class _NextReminderCard extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
                 child: Text(
-                  l.slotMorning,
+                  slotLabel(l, entry.slot),
                   style: TextStyle(fontSize: 17, color: t.cardInk),
                 ),
               ),
@@ -131,9 +142,16 @@ class _NextReminderCard extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
+            // Plural agreement matters here: "١ ساعات" is wrong Arabic, so the
+            // hour and minute counts drive ICU plural forms while the digits
+            // are localized separately for display.
             l.inHours(
+              until.inHours,
               localizeDigits(until.inHours, lang),
-              localizeDigits(until.inMinutes % 60, lang),
+              l.minutesLabel(
+                until.inMinutes % 60,
+                localizeDigits(until.inMinutes % 60, lang),
+              ),
             ),
             style: TextStyle(fontSize: 14, height: 1.7, color: t.cardSub),
           ),
@@ -151,7 +169,18 @@ class _NextReminderCard extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  l.schedFixed,
+                  schedule.usedFixedFallback
+                      ? l.prayerFallbackNotice
+                      : schedule.repeatsForever
+                      ? l.schedFixed
+                      : l.scheduleThroughShort(
+                          localizeDigits(
+                            DateFormat.MMMd(
+                              lang,
+                            ).format(schedule.scheduledThrough!),
+                            lang,
+                          ),
+                        ),
                   style: TextStyle(
                     fontSize: 12.5,
                     height: 1.6,
@@ -241,12 +270,14 @@ class _CategoryCard extends ConsumerWidget {
     final t = context.tokens;
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
-    final state = ref.watch(readerControllerProvider);
+    // Watched so the card's progress updates as the session is counted.
+    ref.watch(readerControllerProvider);
+    final completedToday = ref.watch(completedTodayProvider);
 
     final done = ref
         .read(readerControllerProvider.notifier)
         .completedCount(items);
-    final subtitle = state.completedToday.contains(category)
+    final subtitle = completedToday.contains(category.key)
         ? l.completedToday
         : done == 0
         ? l.athkarCount(localizeDigits(items.length, lang))
@@ -392,6 +423,54 @@ class _LoadFailure extends StatelessWidget {
           '$error',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, color: t.muted),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shown when every reminder slot is off — better than a card describing a
+/// reminder that will never arrive.
+class _NoRemindersCard extends ConsumerWidget {
+  const _NoRemindersCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.tokens;
+    final l = L.of(context);
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () =>
+          ref.read(shellTabProvider.notifier).select(ShellTab.reminders),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: t.softBg,
+          border: Border.all(color: t.softBorder),
+          borderRadius: BorderRadius.circular(22),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                l.off,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: t.ink,
+                ),
+              ),
+            ),
+            Text(
+              l.edit,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: t.accent,
+              ),
+            ),
+          ],
         ),
       ),
     );

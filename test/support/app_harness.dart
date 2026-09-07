@@ -5,7 +5,9 @@ import 'package:mishkat/app.dart';
 import 'package:mishkat/core/clock.dart';
 import 'package:mishkat/data/models/reminder_settings.dart';
 import 'package:mishkat/data/models/thikr.dart';
+import 'package:mishkat/data/local/app_database.dart';
 import 'package:mishkat/data/repositories/athkar_repository.dart';
+import 'package:mishkat/data/repositories/progress_providers.dart';
 import 'package:mishkat/features/reminders/reminder_controller.dart';
 import 'package:mishkat/features/settings/settings_controller.dart';
 import 'package:mishkat/services/notification_service.dart';
@@ -119,6 +121,9 @@ class AppHarness {
   final FakePermissionService permissions;
   final FakeWakelock wakelock = FakeWakelock();
 
+  /// A fresh in-memory database per test; nothing touches the real file.
+  final AppDatabase db = AppDatabase.memory();
+
   bool get screenAwake => wakelock.isOn;
 
   static late AthkarLibrary library;
@@ -145,8 +150,15 @@ class AppHarness {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
-    // Dispose the tree while this test's fakes are still installed.
-    addTearDown(() => tester.pumpWidget(const SizedBox.shrink()));
+    // One teardown so the order is explicit rather than LIFO-dependent:
+    // unmount the tree while this test's fakes are still installed, close the
+    // database, then pump once more. Drift schedules a short timer when its
+    // last stream subscriber cancels, and a pending timer stalls the binding.
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await db.close();
+      await tester.pump(const Duration(milliseconds: 1));
+    });
 
     // WakelockPlus caches its platform object in a top-level variable on first
     // read, so this — not WakelockPlusPlatformInterface.instance — is the hook
@@ -169,6 +181,7 @@ class AppHarness {
           // Preloaded: otherwise pumpAndSettle races the asset read and
           // settles on an empty screen.
           athkarLibraryProvider.overrideWith((ref) => library),
+          appDatabaseProvider.overrideWithValue(db),
           notificationServiceProvider.overrideWithValue(notifications),
           permissionServiceProvider.overrideWithValue(permissions),
           clockProvider.overrideWithValue(
@@ -177,6 +190,20 @@ class AppHarness {
         ],
         child: const MishkatApp(),
       ),
+    );
+    await settleWithDatabase(tester);
+  }
+
+  /// Settles the tree *and* lets database futures resolve.
+  ///
+  /// pumpAndSettle only drives the animation clock; a FutureProvider backed by
+  /// a real query needs the event loop to turn, which only runAsync allows.
+  /// Without this a test can settle on an empty screen and quietly assert
+  /// against it.
+  static Future<void> settleWithDatabase(WidgetTester tester) async {
+    await tester.pumpAndSettle();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 20)),
     );
     await tester.pumpAndSettle();
   }

@@ -57,6 +57,16 @@ platform. Declining location falls back to a named city from `kPrayerCities`,
 and no position at all falls back to the fixed clock times with the UI saying
 so. Coarse accuracy only — prayer times shift by seconds across a city.
 
+**Do not use drift's `watch()` streams.** Favourites and completions change
+only when the user acts, so a live query buys nothing — and an open drift
+subscription schedules a timer on cancellation that stalls the widget-test
+binding indefinitely. Use futures and call `invalidateProgress(ref)` after a
+write.
+
+**Arabic plural agreement is not optional.** "١ ساعات" is wrong; use ICU plural
+forms with a `num` for selection and a separately localized digit string for
+display, as `inHours` and `minutesLabel` do.
+
 **Anything that reads the wall clock goes through `clockProvider`.** Never call
 `DateTime.now()` in a widget or service. The countdown and Hijri header already
 do this; M3's scheduler depends on it, since its correctness is entirely about
@@ -80,7 +90,7 @@ catches an error here.
 | M3 | `feat/notification-engine` | Scheduler, permissions ladder, onboarding, deep links | ✅ done |
 | M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | ✅ done |
 | M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | ✅ done |
-| M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | |
+| M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | ✅ done |
 | M7 | `feat/firebase`, `chore/release-prep` | Crashlytics, Analytics, icons, store prep | |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
@@ -120,6 +130,10 @@ sheet across theme builds and both languages. They load the bundled fonts
 (`test/golden/font_loader.dart`) so Arabic shaping is actually exercised — a
 golden in the fallback font proves nothing. Review the regenerated PNGs before
 committing; they are the cheapest way to see a screen without a device.
+
+Widget tests using the database must await `AppHarness.settleWithDatabase`:
+`pumpAndSettle` only drives the animation clock, so a FutureProvider backed by
+a real query is still unresolved and the test asserts against an empty screen.
 
 Widget tests must override `athkarLibraryProvider` with a preloaded library:
 otherwise `pumpAndSettle` races the asset read and settles on an empty screen.

@@ -27,6 +27,12 @@ dependencies:
   app_settings: ^9.0.0
   adhan: ^2.0.0+1
   geolocator: ^14.0.3
+  drift: ^2.34.4
+  sqlite3_flutter_libs: ^0.6.0+eol
+  path_provider: ^2.1.6
+  screenshot: ^3.0.0
+  share_plus: ^13.3.0
+  path: ^1.9.1
 
 # permission_handler_android 13.x declares in its AAR metadata that consumers
 # must compile against Android API 37. That platform is not published yet, and
@@ -42,6 +48,8 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   wakelock_plus_platform_interface: ^1.7.0
   plugin_platform_interface: ^2.1.8
+  drift_dev: ^2.34.6
+  build_runner: ^2.15.1
 
 flutter:
   uses-material-design: true

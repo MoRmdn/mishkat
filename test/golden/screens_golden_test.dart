@@ -144,6 +144,37 @@ void main() {
     );
   });
 
+  testWidgets('progress — with a streak and history', (tester) async {
+    final h = AppHarness();
+    // Nine consecutive days, so the ring, the grid and the bars all have
+    // something real to draw.
+    for (var i = 0; i < 9; i++) {
+      final day = DateTime(2026, 9, 7 - i, 7);
+      await h.db.recordCompletion('morning', day);
+      if (i.isEven) await h.db.recordCompletion('evening', day);
+    }
+    await h.pump(tester, palette: 'teal', appearance: 'light', language: 'ar');
+    await tester.tap(find.text('التقدّم').last);
+    await AppHarness.settleWithDatabase(tester);
+    await expectLater(
+      find.byType(MishkatApp),
+      matchesGoldenFile('images/progress_teal_ar.png'),
+    );
+  });
+
+  testWidgets('favourites — a saved thikr', (tester) async {
+    final h = AppHarness();
+    await h.db.addFavorite('mo2', DateTime(2026, 9, 7));
+    await h.db.addFavorite('ev2', DateTime(2026, 9, 6));
+    await h.pump(tester, palette: 'olive', appearance: 'light', language: 'ar');
+    await tester.tap(find.text('المفضلة').last);
+    await AppHarness.settleWithDatabase(tester);
+    await expectLater(
+      find.byType(MishkatApp),
+      matchesGoldenFile('images/favorites_olive_ar.png'),
+    );
+  });
+
   testWidgets('onboarding — permission rationale, teal Arabic', (tester) async {
     await harness.pump(
       tester,

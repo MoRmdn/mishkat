@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/clock.dart';
 import '../../data/models/thikr.dart';
+import '../../data/repositories/progress_providers.dart';
 
 /// Delay before a thikr whose count has reached zero advances to the next one.
 /// Long enough to register the completion, short enough not to feel like a wait.
@@ -30,35 +32,20 @@ class ReaderSession {
 
 @immutable
 class AthkarState {
-  const AthkarState({
-    this.remaining = const {},
-    this.completedToday = const {},
-    this.favorites = const {},
-    this.session,
-  });
+  const AthkarState({this.remaining = const {}, this.session});
 
   /// Remaining repetitions per thikr id. Absent means "untouched".
   final Map<String, int> remaining;
-
-  /// Categories whose session has been completed today.
-  final Set<ThikrCategory> completedToday;
-
-  /// Favourited thikr ids. In-memory for now; M6 persists these to drift.
-  final Set<String> favorites;
 
   final ReaderSession? session;
 
   AthkarState copyWith({
     Map<String, int>? remaining,
-    Set<ThikrCategory>? completedToday,
-    Set<String>? favorites,
     ReaderSession? session,
     bool clearSession = false,
   }) {
     return AthkarState(
       remaining: remaining ?? this.remaining,
-      completedToday: completedToday ?? this.completedToday,
-      favorites: favorites ?? this.favorites,
       session: clearSession ? null : (session ?? this.session),
     );
   }
@@ -140,14 +127,15 @@ class ReaderController extends Notifier<AthkarState> {
   void _finish() {
     final s = state.session;
     if (s == null) return;
+    state = state.copyWith(session: s.copyWith(finished: true));
+
     // The tasbih is an open-ended counter, so it never completes a session.
-    final completed = s.category.isCountedSession
-        ? {...state.completedToday, s.category}
-        : state.completedToday;
-    state = state.copyWith(
-      completedToday: completed,
-      session: s.copyWith(finished: true),
-    );
+    if (s.category.isCountedSession) {
+      ref
+          .read(appDatabaseProvider)
+          .recordCompletion(s.category.key, ref.read(clockProvider)())
+          .then((_) => invalidateProgress(ref));
+    }
   }
 
   void close() {
@@ -155,10 +143,17 @@ class ReaderController extends Notifier<AthkarState> {
     state = state.copyWith(clearSession: true);
   }
 
-  void toggleFavorite(String thikrId) {
-    final favorites = {...state.favorites};
-    if (!favorites.remove(thikrId)) favorites.add(thikrId);
-    state = state.copyWith(favorites: favorites);
+  Future<void> toggleFavorite(String thikrId) async {
+    // Asks the database rather than a provider: favoriteIdsProvider only holds
+    // a value while something is listening, so reading it here would silently
+    // treat "not subscribed" as "not favourited".
+    final db = ref.read(appDatabaseProvider);
+    if (await db.isFavorite(thikrId)) {
+      await db.removeFavorite(thikrId);
+    } else {
+      await db.addFavorite(thikrId, ref.read(clockProvider)());
+    }
+    invalidateProgress(ref);
   }
 
   /// How many athkar in [items] are fully counted down.

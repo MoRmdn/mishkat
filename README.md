@@ -19,6 +19,11 @@ than into the reading UI.
 - **Fully bilingual.** Arabic is RTL with Arabic-Indic numerals and ص/م;
   English is LTR with Latin numerals and AM/PM. The Arabic text of a thikr is
   never replaced by a translation — in English the meaning sits underneath it.
+- **Favourites, streaks and progress.** A streak counts consecutive days and
+  is not broken until a day is missed entirely — it does not read as lost every
+  morning before you have opened the app.
+- **Share a thikr as an image**, rendered at 1080×1080 with its تخريج always
+  travelling with the text.
 - **Completely offline.** No account, no sign-in, nothing sent anywhere.
 
 ## Two decisions worth knowing up front
@@ -102,7 +107,7 @@ deliberate act rather than a quiet one.
 | M3 | Scheduler, notification service, permission ladder, onboarding | ✅ |
 | M4 | Reminders tab, slot time sheet, OEM guidance | ✅ |
 | M5 | Prayer times (`adhan`), calculation method, rolling window | ✅ |
-| M6 | Favourites, streaks and progress, share-as-image | — |
+| M6 | Favourites, streaks and progress, share-as-image | ✅ |
 | M7 | Crashlytics and Analytics, icons, store preparation | — |
 
 Prayer times are computed on-device and offline. If location is declined the

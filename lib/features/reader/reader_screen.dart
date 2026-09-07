@@ -8,8 +8,11 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_icons.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
+import '../../data/repositories/progress_providers.dart';
 import '../../data/models/app_settings.dart';
+import '../../data/repositories/progress_providers.dart' as progress;
 import '../home/home_tab.dart';
+import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
 import 'reader_controller.dart';
 
@@ -115,7 +118,7 @@ class _ReaderHeader extends ConsumerWidget {
     final t = context.tokens;
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
-    final state = ref.watch(readerControllerProvider);
+    final favorites = ref.watch(favoriteIdsProvider);
     final current = items[session.index];
 
     Widget iconButton(Widget child, VoidCallback onTap, String label) {
@@ -175,10 +178,7 @@ class _ReaderHeader extends ConsumerWidget {
             ),
           ),
           iconButton(
-            HeartIcon(
-              color: t.gold,
-              filled: state.favorites.contains(current.id),
-            ),
+            HeartIcon(color: t.gold, filled: favorites.contains(current.id)),
             () => ref
                 .read(readerControllerProvider.notifier)
                 .toggleFavorite(current.id),
@@ -500,9 +500,8 @@ class _DoneView extends ConsumerWidget {
     final t = context.tokens;
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
-
-    // Streak and the next reminder time become real in M6 and M4.
-    const streak = 12;
+    final streak = ref.watch(progress.progressStatsProvider).currentStreak;
+    final next = ref.watch(currentScheduleProvider).entries.firstOrNull;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 30),
@@ -539,7 +538,15 @@ class _DoneView extends ConsumerWidget {
           Text(
             l.doneStreak(
               localizeDigits(streak, lang),
-              formatClock(6, 30, lang, am: l.am, pm: l.pm),
+              next == null
+                  ? '—'
+                  : formatClock(
+                      next.at.hour,
+                      next.at.minute,
+                      lang,
+                      am: l.am,
+                      pm: l.pm,
+                    ),
             ),
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, height: 1.9, color: t.rdDim),

@@ -8,7 +8,10 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_icons.dart';
 import '../../core/widgets/streak_ring.dart';
+import '../../data/repositories/progress_providers.dart';
+import '../favorites/favorites_tab.dart';
 import '../home/home_tab.dart';
+import '../progress/progress_tab.dart';
 import '../reminders/reminders_tab.dart';
 import '../settings/settings_controller.dart';
 import '../settings/settings_sheet.dart';
@@ -53,6 +56,7 @@ class AppShell extends ConsumerWidget {
               title: title,
               languageCode: lang.name,
               now: ref.watch(clockProvider)(),
+              streakDays: ref.watch(progressStatsProvider).currentStreak,
             ),
             Expanded(
               child: IndexedStack(
@@ -60,8 +64,8 @@ class AppShell extends ConsumerWidget {
                 children: const [
                   HomeTab(),
                   RemindersTab(),
-                  _TabPlaceholder(tab: ShellTab.favorites, milestone: 'M6'),
-                  _TabPlaceholder(tab: ShellTab.progress, milestone: 'M6'),
+                  FavoritesTab(),
+                  ProgressTab(),
                 ],
               ),
             ),
@@ -78,17 +82,17 @@ class _Header extends StatelessWidget {
     required this.title,
     required this.languageCode,
     required this.now,
+    required this.streakDays,
   });
 
   final String title;
   final String languageCode;
   final DateTime now;
+  final int streakDays;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
-    // Streak is placeholder state until M6 introduces the progress store.
-    const streakDays = 12;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
@@ -125,7 +129,7 @@ class _Header extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const StreakRing(percent: (streakDays % 30) / 30 * 100),
+                StreakRing(percent: (streakDays % 30) / 30 * 100),
                 const SizedBox(width: 8),
                 Text(
                   '${localizeDigits(streakDays, languageCode)} ${L.of(context).dayUnit}',
@@ -212,43 +216,6 @@ class _BottomNav extends ConsumerWidget {
             item(ShellTab.reminders, AppIcons.bell, l.navReminders),
             item(ShellTab.favorites, AppIcons.heart, l.navFavorites),
             item(ShellTab.progress, AppIcons.chart, l.navProgress),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Stand-in for tabs whose content arrives in a later milestone. Naming the
-/// milestone keeps it obvious this is scaffolding, not a finished screen.
-class _TabPlaceholder extends StatelessWidget {
-  const _TabPlaceholder({required this.tab, required this.milestone});
-
-  final ShellTab tab;
-  final String milestone;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              tab.name,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: t.muted,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Arrives in $milestone',
-              style: TextStyle(fontSize: 13, color: t.faint),
-            ),
           ],
         ),
       ),

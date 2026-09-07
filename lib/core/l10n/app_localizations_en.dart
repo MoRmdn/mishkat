@@ -63,8 +63,37 @@ class LEn extends L {
   String get edit => 'Edit';
 
   @override
-  String inHours(String hours, String minutes) {
-    return 'in $hours hours $minutes minutes';
+  String minutesLabel(num minutesCount, String minutes) {
+    final intl.NumberFormat minutesCountNumberFormat =
+        intl.NumberFormat.compact(locale: localeName);
+    final String minutesCountString = minutesCountNumberFormat.format(
+      minutesCount,
+    );
+
+    String _temp0 = intl.Intl.pluralLogic(
+      minutesCount,
+      locale: localeName,
+      other: '$minutes minutes',
+      one: '1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inHours(num hoursCount, String hours, String minutesText) {
+    final intl.NumberFormat hoursCountNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String hoursCountString = hoursCountNumberFormat.format(hoursCount);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      hoursCount,
+      locale: localeName,
+      other: 'in $hours hours $minutesText',
+      one: 'in 1 hour $minutesText',
+      zero: 'in $minutesText',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -318,6 +347,9 @@ class LEn extends L {
 
   @override
   String get backHome => 'Back to home';
+
+  @override
+  String get shareCardLabel => 'ذِكْر';
 
   @override
   String get shareTitle => 'Share this thikr';

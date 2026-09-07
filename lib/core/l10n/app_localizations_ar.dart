@@ -63,8 +63,41 @@ class LAr extends L {
   String get edit => 'تعديل';
 
   @override
-  String inHours(String hours, String minutes) {
-    return 'بعد $hours ساعات و$minutes دقيقة';
+  String minutesLabel(num minutesCount, String minutes) {
+    final intl.NumberFormat minutesCountNumberFormat =
+        intl.NumberFormat.compact(locale: localeName);
+    final String minutesCountString = minutesCountNumberFormat.format(
+      minutesCount,
+    );
+
+    String _temp0 = intl.Intl.pluralLogic(
+      minutesCount,
+      locale: localeName,
+      other: '$minutes دقيقة',
+      few: '$minutes دقائق',
+      two: 'دقيقتين',
+      one: 'دقيقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inHours(num hoursCount, String hours, String minutesText) {
+    final intl.NumberFormat hoursCountNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String hoursCountString = hoursCountNumberFormat.format(hoursCount);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      hoursCount,
+      locale: localeName,
+      other: 'بعد $hours ساعة و$minutesText',
+      few: 'بعد $hours ساعات و$minutesText',
+      two: 'بعد ساعتين و$minutesText',
+      one: 'بعد ساعة و$minutesText',
+      zero: 'بعد $minutesText',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -317,6 +350,9 @@ class LAr extends L {
 
   @override
   String get backHome => 'العودة للرئيسية';
+
+  @override
+  String get shareCardLabel => 'ذِكْر';
 
   @override
   String get shareTitle => 'مشاركة الذكر';

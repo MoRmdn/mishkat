@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mishkat/core/clock.dart';
+import 'package:mishkat/data/local/app_database.dart';
 import 'package:mishkat/data/models/thikr.dart';
+import 'package:mishkat/data/repositories/progress_providers.dart';
 import 'package:mishkat/features/reader/reader_controller.dart';
 
 Thikr _thikr(
@@ -25,13 +28,33 @@ Future<void> pastAutoAdvance() =>
 
 void main() {
   late ProviderContainer container;
+  late AppDatabase db;
+  final now = DateTime(2026, 9, 7, 6, 0);
 
   ReaderController controller() =>
       container.read(readerControllerProvider.notifier);
   AthkarState state() => container.read(readerControllerProvider);
 
-  setUp(() => container = ProviderContainer());
-  tearDown(() => container.dispose());
+  /// Completions and favourites live in the database now, so assertions read
+  /// from there rather than from in-memory state.
+  Future<Set<String>> completedCategories() async =>
+      (await db.allCompletions()).map((c) => c.category).toSet();
+  Future<Set<String>> favoriteIds() async =>
+      (await db.allFavorites()).map((f) => f.thikrId).toSet();
+
+  setUp(() {
+    db = AppDatabase.memory();
+    container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        clockProvider.overrideWithValue(() => now),
+      ],
+    );
+  });
+  tearDown(() async {
+    container.dispose();
+    await db.close();
+  });
 
   group('opening a session', () {
     test('starts at the first thikr with every count restored', () {
@@ -118,13 +141,14 @@ void main() {
   });
 
   group('navigation', () {
-    test('advancing past the last thikr finishes the session', () {
+    test('advancing past the last thikr finishes the session', () async {
       final items = [_thikr('a', 1)];
       controller().open(ThikrCategory.morning, items);
 
       controller().advance(items);
       expect(state().session!.finished, isTrue);
-      expect(state().completedToday, contains(ThikrCategory.morning));
+      await pumpEventQueue();
+      expect(await completedCategories(), contains('morning'));
     });
 
     test('previous moves back but stops at the first', () {
@@ -157,13 +181,14 @@ void main() {
   });
 
   group('completion', () {
-    test('the tasbih never marks a completed session', () {
+    test('the tasbih never marks a completed session', () async {
       final items = [_thikr('t', 1, category: ThikrCategory.tasbih)];
       controller().open(ThikrCategory.tasbih, items);
       controller().advance(items);
 
       expect(state().session!.finished, isTrue);
-      expect(state().completedToday, isEmpty);
+      await pumpEventQueue();
+      expect(await completedCategories(), isEmpty);
     });
 
     test('completedCount reports fully counted athkar', () {
@@ -187,11 +212,28 @@ void main() {
   });
 
   group('favorites', () {
-    test('toggling adds then removes', () {
-      controller().toggleFavorite('a');
-      expect(state().favorites, contains('a'));
-      controller().toggleFavorite('a');
-      expect(state().favorites, isEmpty);
+    test('toggling adds then removes', () async {
+      await controller().toggleFavorite('a');
+      // The provider stream has to deliver before the toggle can invert.
+      await pumpEventQueue();
+      expect(await favoriteIds(), contains('a'));
+
+      await controller().toggleFavorite('a');
+      await pumpEventQueue();
+      expect(await favoriteIds(), isEmpty);
+    });
+
+    test('a completed category is recorded once per day', () async {
+      final items = [_thikr('a', 1)];
+      controller().open(ThikrCategory.morning, items);
+      controller().advance(items);
+      await pumpEventQueue();
+
+      controller().open(ThikrCategory.morning, items);
+      controller().advance(items);
+      await pumpEventQueue();
+
+      expect(await db.allCompletions(), hasLength(1));
     });
   });
 

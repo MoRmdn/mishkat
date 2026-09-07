@@ -23,9 +23,20 @@
 
   "nextReminder": "التذكير القادم",
   "edit": "تعديل",
-  "inHours": "بعد {hours} ساعات و{minutes} دقيقة",
+  "minutesLabel": "{minutesCount, plural, =1{دقيقة} =2{دقيقتين} few{{minutes} دقائق} other{{minutes} دقيقة}}",
+  "@minutesLabel": {
+    "placeholders": {
+      "minutesCount": { "type": "num", "format": "compact" },
+      "minutes": { "type": "String" }
+    }
+  },
+  "inHours": "{hoursCount, plural, =0{بعد {minutesText}} =1{بعد ساعة و{minutesText}} =2{بعد ساعتين و{minutesText}} few{بعد {hours} ساعات و{minutesText}} other{بعد {hours} ساعة و{minutesText}}}",
   "@inHours": {
-    "placeholders": { "hours": { "type": "String" }, "minutes": { "type": "String" } }
+    "placeholders": {
+      "hoursCount": { "type": "num", "format": "compact" },
+      "hours": { "type": "String" },
+      "minutesText": { "type": "String" }
+    }
   },
   "prayerBased": "محسوب على مواقيت اليوم",
 
@@ -136,6 +147,7 @@
   },
   "shareAsImage": "مشاركة كصورة",
   "backHome": "العودة للرئيسية",
+  "shareCardLabel": "ذِكْر",
   "shareTitle": "مشاركة الذكر",
   "saveImage": "حفظ كصورة",
   "share": "مشاركة",
