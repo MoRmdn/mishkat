@@ -21,13 +21,13 @@ class SettingsStore {
   static const _kOnboarding = 'settings.onboardingComplete';
 
   AppSettings read() => AppSettings(
-        palette: AppPalette.fromName(_prefs.getString(_kPalette)),
-        appearance: AppearanceMode.fromName(_prefs.getString(_kAppearance)),
-        language: AppLanguage.fromName(_prefs.getString(_kLanguage)),
-        textSize: ThikrTextSize.fromIndex(_prefs.getInt(_kTextSize)),
-        useQuranFont: _prefs.getBool(_kQuranFont) ?? true,
-        onboardingComplete: _prefs.getBool(_kOnboarding) ?? false,
-      );
+    palette: AppPalette.fromName(_prefs.getString(_kPalette)),
+    appearance: AppearanceMode.fromName(_prefs.getString(_kAppearance)),
+    language: AppLanguage.fromName(_prefs.getString(_kLanguage)),
+    textSize: ThikrTextSize.fromIndex(_prefs.getInt(_kTextSize)),
+    useQuranFont: _prefs.getBool(_kQuranFont) ?? true,
+    onboardingComplete: _prefs.getBool(_kOnboarding) ?? false,
+  );
 
   Future<void> write(AppSettings s) async {
     await Future.wait([

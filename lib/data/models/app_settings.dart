@@ -7,22 +7,26 @@ enum AppearanceMode {
   dark,
   system;
 
-  static AppearanceMode fromName(String? n) => AppearanceMode.values
-      .firstWhere((m) => m.name == n, orElse: () => AppearanceMode.system);
+  static AppearanceMode fromName(String? n) => AppearanceMode.values.firstWhere(
+    (m) => m.name == n,
+    orElse: () => AppearanceMode.system,
+  );
 
   ThemeMode get themeMode => switch (this) {
-        AppearanceMode.light => ThemeMode.light,
-        AppearanceMode.dark => ThemeMode.dark,
-        AppearanceMode.system => ThemeMode.system,
-      };
+    AppearanceMode.light => ThemeMode.light,
+    AppearanceMode.dark => ThemeMode.dark,
+    AppearanceMode.system => ThemeMode.system,
+  };
 }
 
 enum AppLanguage {
   ar,
   en;
 
-  static AppLanguage fromName(String? n) =>
-      AppLanguage.values.firstWhere((l) => l.name == n, orElse: () => AppLanguage.ar);
+  static AppLanguage fromName(String? n) => AppLanguage.values.firstWhere(
+    (l) => l.name == n,
+    orElse: () => AppLanguage.ar,
+  );
 
   Locale get locale => Locale(name);
   bool get isRtl => this == AppLanguage.ar;

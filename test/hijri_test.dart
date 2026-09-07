@@ -29,7 +29,11 @@ void main() {
 
     expect(ar, contains('ربيع الأول'));
     expect(ar, contains('الاثنين'));
-    expect(ar, isNot(matches(RegExp(r'[0-9]'))), reason: 'no Latin digits in ar');
+    expect(
+      ar,
+      isNot(matches(RegExp(r'[0-9]'))),
+      reason: 'no Latin digits in ar',
+    );
 
     expect(en, contains("Rabi' al-Awwal"));
     expect(en, contains('Monday'));

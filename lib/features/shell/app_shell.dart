@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/clock.dart';
 import '../../core/format/hijri_date.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_icons.dart';
 import '../../core/widgets/streak_ring.dart';
+import '../home/home_tab.dart';
 import '../settings/settings_controller.dart';
 import '../settings/settings_sheet.dart';
 
@@ -46,12 +48,16 @@ class AppShell extends ConsumerWidget {
         bottom: false,
         child: Column(
           children: [
-            _Header(title: title, languageCode: lang.name),
+            _Header(
+              title: title,
+              languageCode: lang.name,
+              now: ref.watch(clockProvider)(),
+            ),
             Expanded(
               child: IndexedStack(
                 index: tab.index,
                 children: const [
-                  _TabPlaceholder(tab: ShellTab.home, milestone: 'M2'),
+                  HomeTab(),
                   _TabPlaceholder(tab: ShellTab.reminders, milestone: 'M4'),
                   _TabPlaceholder(tab: ShellTab.favorites, milestone: 'M6'),
                   _TabPlaceholder(tab: ShellTab.progress, milestone: 'M6'),
@@ -67,10 +73,15 @@ class AppShell extends ConsumerWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.title, required this.languageCode});
+  const _Header({
+    required this.title,
+    required this.languageCode,
+    required this.now,
+  });
 
   final String title;
   final String languageCode;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +108,7 @@ class _Header extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  formatHijriHeader(DateTime.now(), languageCode),
+                  formatHijriHeader(now, languageCode),
                   style: TextStyle(fontSize: 13, color: t.muted),
                 ),
               ],
@@ -117,23 +128,30 @@ class _Header extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   '${localizeDigits(streakDays, languageCode)} ${L.of(context).dayUnit}',
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => showSettingsSheet(context),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: t.surface,
-                border: Border.all(color: t.border),
-                borderRadius: BorderRadius.circular(14),
+          Semantics(
+            button: true,
+            label: L.of(context).settings,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => showSettingsSheet(context),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: t.surface,
+                  border: Border.all(color: t.border),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: GearIcon(color: t.muted),
               ),
-              child: GearIcon(color: t.muted),
             ),
           ),
         ],

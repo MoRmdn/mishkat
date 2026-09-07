@@ -50,14 +50,23 @@ void main() {
       for (final p in AppPalette.values) {
         final t = AppTokens.of(p, Brightness.light);
         // The reader is dark by default for night use, even in a light build.
-        expect(t.rdBg.computeLuminance(), lessThan(0.1), reason: '$p reader bg');
-        expect(t.rdInk.computeLuminance(), greaterThan(0.7), reason: '$p reader ink');
+        expect(
+          t.rdBg.computeLuminance(),
+          lessThan(0.1),
+          reason: '$p reader bg',
+        );
+        expect(
+          t.rdInk.computeLuminance(),
+          greaterThan(0.7),
+          reason: '$p reader ink',
+        );
       }
     });
 
     test('the three palettes are actually distinct', () {
-      final accents =
-          AppPalette.values.map((p) => AppTokens.of(p, Brightness.light).accent).toSet();
+      final accents = AppPalette.values
+          .map((p) => AppTokens.of(p, Brightness.light).accent)
+          .toSet();
       expect(accents.length, 3);
     });
 

@@ -203,15 +203,16 @@ ThemeData buildAppTheme(AppPalette palette, Brightness brightness) {
     fontFamily: kUiFont,
     scaffoldBackgroundColor: t.bg,
     canvasColor: t.bg,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: t.accent,
-      brightness: brightness,
-    ).copyWith(
-      primary: t.accent,
-      onPrimary: t.onAccent,
-      surface: t.surface,
-      onSurface: t.ink,
-    ),
+    colorScheme:
+        ColorScheme.fromSeed(
+          seedColor: t.accent,
+          brightness: brightness,
+        ).copyWith(
+          primary: t.accent,
+          onPrimary: t.onAccent,
+          surface: t.surface,
+          onSurface: t.ink,
+        ),
     extensions: [t],
   );
 }

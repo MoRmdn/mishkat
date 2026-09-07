@@ -5,7 +5,18 @@
 /// prototype's `AR()`, `num()` and `time()` helpers.
 library;
 
-const List<String> _arabicIndic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+const List<String> _arabicIndic = [
+  '٠',
+  '١',
+  '٢',
+  '٣',
+  '٤',
+  '٥',
+  '٦',
+  '٧',
+  '٨',
+  '٩',
+];
 
 /// Converts every ASCII digit in [input] to its Arabic-Indic form.
 String toArabicIndic(String input) {

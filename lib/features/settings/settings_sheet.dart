@@ -98,7 +98,10 @@ class SettingsSheet extends ConsumerWidget {
                     ThikrTextSize.large => l.fontSizeLarge,
                   },
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -149,7 +152,10 @@ class SettingsSheet extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  AppSwitch(value: s.useQuranFont, onChanged: c.toggleQuranFont),
+                  AppSwitch(
+                    value: s.useQuranFont,
+                    onChanged: c.toggleQuranFont,
+                  ),
                 ],
               ),
             ),
@@ -202,13 +208,13 @@ class _PaletteOption extends StatelessWidget {
     final t = context.tokens;
     final spec = kPalettes[palette]!;
     Widget swatch(Color c) => Container(
-          width: 18,
-          height: 18,
-          decoration: BoxDecoration(
-            color: c,
-            borderRadius: BorderRadius.circular(6),
-          ),
-        );
+      width: 18,
+      height: 18,
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(6),
+      ),
+    );
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

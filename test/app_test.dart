@@ -48,7 +48,9 @@ void main() {
     expect(find.text('Home'), findsOneWidget);
   });
 
-  testWidgets('a stored palette and appearance drive the theme', (tester) async {
+  testWidgets('a stored palette and appearance drive the theme', (
+    tester,
+  ) async {
     await pumpApp(tester, {
       'settings.palette': 'indigo',
       'settings.appearance': 'dark',

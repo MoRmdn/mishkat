@@ -45,6 +45,11 @@ be — `buildSchedule(settings, prayerTimes, now)` — and `notification_service
 applies it to the OS. Scheduling bugs are invisible until a user misses a
 reminder, so this half must be unit-testable without a device.
 
+**Anything that reads the wall clock goes through `clockProvider`.** Never call
+`DateTime.now()` in a widget or service. The countdown and Hijri header already
+do this; M3's scheduler depends on it, since its correctness is entirely about
+what time it thinks it is — and time-dependent UI silently rots golden files.
+
 **Colours come from `AppTokens` only.** Read `context.tokens.accent`, never a
 raw hex and never `kPalettes` directly. Three palettes × light/dark = six
 builds, plus a reader ramp that stays dark-toned in every build.
@@ -59,7 +64,7 @@ catches an error here.
 | # | Branch | Scope | State |
 |---|---|---|---|
 | M1 | `feat/foundation` | Tokens, fonts, ar/en i18n, settings store, app shell | ✅ done |
-| M2 | `feat/athkar-reader` | Content, home screen, reader, tasbih | |
+| M2 | `feat/athkar-reader` | Content, home screen, reader, tasbih | ✅ done |
 | M3 | `feat/notification-engine` | Scheduler, permissions ladder, onboarding, deep links | |
 | M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | |
 | M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | |
@@ -82,11 +87,24 @@ lib/features/   onboarding home reader reminders favorites progress settings sha
 
 ```bash
 flutter pub get
-flutter gen-l10n          # after editing lib/core/l10n/*.arb
+flutter gen-l10n                        # after editing lib/core/l10n/*.arb
 flutter analyze
 flutter test
+flutter test test/golden --update-goldens   # after an intended visual change
 flutter run -d <device>
 ```
+
+Golden files in `test/golden/images/` cover home, the reader and the settings
+sheet across theme builds and both languages. They load the bundled fonts
+(`test/golden/font_loader.dart`) so Arabic shaping is actually exercised — a
+golden in the fallback font proves nothing. Review the regenerated PNGs before
+committing; they are the cheapest way to see a screen without a device.
+
+Widget tests must override `athkarLibraryProvider` with a preloaded library:
+otherwise `pumpAndSettle` races the asset read and settles on an empty screen.
+Tests touching the reader must set `wakelockPlusPlatformInstance` — the package
+caches its platform object in a top-level variable on first read, so overriding
+`WakelockPlusPlatformInterface.instance` only affects the first test that runs.
 
 Strings live in `lib/core/l10n/app_ar.arb` (template) and `app_en.arb`. ARB keys
 must not collide with `AppLocalizations` members — `of` had to become `countOf`.
