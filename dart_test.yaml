@@ -1,0 +1,8 @@
+tags:
+  # Asset generators, not tests: they rewrite files in assets/branding as a
+  # side effect. Run deliberately:
+  #   flutter test test/tools --run-skipped
+  tools:
+    skip: "generators — run test/tools explicitly with --run-skipped"
+  golden:
+    # Goldens run normally; the tag exists so they can be targeted or excluded.

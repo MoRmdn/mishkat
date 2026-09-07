@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/clock.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/progress_providers.dart';
+import '../../services/diagnostics.dart';
 
 /// Delay before a thikr whose count has reached zero advances to the next one.
 /// Long enough to register the completion, short enough not to feel like a wait.
@@ -135,6 +136,7 @@ class ReaderController extends Notifier<AthkarState> {
           .read(appDatabaseProvider)
           .recordCompletion(s.category.key, ref.read(clockProvider)())
           .then((_) => invalidateProgress(ref));
+      ref.read(diagnosticsProvider).sessionCompleted(s.category.key);
     }
   }
 

@@ -5,6 +5,7 @@ import '../../core/l10n/app_localizations.dart';
 import '../../data/models/reminder_settings.dart';
 import '../../services/reminder_scheduler.dart';
 import '../../data/repositories/athkar_repository.dart';
+import '../../services/diagnostics.dart';
 import '../../services/permission_service.dart';
 import '../reader/reader_screen.dart';
 import '../settings/settings_controller.dart';
@@ -70,6 +71,7 @@ class _ReminderSyncScopeState extends ConsumerState<ReminderSyncScope>
     final library = ref.read(athkarLibraryProvider).value;
     if (library == null) return;
 
+    ref.read(diagnosticsProvider).reminderOpened(slot);
     openReader(context, ref, slot.category, library[slot.category]);
     unawaitedSync();
   }
@@ -79,16 +81,31 @@ class _ReminderSyncScopeState extends ConsumerState<ReminderSyncScope>
     final library = ref.read(athkarLibraryProvider).value;
     if (library == null) return;
 
+    final ReminderSchedule applied =
+        schedule ?? ref.read(currentScheduleProvider);
+
     await syncReminders(
       service: ref.read(notificationServiceProvider),
-      schedule: schedule ?? ref.read(currentScheduleProvider),
+      schedule: applied,
       permissions: ref.read(permissionsProvider),
       l: L.of(context),
       library: library,
       languageCode: ref.read(settingsProvider).language.name,
     );
 
-    if (mounted) ref.invalidate(pendingCountProvider);
+    if (!mounted) return;
+    ref.invalidate(pendingCountProvider);
+
+    final permissions = ref.read(permissionsProvider);
+    if (permissions.notifications) {
+      ref
+          .read(diagnosticsProvider)
+          .reminderScheduled(
+            mode: ref.read(reminderSettingsProvider).mode,
+            pendingCount: applied.pendingCount,
+            exactAlarmsAllowed: permissions.exactAlarms,
+          );
+    }
   }
 
   @override

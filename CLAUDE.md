@@ -67,6 +67,19 @@ write.
 forms with a `num` for selection and a separately localized digit string for
 display, as `inHours` and `minutesLabel` do.
 
+**Diagnostics answer one question.** `Diagnostics` exists to compare reminders
+*scheduled* against reminders *opened*, split by whether exact alarms were
+allowed. That is how a device class that silently drops alarms is detected from
+the field. Do not add events that record what a user read, when they pray, or
+where they are. The default implementation is a no-op; Firebase is not wired
+because it needs a project only the app's owner can create.
+
+**Branding assets are generated, not fetched.** The design project's 1024px and
+512px icon exports exceed DesignSync's 256 KiB per-file limit and come back
+truncated. `test/tools/` regenerates the icon and splash mark from the same
+palette and mark path the app uses. Replace them with the designer's exports
+before release.
+
 **Anything that reads the wall clock goes through `clockProvider`.** Never call
 `DateTime.now()` in a widget or service. The countdown and Hijri header already
 do this; M3's scheduler depends on it, since its correctness is entirely about
@@ -91,7 +104,7 @@ catches an error here.
 | M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | ✅ done |
 | M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | ✅ done |
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | ✅ done |
-| M7 | `feat/firebase`, `chore/release-prep` | Crashlytics, Analytics, icons, store prep | |
+| M7 | `feat/firebase` | Icons, splash, diagnostics seam, store prep | ✅ done (Firebase config pending — see `docs/firebase.md`) |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.

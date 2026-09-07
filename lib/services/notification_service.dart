@@ -70,7 +70,9 @@ class NotificationService {
 
     await _plugin.initialize(
       settings: const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        // A white silhouette, not the launcher icon: Android masks a full
+        // colour icon into a featureless blob in the status bar.
+        android: AndroidInitializationSettings('@drawable/ic_notification'),
         // Permissions are requested explicitly during onboarding, where the
         // rationale is shown first, not silently at startup.
         iOS: DarwinInitializationSettings(

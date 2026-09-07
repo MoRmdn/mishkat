@@ -108,11 +108,25 @@ deliberate act rather than a quiet one.
 | M4 | Reminders tab, slot time sheet, OEM guidance | ✅ |
 | M5 | Prayer times (`adhan`), calculation method, rolling window | ✅ |
 | M6 | Favourites, streaks and progress, share-as-image | ✅ |
-| M7 | Crashlytics and Analytics, icons, store preparation | — |
+| M7 | Icons, splash, diagnostics seam, store preparation | ✅ |
 
 Prayer times are computed on-device and offline. If location is declined the
 app uses a city chosen from a list; if there is no position at all it falls
 back to the fixed clock times and says so rather than scheduling nothing.
+
+## Before shipping
+
+Four things stand between this and a store submission, all documented in
+`docs/store-listing.md`:
+
+1. **Replace the athkar corpus** with a human-verified dataset (see above).
+2. **Configure Firebase** if diagnostics are wanted — `docs/firebase.md`. The
+   app is fully functional without it; the default implementation is a no-op.
+3. **Set a release signing key.** The release build currently signs with the
+   debug key.
+4. **Verify reminder delivery on physical hardware.**
+
+`docs/privacy-policy.md` is drafted and reflects what the app actually does.
 
 ## Licences
 

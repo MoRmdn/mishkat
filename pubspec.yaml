@@ -50,6 +50,35 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.8
   drift_dev: ^2.34.6
   build_runner: ^2.15.1
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
+
+# Generates the platform icon sets from a single source. Re-run with:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: assets/branding/app-icon.png
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  # The teal build's deep ink, so the adaptive icon's background matches the
+  # mark rather than showing white corners.
+  adaptive_icon_background: "#123A31"
+  adaptive_icon_foreground: assets/branding/app-icon.png
+
+# Launch screen. Regenerate with:
+#   dart run flutter_native_splash:create
+flutter_native_splash:
+  # The teal build's deep ink, so launch flows into the app rather than
+  # flashing white first.
+  color: "#123A31"
+  color_dark: "#0E1613"
+  image: assets/branding/splash-mark.png
+  image_dark: assets/branding/splash-mark.png
+  android_12:
+    color: "#123A31"
+    color_dark: "#0E1613"
+    image: assets/branding/splash-mark.png
+    image_dark: assets/branding/splash-mark.png
 
 flutter:
   uses-material-design: true

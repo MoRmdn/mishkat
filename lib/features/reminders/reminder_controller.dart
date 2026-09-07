@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/clock.dart';
 import '../../data/models/reminder_settings.dart';
+import '../../services/diagnostics.dart';
 import '../../services/notification_service.dart';
 import '../../services/permission_service.dart';
 import '../../services/reminder_scheduler.dart';
@@ -78,6 +79,9 @@ class PermissionController extends Notifier<PermissionState> {
     final granted = await ref
         .read(permissionServiceProvider)
         .requestNotifications();
+    ref
+        .read(diagnosticsProvider)
+        .permissionResolved(permission: 'notifications', granted: granted);
     await refresh();
     return granted;
   }
@@ -86,6 +90,9 @@ class PermissionController extends Notifier<PermissionState> {
     final granted = await ref
         .read(permissionServiceProvider)
         .requestExactAlarms();
+    ref
+        .read(diagnosticsProvider)
+        .permissionResolved(permission: 'exact_alarms', granted: granted);
     await refresh();
     return granted;
   }
@@ -94,6 +101,9 @@ class PermissionController extends Notifier<PermissionState> {
     final granted = await ref
         .read(permissionServiceProvider)
         .requestBatteryExemption();
+    ref
+        .read(diagnosticsProvider)
+        .permissionResolved(permission: 'battery_exemption', granted: granted);
     await refresh();
     return granted;
   }
