@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../data/models/reminder_settings.dart';
+import '../../services/reminder_scheduler.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../services/permission_service.dart';
 import '../reader/reader_screen.dart';
@@ -73,14 +74,14 @@ class _ReminderSyncScopeState extends ConsumerState<ReminderSyncScope>
     unawaitedSync();
   }
 
-  Future<void> _sync() async {
+  Future<void> _sync({ReminderSchedule? schedule}) async {
     if (!mounted) return;
     final library = ref.read(athkarLibraryProvider).value;
     if (library == null) return;
 
     await syncReminders(
       service: ref.read(notificationServiceProvider),
-      schedule: ref.read(currentScheduleProvider),
+      schedule: schedule ?? ref.read(currentScheduleProvider),
       permissions: ref.read(permissionsProvider),
       l: L.of(context),
       library: library,
@@ -92,8 +93,13 @@ class _ReminderSyncScopeState extends ConsumerState<ReminderSyncScope>
 
   @override
   Widget build(BuildContext context) {
-    // Anything that changes what should be scheduled triggers a re-apply.
-    ref.listen<ReminderSettings>(reminderSettingsProvider, (_, _) => _sync());
+    // Listen to the derived schedule, not the settings it comes from: a
+    // settings listener fires before dependent providers recompute, so reading
+    // the schedule inside it hands back the previous value.
+    ref.listen<ReminderSchedule>(
+      currentScheduleProvider,
+      (_, next) => _sync(schedule: next),
+    );
     ref.listen<PermissionState>(permissionsProvider, (_, _) => _sync());
     ref.listen(settingsProvider.select((s) => s.language), (_, _) => _sync());
     ref.listen(athkarLibraryProvider, (_, _) => _sync());

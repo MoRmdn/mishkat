@@ -45,13 +45,18 @@ class SettingsStore {
   }
 
   static ReminderSlot _decodeSlot(String? raw, ReminderSlot fallback) {
-    if (raw == null) return fallback;
+    if (raw == null) {
+      return fallback;
+    }
     final parts = raw.split(':');
-    if (parts.length != 3) return fallback;
+    if (parts.length != 3) {
+      return fallback;
+    }
     final hour = int.tryParse(parts[0]);
     final minute = int.tryParse(parts[1]);
-    if (hour == null || minute == null || hour > 23 || minute > 59)
+    if (hour == null || minute == null || hour > 23 || minute > 59) {
       return fallback;
+    }
     return fallback.copyWith(
       hour: hour,
       minute: minute,

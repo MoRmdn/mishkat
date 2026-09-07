@@ -45,6 +45,12 @@ be — `buildSchedule(settings, prayerTimes, now)` — and `notification_service
 applies it to the OS. Scheduling bugs are invisible until a user misses a
 reminder, so this half must be unit-testable without a device.
 
+**Listen to derived providers, not their inputs.** `ReminderSyncScope` watches
+`currentScheduleProvider`, not `reminderSettingsProvider`: a listener on the
+settings fires before dependents recompute, so reading the schedule inside it
+returns the previous value and the app schedules the configuration the user
+just replaced.
+
 **Anything that reads the wall clock goes through `clockProvider`.** Never call
 `DateTime.now()` in a widget or service. The countdown and Hijri header already
 do this; M3's scheduler depends on it, since its correctness is entirely about
@@ -66,7 +72,7 @@ catches an error here.
 | M1 | `feat/foundation` | Tokens, fonts, ar/en i18n, settings store, app shell | ✅ done |
 | M2 | `feat/athkar-reader` | Content, home screen, reader, tasbih | ✅ done |
 | M3 | `feat/notification-engine` | Scheduler, permissions ladder, onboarding, deep links | ✅ done |
-| M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | |
+| M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | ✅ done |
 | M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | |
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | |
 | M7 | `feat/firebase`, `chore/release-prep` | Crashlytics, Analytics, icons, store prep | |

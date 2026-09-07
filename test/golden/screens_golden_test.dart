@@ -87,6 +87,41 @@ void main() {
     );
   });
 
+  testWidgets('reminders — fixed mode, teal Arabic', (tester) async {
+    await harness.pump(
+      tester,
+      palette: 'teal',
+      appearance: 'light',
+      language: 'ar',
+    );
+    await tester.tap(find.text('التذكيرات').last);
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(MishkatApp),
+      matchesGoldenFile('images/reminders_fixed_ar.png'),
+    );
+  });
+
+  testWidgets('reminders — exact alarms denied, indigo dark English', (
+    tester,
+  ) async {
+    final denied = AppHarness(
+      permissions: FakePermissionService(exactAlarms: false),
+    );
+    await denied.pump(
+      tester,
+      palette: 'indigo',
+      appearance: 'dark',
+      language: 'en',
+    );
+    await tester.tap(find.text('Reminders').last);
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(MishkatApp),
+      matchesGoldenFile('images/reminders_inexact_dark_en.png'),
+    );
+  });
+
   testWidgets('onboarding — permission rationale, teal Arabic', (tester) async {
     await harness.pump(
       tester,

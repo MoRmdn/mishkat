@@ -176,8 +176,9 @@ class NotificationService {
   Future<ReminderSlotId?> launchSlot() async {
     final details = await _plugin.getNotificationAppLaunchDetails();
     final payload = details?.notificationResponse?.payload;
-    if (details?.didNotificationLaunchApp != true || payload == null)
+    if (details?.didNotificationLaunchApp != true || payload == null) {
       return null;
+    }
     return ReminderSlotId.fromKey(payload);
   }
 }

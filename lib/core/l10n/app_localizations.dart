@@ -457,6 +457,42 @@ abstract class L {
   /// **'أنظمة بعض الشركات توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات التالية مرة واحدة.'**
   String get oemBody;
 
+  /// No description provided for @oemHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعدادات {vendor}'**
+  String oemHeading(String vendor);
+
+  /// No description provided for @oemStep1.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات ← التطبيقات ← إدارة التطبيقات ← مشكاة'**
+  String get oemStep1;
+
+  /// No description provided for @oemStep2.
+  ///
+  /// In ar, this message translates to:
+  /// **'فعّل «التشغيل التلقائي» إن كان متاحاً على جهازك'**
+  String get oemStep2;
+
+  /// No description provided for @oemStep3.
+  ///
+  /// In ar, this message translates to:
+  /// **'من «موفّر البطارية» اختر «بدون قيود»'**
+  String get oemStep3;
+
+  /// No description provided for @oemStep4.
+  ///
+  /// In ar, this message translates to:
+  /// **'ثبّت التطبيق من شاشة التطبيقات الحديثة'**
+  String get oemStep4;
+
+  /// No description provided for @oemGenericHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'خطوات عامة — قد تختلف التسميات قليلاً بين الأجهزة'**
+  String get oemGenericHint;
+
   /// No description provided for @openBattery.
   ///
   /// In ar, this message translates to:

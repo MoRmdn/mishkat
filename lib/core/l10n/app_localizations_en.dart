@@ -199,6 +199,27 @@ class LEn extends L {
       'Some manufacturers stop apps in the background, which cancels scheduled reminders. These steps fix it once.';
 
   @override
+  String oemHeading(String vendor) {
+    return '$vendor settings';
+  }
+
+  @override
+  String get oemStep1 => 'Settings → Apps → Manage apps → Mishkat';
+
+  @override
+  String get oemStep2 => 'Turn on “Autostart” if your device offers it';
+
+  @override
+  String get oemStep3 => 'Under “Battery saver” choose “No restrictions”';
+
+  @override
+  String get oemStep4 => 'Lock the app from the recent-apps screen';
+
+  @override
+  String get oemGenericHint =>
+      'General steps — the exact labels vary a little by device';
+
+  @override
   String get openBattery => 'Open battery settings';
 
   @override

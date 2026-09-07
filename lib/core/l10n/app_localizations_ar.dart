@@ -199,6 +199,27 @@ class LAr extends L {
       'أنظمة بعض الشركات توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات التالية مرة واحدة.';
 
   @override
+  String oemHeading(String vendor) {
+    return 'إعدادات $vendor';
+  }
+
+  @override
+  String get oemStep1 => 'الإعدادات ← التطبيقات ← إدارة التطبيقات ← مشكاة';
+
+  @override
+  String get oemStep2 => 'فعّل «التشغيل التلقائي» إن كان متاحاً على جهازك';
+
+  @override
+  String get oemStep3 => 'من «موفّر البطارية» اختر «بدون قيود»';
+
+  @override
+  String get oemStep4 => 'ثبّت التطبيق من شاشة التطبيقات الحديثة';
+
+  @override
+  String get oemGenericHint =>
+      'خطوات عامة — قد تختلف التسميات قليلاً بين الأجهزة';
+
+  @override
   String get openBattery => 'فتح إعدادات البطارية';
 
   @override

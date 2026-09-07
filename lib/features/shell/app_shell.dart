@@ -9,6 +9,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/app_icons.dart';
 import '../../core/widgets/streak_ring.dart';
 import '../home/home_tab.dart';
+import '../reminders/reminders_tab.dart';
 import '../settings/settings_controller.dart';
 import '../settings/settings_sheet.dart';
 
@@ -58,7 +59,7 @@ class AppShell extends ConsumerWidget {
                 index: tab.index,
                 children: const [
                   HomeTab(),
-                  _TabPlaceholder(tab: ShellTab.reminders, milestone: 'M4'),
+                  RemindersTab(),
                   _TabPlaceholder(tab: ShellTab.favorites, milestone: 'M6'),
                   _TabPlaceholder(tab: ShellTab.progress, milestone: 'M6'),
                 ],
