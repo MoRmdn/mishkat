@@ -883,6 +883,36 @@ abstract class L {
   /// **'لاحقاً'**
   String get onb4Secondary;
 
+  /// No description provided for @notifBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'{thikr} · {count} أذكار · {minutes} دقائق'**
+  String notifBody(String thikr, String count, String minutes);
+
+  /// No description provided for @scheduleThroughShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجدولة حتى {date}'**
+  String scheduleThroughShort(String date);
+
+  /// No description provided for @prayerFallbackNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حساب المواقيت — تُستخدم الأوقات الثابتة مؤقتاً'**
+  String get prayerFallbackNotice;
+
+  /// No description provided for @notificationsBlocked.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات غير مسموحة — لن تصل التذكيرات'**
+  String get notificationsBlocked;
+
+  /// No description provided for @enableNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفعيل التنبيهات'**
+  String get enableNotifications;
+
   /// No description provided for @notifTitleMorning.
   ///
   /// In ar, this message translates to:

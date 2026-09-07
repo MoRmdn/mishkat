@@ -176,6 +176,15 @@
   "onb4Primary": "استثناء التطبيق",
   "onb4Secondary": "لاحقاً",
 
+  "notifBody": "{thikr} · {count} أذكار · {minutes} دقائق",
+  "@notifBody": {
+    "placeholders": { "thikr": { "type": "String" }, "count": { "type": "String" }, "minutes": { "type": "String" } }
+  },
+  "scheduleThroughShort": "مجدولة حتى {date}",
+  "@scheduleThroughShort": { "placeholders": { "date": { "type": "String" } } },
+  "prayerFallbackNotice": "تعذّر حساب المواقيت — تُستخدم الأوقات الثابتة مؤقتاً",
+  "notificationsBlocked": "التنبيهات غير مسموحة — لن تصل التذكيرات",
+  "enableNotifications": "تفعيل التنبيهات",
   "notifTitleMorning": "وقت أذكار الصباح",
   "notifTitleEvening": "وقت أذكار المساء",
   "notifTitleSleep": "وقت أذكار النوم",

@@ -429,6 +429,27 @@ class LEn extends L {
   String get onb4Secondary => 'Later';
 
   @override
+  String notifBody(String thikr, String count, String minutes) {
+    return '$thikr · $count athkar · $minutes min';
+  }
+
+  @override
+  String scheduleThroughShort(String date) {
+    return 'Scheduled through $date';
+  }
+
+  @override
+  String get prayerFallbackNotice =>
+      'Prayer times unavailable — using fixed times for now';
+
+  @override
+  String get notificationsBlocked =>
+      'Notifications are off — no reminders will arrive';
+
+  @override
+  String get enableNotifications => 'Turn on notifications';
+
+  @override
   String get notifTitleMorning => 'Time for the morning athkar';
 
   @override

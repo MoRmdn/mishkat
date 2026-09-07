@@ -19,6 +19,20 @@ dependencies:
   flutter_svg: ^2.3.0
   hijri: ^3.0.1
   wakelock_plus: ^1.8.0
+  flutter_local_notifications: ^22.3.0
+  timezone: ^0.11.1
+  flutter_timezone: ^5.1.0
+  permission_handler: ^12.0.0
+  device_info_plus: ^13.2.0
+  app_settings: ^9.0.0
+
+# permission_handler_android 13.x declares in its AAR metadata that consumers
+# must compile against Android API 37. That platform is not published yet, and
+# Android Gradle Plugin 9 caps compileSdk at 36 — the two cannot both be
+# satisfied. 12.1.0 targets 34 and exposes the same permissions we use.
+# Remove this override once API 37 ships.
+dependency_overrides:
+  permission_handler_android: 12.1.0
 
 dev_dependencies:
   flutter_test:

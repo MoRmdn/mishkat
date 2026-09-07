@@ -160,6 +160,11 @@
   "onb4Primary": "Exempt the app",
   "onb4Secondary": "Later",
 
+  "notifBody": "{thikr} · {count} athkar · {minutes} min",
+  "scheduleThroughShort": "Scheduled through {date}",
+  "prayerFallbackNotice": "Prayer times unavailable — using fixed times for now",
+  "notificationsBlocked": "Notifications are off — no reminders will arrive",
+  "enableNotifications": "Turn on notifications",
   "notifTitleMorning": "Time for the morning athkar",
   "notifTitleEvening": "Time for the evening athkar",
   "notifTitleSleep": "Time for the sleep athkar",

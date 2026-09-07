@@ -65,7 +65,7 @@ catches an error here.
 |---|---|---|---|
 | M1 | `feat/foundation` | Tokens, fonts, ar/en i18n, settings store, app shell | ✅ done |
 | M2 | `feat/athkar-reader` | Content, home screen, reader, tasbih | ✅ done |
-| M3 | `feat/notification-engine` | Scheduler, permissions ladder, onboarding, deep links | |
+| M3 | `feat/notification-engine` | Scheduler, permissions ladder, onboarding, deep links | ✅ done |
 | M4 | `feat/reminders-ui` | Reminders tab, time sheet, OEM guidance | |
 | M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | |
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | |
@@ -73,6 +73,15 @@ catches an error here.
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.
+
+## Android SDK pin
+
+`compileSdk`/`targetSdk` are pinned to **36**, not `flutter.compileSdkVersion`
+(37): API 37 is unpublished, and the preview installed locally declares a
+malformed `AndroidVersion.ApiLevel` of `37.0` that Gradle cannot resolve. There
+is also a `dependency_overrides` entry pinning `permission_handler_android` to
+12.1.0, because 13.x demands compileSdk 37 while AGP 9 caps at 36 — the two
+cannot both be satisfied. Drop both once API 37 ships.
 
 ## Layout
 

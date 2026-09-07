@@ -427,6 +427,26 @@ class LAr extends L {
   String get onb4Secondary => 'لاحقاً';
 
   @override
+  String notifBody(String thikr, String count, String minutes) {
+    return '$thikr · $count أذكار · $minutes دقائق';
+  }
+
+  @override
+  String scheduleThroughShort(String date) {
+    return 'مجدولة حتى $date';
+  }
+
+  @override
+  String get prayerFallbackNotice =>
+      'تعذّر حساب المواقيت — تُستخدم الأوقات الثابتة مؤقتاً';
+
+  @override
+  String get notificationsBlocked => 'التنبيهات غير مسموحة — لن تصل التذكيرات';
+
+  @override
+  String get enableNotifications => 'تفعيل التنبيهات';
+
+  @override
   String get notifTitleMorning => 'وقت أذكار الصباح';
 
   @override

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/reminders/reminder_sync_scope.dart';
 import 'features/settings/settings_controller.dart';
 import 'features/shell/app_shell.dart';
 
@@ -28,7 +30,11 @@ class MishkatApp extends ConsumerWidget {
       theme: buildAppTheme(settings.palette, Brightness.light),
       darkTheme: buildAppTheme(settings.palette, Brightness.dark),
       themeMode: settings.appearance.themeMode,
-      home: const AppShell(),
+      // Onboarding runs the permission ladder before the shell appears.
+      // Skipping it lands on a working home with reminders off.
+      home: settings.onboardingComplete
+          ? const ReminderSyncScope(child: AppShell())
+          : const OnboardingScreen(),
     );
   }
 }
