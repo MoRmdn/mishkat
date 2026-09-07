@@ -31,12 +31,6 @@ class AppIcons {
   static const miscShapes =
       '<circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/>';
 
-  /// The app mark used on the onboarding screens.
-  static const mark =
-      'M12 3v2M12 19v2M4.2 12H2M22 12h-2M6 6l-1.4-1.4'
-      'M19.4 19.4L18 18M18 6l1.4-1.4M4.6 19.4L6 18';
-  static const markShapes = '<circle cx="12" cy="12" r="4.2"/>';
-
   static const warning = 'M12 8v5M12 16.5v.5';
   static const warningShapes = '<circle cx="12" cy="12" r="9"/>';
 

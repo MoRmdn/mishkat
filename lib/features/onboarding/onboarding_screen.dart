@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/brand_mark.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
 
@@ -118,13 +118,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           border: Border.all(color: t.onbLine),
                           borderRadius: BorderRadius.circular(26),
                         ),
-                        child: StrokeIcon(
-                          AppIcons.mark,
-                          color: t.gold,
-                          size: 34,
-                          strokeWidth: 1.4,
-                          extraShapes: AppIcons.markShapes,
-                        ),
+                        child: const BrandMark(size: 38),
                       ),
                       const SizedBox(height: 26),
                       Text(

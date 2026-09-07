@@ -70,8 +70,9 @@ class NotificationService {
 
     await _plugin.initialize(
       settings: const InitializationSettings(
-        // A white silhouette, not the launcher icon: Android masks a full
-        // colour icon into a featureless blob in the status bar.
+        // A white silhouette with the flame punched through, not the launcher
+        // icon: Android tints notification icons flat and masks anything that
+        // is not a silhouette into a featureless blob.
         android: AndroidInitializationSettings('@drawable/ic_notification'),
         // Permissions are requested explicitly during onboarding, where the
         // rationale is shown first, not silently at startup.

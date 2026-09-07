@@ -11,6 +11,7 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/palettes.dart';
 import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/brand_mark.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../settings/settings_controller.dart';
@@ -77,10 +78,12 @@ class ShareCard extends StatelessWidget {
                 Container(
                   width: 34,
                   height: 34,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     border: Border.all(color: spec.gold.withValues(alpha: 0.4)),
                     borderRadius: BorderRadius.circular(11),
                   ),
+                  child: const BrandMark(size: 20),
                 ),
               ],
             ),
