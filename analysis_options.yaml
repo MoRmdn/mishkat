@@ -9,6 +9,13 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Generated: drift schema and the localization delegates. Their warnings
+    # are not actionable from this repo.
+    - "**/*.g.dart"
+    - lib/core/l10n/app_localizations*.dart
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`

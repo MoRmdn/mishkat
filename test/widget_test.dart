@@ -1,30 +1,38 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mishkat/main.dart';
+import 'package:mishkat/core/format/numerals.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('numerals', () {
+    test('converts ASCII digits to Arabic-Indic', () {
+      expect(toArabicIndic('2026'), '٢٠٢٦');
+      expect(toArabicIndic('6:30'), '٦:٣٠');
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('leaves non-digits untouched', () {
+      expect(toArabicIndic('Fajr 4:48 AM'), 'Fajr ٤:٤٨ AM');
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('localizeDigits switches on language', () {
+      expect(localizeDigits(14, 'ar'), '١٤');
+      expect(localizeDigits(14, 'en'), '14');
+    });
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  group('formatClock', () {
+    test('Arabic uses Arabic-Indic digits and ص/م', () {
+      expect(formatClock(6, 30, 'ar', am: 'ص', pm: 'م'), '٦:٣٠ ص');
+      expect(formatClock(17, 30, 'ar', am: 'ص', pm: 'م'), '٥:٣٠ م');
+    });
+
+    test('English uses Latin digits and AM/PM', () {
+      expect(formatClock(6, 30, 'en', am: 'AM', pm: 'PM'), '6:30 AM');
+      expect(formatClock(22, 30, 'en', am: 'AM', pm: 'PM'), '10:30 PM');
+    });
+
+    test('midnight and noon map to 12, not 0', () {
+      expect(formatClock(0, 5, 'en', am: 'AM', pm: 'PM'), '12:05 AM');
+      expect(formatClock(12, 0, 'en', am: 'AM', pm: 'PM'), '12:00 PM');
+    });
   });
 }
