@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "9295918147",
+    "project_id": "mishkat-al-wird",
+    "storage_bucket": "mishkat-al-wird.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9295918147:android:04f4d05731da1b18b750f6",
+        "android_client_info": {
+          "package_name": "com.mormdn.mishkat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhdrShHnIz0ViRx2KMLtJb-mihZCxY96g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
