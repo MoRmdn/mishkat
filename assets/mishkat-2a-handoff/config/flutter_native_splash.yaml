@@ -1,0 +1,12 @@
+# dart run flutter_native_splash:create --path=design-handoff/config/flutter_native_splash.yaml
+flutter_native_splash:
+  color: "#EFEBE7"
+  image: assets/branding/png/splash-mark-1152.png
+  color_dark: "#1B1320"
+  image_dark: assets/branding/png/splash-mark-dark-1152.png
+  android_12:
+    color: "#EFEBE7"
+    image: assets/branding/png/splash-mark-1152.png
+    color_dark: "#1B1320"
+    image_dark: assets/branding/png/splash-mark-dark-1152.png
+  fullscreen: false

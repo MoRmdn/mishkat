@@ -1,0 +1,13 @@
+# dart run flutter_launcher_icons -f design-handoff/config/flutter_launcher_icons.yaml
+# Generates iOS icons and legacy Android mipmaps ONLY.
+# The adaptive icon is the vector set in design-handoff/android/app/src/main/res —
+# copy it over android/app/src/main/res afterwards.
+# If any drawable-*dpi/ic_launcher_foreground.png exist from an earlier run, delete them:
+# density-qualified PNGs override the vector drawable.
+flutter_launcher_icons:
+  image_path: "assets/branding/png/app-icon-ios-1024.png"
+  android: "ic_launcher"
+  ios: true
+  remove_alpha_ios: true
+  image_path_ios_dark_transparent: "assets/branding/png/app-icon-ios-dark-transparent-1024.png"
+  image_path_ios_tinted_grayscale: "assets/branding/png/app-icon-ios-tinted-1024.png"

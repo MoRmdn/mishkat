@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 13+ themed icon: one colour, lamp knocked out -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+  <group android:scaleX="0.7" android:scaleY="0.7" android:translateX="12" android:translateY="8.5">
+    <path android:fillColor="#FF000000" android:fillType="evenOdd" android:pathData="M32 100V58a28 28 0 0 1 56 0v42z M60 75a9 9 0 1 1 0 18a9 9 0 1 1 0-18z"/>
+  </group>
+</vector>

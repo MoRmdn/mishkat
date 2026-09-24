@@ -1,0 +1,187 @@
+{
+  "$schema": "Mishkat Al-Wird design tokens · direction 2a “Dusk Grid”",
+  "color": {
+    "light": {
+      "bg": "#EFEBE7",
+      "surface": "#F9F7F4",
+      "surfaceRaised": "#FFFFFF",
+      "line": "#DDD5CE",
+      "lineSoft": "#E7E0DA",
+      "ink": "#2A1B2C",
+      "inkMuted": "#6E5F6B",
+      "inkFaint": "#7E6F7B",
+      "primary": "#4A2A4D",
+      "onPrimary": "#FFFFFF",
+      "onPrimaryMuted": "#E3D2DC",
+      "glow": "#C9939A",
+      "glowSoft": "#F2E1DF",
+      "glowLine": "#E3C6C6",
+      "accentText": "#8E4E5A",
+      "cta": "#E5B3B9",
+      "onCta": "#2A1B2C",
+      "ctaOnPrimaryLabel": "#E5B3B9",
+      "trackOff": "#CFC5BE",
+      "focusRing": "#8E4E5A",
+      "scrim": "#2A1B2C99",
+      "warnBg": "#FBF1E1",
+      "warnLine": "#EBD6AE",
+      "warnInk": "#5E4712",
+      "warnAction": "#8A6820",
+      "onWarnAction": "#FFFFFF",
+      "error": "#A13A3A",
+      "onError": "#FFFFFF",
+      "errorSoft": "#F7E3E1"
+    },
+    "dark": {
+      "bg": "#1B1320",
+      "surface": "#261B2C",
+      "surfaceRaised": "#2E2234",
+      "line": "#3A2C40",
+      "lineSoft": "#332539",
+      "ink": "#F1E9EE",
+      "inkMuted": "#BBA9B6",
+      "inkFaint": "#9C8A98",
+      "primary": "#261B2C",
+      "onPrimary": "#F1E9EE",
+      "onPrimaryMuted": "#BBA9B6",
+      "glow": "#E5B3B9",
+      "glowSoft": "#3A2C40",
+      "glowLine": "#4A3552",
+      "accentText": "#E5B3B9",
+      "cta": "#E5B3B9",
+      "onCta": "#1B1320",
+      "ctaOnPrimaryLabel": "#E5B3B9",
+      "trackOff": "#4A3A50",
+      "focusRing": "#E5B3B9",
+      "scrim": "#000000A3",
+      "warnBg": "#2A2216",
+      "warnLine": "#4C4023",
+      "warnInk": "#F2E2B4",
+      "warnAction": "#D8B86C",
+      "onWarnAction": "#241D08",
+      "error": "#F0A3A3",
+      "onError": "#2A0E0E",
+      "errorSoft": "#3A1E22"
+    },
+    "note": "primary in dark is a surface with glowLine border; the CTA carries the colour. glow is fill-only on light — never text."
+  },
+  "font": {
+    "ui": {
+      "family": "Alexandria",
+      "weights": [
+        300,
+        400,
+        500
+      ],
+      "license": "OFL"
+    },
+    "thikr": {
+      "family": "Scheherazade New",
+      "weights": [
+        400,
+        500
+      ],
+      "license": "OFL"
+    },
+    "thikrAlt": {
+      "family": "Amiri Quran",
+      "weights": [
+        400
+      ],
+      "license": "OFL",
+      "note": "behind the existing Quranic-script toggle"
+    }
+  },
+  "type": {
+    "display": {
+      "size": 30,
+      "weight": 500,
+      "lineHeight": 1.35
+    },
+    "title": {
+      "size": 20,
+      "weight": 500,
+      "lineHeight": 1.4
+    },
+    "headline": {
+      "size": 17,
+      "weight": 500,
+      "lineHeight": 1.45
+    },
+    "body": {
+      "size": 14.5,
+      "weight": 400,
+      "lineHeight": 1.75
+    },
+    "bodyLight": {
+      "size": 14.5,
+      "weight": 300,
+      "lineHeight": 1.85,
+      "minSize": 14
+    },
+    "label": {
+      "size": 12.5,
+      "weight": 500,
+      "lineHeight": 1.4
+    },
+    "caption": {
+      "size": 12,
+      "weight": 300,
+      "lineHeight": 1.6
+    },
+    "counter": {
+      "size": 60,
+      "weight": 300,
+      "lineHeight": 1
+    },
+    "thikr": {
+      "small": 24,
+      "medium": 29,
+      "large": 35,
+      "lineHeight": 2,
+      "rule": "fixed per setting — long athkar scroll, never shrink"
+    }
+  },
+  "space": {
+    "xxs": 4,
+    "xs": 8,
+    "sm": 12,
+    "md": 16,
+    "lg": 20,
+    "xl": 24,
+    "xxl": 32,
+    "xxxl": 40,
+    "screenInline": 20
+  },
+  "radius": {
+    "sm": 10,
+    "md": 14,
+    "lg": 18,
+    "xl": 24,
+    "pill": 999,
+    "iconTileRatio": 0.26
+  },
+  "size": {
+    "touchMin": 48,
+    "iconSm": 16,
+    "icon": 22,
+    "iconLg": 24,
+    "navHeight": 64,
+    "buttonHeight": 52,
+    "rowHeight": 58
+  },
+  "elevation": {
+    "none": "none",
+    "sheet": "0 -8 32 rgba(27,19,32,0.18)",
+    "note": "the system is flat; only bottom sheets and dialogs lift"
+  },
+  "motion": {
+    "fast": 120,
+    "base": 200,
+    "slow": 320,
+    "easing": "cubic-bezier(0.2, 0, 0, 1)",
+    "tapPulse": 140,
+    "autoAdvanceDelay": 480,
+    "reducedMotion": "all durations → 0; no scale pulse; progress changes instantly"
+  }
+}
