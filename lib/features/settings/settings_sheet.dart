@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/buttons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../core/widgets/segmented_control.dart';
 import '../../data/models/app_settings.dart';
 import 'settings_controller.dart';
@@ -11,6 +13,8 @@ import 'settings_controller.dart';
 Future<void> showSettingsSheet(BuildContext context) =>
     showAppSheet(context, (_) => const SettingsSheet());
 
+/// Board 5.4. One identity, so appearance is the only visual choice: light,
+/// dark or follow the system.
 class SettingsSheet extends ConsumerWidget {
   const SettingsSheet({super.key});
 
@@ -24,81 +28,89 @@ class SettingsSheet extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          l.settings,
-          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
-        ),
-
+        SheetTitle(l.settings),
         SheetSectionLabel(l.language),
         SegmentedControl<AppLanguage>(
           value: s.language,
           onChanged: c.setLanguage,
-          options: const [
-            SegmentedOption(AppLanguage.ar, 'العربية'),
-            SegmentedOption(AppLanguage.en, 'English'),
+          onSurface: true,
+          options: [
+            SegmentedOption(AppLanguage.ar, l.languageArabic),
+            SegmentedOption(AppLanguage.en, l.languageEnglish),
           ],
         ),
-
         SheetSectionLabel(l.appearance),
         SegmentedControl<AppearanceMode>(
           value: s.appearance,
           onChanged: c.setAppearance,
+          onSurface: true,
           options: [
-            SegmentedOption(AppearanceMode.light, l.light),
-            SegmentedOption(AppearanceMode.dark, l.dark),
-            SegmentedOption(AppearanceMode.system, l.system),
+            SegmentedOption(AppearanceMode.light, l.light, icon: MIcon.sun),
+            SegmentedOption(AppearanceMode.dark, l.dark, icon: MIcon.moon),
+            SegmentedOption(
+              AppearanceMode.system,
+              l.system,
+              icon: MIcon.device,
+            ),
           ],
         ),
-
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  l.fontSize,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.4,
-                    color: t.muted,
-                  ),
-                ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                l.fontSize,
+                style: MishkatType.label(
+                  t,
+                ).copyWith(fontSize: 12, color: t.inkMuted),
               ),
-              _StepButton(label: '−', onTap: () => c.stepTextSize(-1)),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 52,
-                child: Text(
-                  switch (s.textSize) {
-                    ThikrSize.small => l.fontSizeSmall,
-                    ThikrSize.medium => l.fontSizeMedium,
-                    ThikrSize.large => l.fontSizeLarge,
-                  },
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+            ),
+            IconCircleButton(
+              icon: MIcon.minus,
+              iconSize: 16,
+              background: t.bg,
+              semanticLabel: l.textSmaller,
+              onPressed: s.textSize == ThikrSize.small
+                  ? null
+                  : () => c.stepTextSize(-1),
+            ),
+            SizedBox(
+              width: 60,
+              child: Text(
+                switch (s.textSize) {
+                  ThikrSize.small => l.fontSizeSmall,
+                  ThikrSize.medium => l.fontSizeMedium,
+                  ThikrSize.large => l.fontSizeLarge,
+                },
+                textAlign: TextAlign.center,
+                style: MishkatType.label(t).copyWith(fontSize: 13.5),
               ),
-              const SizedBox(width: 10),
-              _StepButton(label: '+', onTap: () => c.stepTextSize(1)),
-            ],
-          ),
+            ),
+            IconCircleButton(
+              icon: MIcon.plus,
+              iconSize: 16,
+              background: t.bg,
+              semanticLabel: l.textLarger,
+              onPressed: s.textSize == ThikrSize.large
+                  ? null
+                  : () => c.stepTextSize(1),
+            ),
+          ],
         ),
-
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
+        const SizedBox(height: 16),
+        Semantics(
+          toggled: s.useQuranFont,
+          button: true,
+          label: l.quranFont,
+          excludeSemantics: true,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: c.toggleQuranFont,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: t.surface,
-                border: Border.all(color: t.border),
-                borderRadius: BorderRadius.circular(16),
+                color: t.bg,
+                borderRadius: BorderRadius.circular(Radii.lg),
               ),
               child: Row(
                 children: [
@@ -108,24 +120,18 @@ class SettingsSheet extends ConsumerWidget {
                       children: [
                         Text(
                           l.quranFont,
-                          style: const TextStyle(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: MishkatType.label(t).copyWith(fontSize: 14),
                         ),
-                        const SizedBox(height: 6),
-                        // Live preview so the toggle shows its own effect.
-                        Directionality(
+                        const SizedBox(height: 4),
+                        // Always set in the Quranic script: it previews what
+                        // the switch turns on.
+                        Text(
+                          'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
                           textDirection: TextDirection.rtl,
-                          child: Text(
-                            'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
-                            style: TextStyle(
-                              fontFamily: s.useQuranFont
-                                  ? kQuranFont
-                                  : kThikrFont,
-                              fontSize: 17,
-                              color: t.muted,
-                            ),
+                          style: TextStyle(
+                            fontFamily: kQuranFont,
+                            fontSize: 17,
+                            color: t.inkMuted,
                           ),
                         ),
                       ],
@@ -141,58 +147,12 @@ class SettingsSheet extends ConsumerWidget {
             ),
           ),
         ),
-
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                color: t.accent,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                l.done,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: t.onAccent,
-                ),
-              ),
-            ),
-          ),
+        const SizedBox(height: 16),
+        PrimaryButton(
+          label: l.done,
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ],
-    );
-  }
-}
-
-class _StepButton extends StatelessWidget {
-  const _StepButton({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Container(
-        width: 36,
-        height: 36,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: t.surface,
-          border: Border.all(color: t.border),
-          borderRadius: BorderRadius.circular(11),
-        ),
-        child: Text(label, style: TextStyle(fontSize: 16, color: t.ink)),
-      ),
     );
   }
 }

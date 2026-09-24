@@ -3,21 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/widgets/mishkat_icon.dart';
+import '../../core/l10n/labels.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/buttons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/reminder_settings.dart';
 import '../settings/settings_controller.dart';
 import 'reminder_controller.dart';
-import 'reminders_tab.dart';
 
 Future<void> showSlotTimeSheet(BuildContext context, ReminderSlotId slot) =>
     showAppSheet(context, (_) => SlotTimeSheet(slot: slot));
 
-/// Hour and minute steppers, matching the design.
+/// Board 4.3: hour and minute steppers with an AM/PM choice.
 ///
 /// Minutes move in fives: a reminder does not need minute precision, and a
-/// stepper that took sixty taps to cross an hour would be hostile.
+/// stepper that took sixty taps to cross an hour would be hostile. Changes
+/// apply — and reschedule — as they are made; the button dismisses.
 class SlotTimeSheet extends ConsumerWidget {
   const SlotTimeSheet({super.key, required this.slot});
 
@@ -32,15 +34,19 @@ class SlotTimeSheet extends ConsumerWidget {
     final controller = ref.read(reminderSettingsProvider.notifier);
 
     final hour12 = current.hour % 12 == 0 ? 12 : current.hour % 12;
+    final pm = current.hour >= 12;
+
+    void setHalf(bool toPm) => controller.setSlotTime(
+      slot,
+      hour: current.hour % 12 + (toPm ? 12 : 0),
+      minute: current.minute,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          l.timeOf(slotLabel(l, slot)),
-          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 24),
+        SheetTitle(l.timeOf(slotLabel(l, slot))),
+        const SizedBox(height: 22),
         // Clock digits read left-to-right in both languages.
         Directionality(
           textDirection: TextDirection.ltr,
@@ -51,14 +57,25 @@ class SlotTimeSheet extends ConsumerWidget {
                 value: localizeDigits(hour12, lang),
                 onUp: () => controller.shiftSlotTime(slot, hours: 1),
                 onDown: () => controller.shiftSlotTime(slot, hours: -1),
-                semanticsPrefix: 'hour',
+                upLabel: l.hourUp,
+                downLabel: l.hourDown,
               ),
-              const SizedBox(width: 18),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Text(':', style: TextStyle(fontSize: 34, color: t.s3)),
+              const SizedBox(width: 14),
+              ExcludeSemantics(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    ':',
+                    style: TextStyle(
+                      fontFamily: kUiFont,
+                      fontSize: 36,
+                      fontWeight: FontWeight.w300,
+                      color: t.trackOff,
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 18),
+              const SizedBox(width: 14),
               _Stepper(
                 value: localizeDigits(
                   current.minute.toString().padLeft(2, '0'),
@@ -66,39 +83,39 @@ class SlotTimeSheet extends ConsumerWidget {
                 ),
                 onUp: () => controller.shiftSlotTime(slot, minutes: 5),
                 onDown: () => controller.shiftSlotTime(slot, minutes: -5),
-                semanticsPrefix: 'minute',
+                upLabel: l.minuteUp,
+                downLabel: l.minuteDown,
+              ),
+              const SizedBox(width: 22),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _HalfChip(
+                    label: l.am,
+                    selected: !pm,
+                    onTap: () => setHalf(false),
+                  ),
+                  const SizedBox(height: 6),
+                  _HalfChip(
+                    label: l.pm,
+                    selected: pm,
+                    onTap: () => setHalf(true),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 18),
         Text(
-          '${current.hour < 12 ? l.am : l.pm} · ${l.repeatsDaily}',
+          l.timeSheetHint,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12.5, color: t.muted),
+          style: MishkatType.caption(t).copyWith(fontSize: 12.5),
         ),
-        const SizedBox(height: 20),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          // Changes are already applied and rescheduled as they are made; this
-          // button just dismisses.
-          onTap: () => Navigator.of(context).pop(),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: t.accent,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              l.saveReschedule,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: t.onAccent,
-              ),
-            ),
-          ),
+        const SizedBox(height: 18),
+        PrimaryButton(
+          label: l.saveReschedule,
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ],
     );
@@ -110,12 +127,13 @@ class _Stepper extends StatelessWidget {
     required this.value,
     required this.onUp,
     required this.onDown,
-    required this.semanticsPrefix,
+    required this.upLabel,
+    required this.downLabel,
   });
 
   final String value;
   final VoidCallback onUp, onDown;
-  final String semanticsPrefix;
+  final String upLabel, downLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -124,39 +142,91 @@ class _Stepper extends StatelessWidget {
     Widget button(MIcon icon, VoidCallback onTap, String label) => Semantics(
       button: true,
       label: label,
+      excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          width: 56,
+          height: 48,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: t.s2,
-            borderRadius: BorderRadius.circular(12),
+            color: t.bg,
+            borderRadius: BorderRadius.circular(24),
           ),
-          child: MishkatIcon(icon, color: t.accent, size: 18),
+          child: MishkatIcon(
+            icon,
+            color: t.isDark ? t.accentText : t.primary,
+            size: 16,
+          ),
         ),
       ),
     );
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        button(MIcon.chevronUp, onUp, '$semanticsPrefix up'),
-        const SizedBox(height: 8),
+        button(MIcon.chevronUp, onUp, upLabel),
+        const SizedBox(height: 6),
         SizedBox(
           width: 64,
           child: Text(
             value,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w600,
+            style: TextStyle(
+              fontFamily: kUiFont,
+              fontSize: 44,
+              fontWeight: FontWeight.w300,
               height: 1.1,
+              color: t.ink,
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        button(MIcon.chevronDown, onDown, '$semanticsPrefix down'),
+        const SizedBox(height: 6),
+        button(MIcon.chevronDown, onDown, downLabel),
       ],
+    );
+  }
+}
+
+class _HalfChip extends StatelessWidget {
+  const _HalfChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final fill = selected ? (t.isDark ? t.cta : t.primary) : t.bg;
+    final ink = selected ? (t.isDark ? t.onCta : t.onPrimary) : t.ink;
+    return Semantics(
+      button: true,
+      selected: selected,
+      inMutuallyExclusiveGroup: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Container(
+          height: 40,
+          constraints: const BoxConstraints(minWidth: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: fill,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(fontFamily: kUiFont, fontSize: 13, color: ink),
+          ),
+        ),
+      ),
     );
   }
 }

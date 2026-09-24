@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/l10n/labels.dart';
+import '../../core/theme/mishkat_tokens.dart';
+import '../../core/widgets/buttons.dart';
 import '../../core/widgets/mishkat_icon.dart';
+import '../../core/widgets/surfaces.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
-import '../home/home_tab.dart' show categoryLabel;
 import '../reader/reader_controller.dart';
+import '../reader/reader_screen.dart';
 import '../settings/settings_controller.dart';
 import '../share/share_card.dart';
+import '../shell/app_shell.dart';
 
+/// Boards 5.1 and 5.2.
 class FavoritesTab extends ConsumerWidget {
   const FavoritesTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final library = ref.watch(athkarLibraryProvider).value;
     final favorites = ref.watch(favoritesProvider).value;
 
-    if (library == null || favorites == null) return const SizedBox.shrink();
+    final title = Padding(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
+      child: PageTitle(l.titleFavorites),
+    );
+    if (library == null || favorites == null) {
+      return Align(alignment: AlignmentDirectional.topStart, child: title);
+    }
 
     // A favourite whose thikr is no longer in the corpus is skipped rather
     // than rendered as a blank card.
@@ -29,14 +42,30 @@ class FavoritesTab extends ConsumerWidget {
         .whereType<Thikr>()
         .toList();
 
-    if (items.isEmpty) return const _EmptyState();
+    if (items.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          title,
+          const Expanded(child: _EmptyState()),
+        ],
+      );
+    }
 
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 22),
-      itemCount: items.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (context, i) =>
-          _FavoriteCard(thikr: items[i], library: library),
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 20),
+      children: [
+        title,
+        for (final thikr in items)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            child: _FavoriteCard(thikr: thikr, library: library),
+          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(l.favHint, style: MishkatType.caption(context.tokens)),
+        ),
+      ],
     );
   }
 }
@@ -52,101 +81,126 @@ class _FavoriteCard extends ConsumerWidget {
     final t = context.tokens;
     final l = L.of(context);
     final settings = ref.watch(settingsProvider);
+    final lang = settings.language.name;
+    void remove() =>
+        ref.read(readerControllerProvider.notifier).toggleFavorite(thikr.id);
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      // Long-press to share, as the design specifies.
-      onLongPress: () => showShareSheet(context, thikr),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: t.surface,
-          border: Border.all(color: t.border),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    final reference = library.referenceLine(thikr, lang);
+    final footer = thikr.count > 1
+        ? '$reference · ${l.timesCount(thikr.count, localizeDigits(thikr.count, lang))}'
+        : reference;
+
+    return Dismissible(
+      key: ValueKey(thikr.id),
+      onDismissed: (_) => remove(),
+      child: Semantics(
+        button: true,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () =>
+              openReader(context, ref, thikr.category, [thikr], subset: true),
+          onLongPress: () => showShareSheet(context, thikr),
+          child: Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Text(
-                    categoryLabel(l, thikr.category),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: t.accent,
-                    ),
-                  ),
-                ),
-                Semantics(
-                  button: true,
-                  label: 'unfavorite',
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => ref
-                        .read(readerControllerProvider.notifier)
-                        .toggleFavorite(thikr.id),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2),
-                      child: MishkatIcon(
-                        MIcon.heartFilled,
-                        color: t.accent,
-                        size: 20,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        categoryLabel(l, thikr.category),
+                        style: MishkatType.label(
+                          t,
+                        ).copyWith(fontSize: 12, color: t.accentText),
                       ),
                     ),
+                    IconCircleButton(
+                      icon: MIcon.heartFilled,
+                      size: 32,
+                      background: t.surface,
+                      color: t.isDark ? t.accentText : t.primary,
+                      semanticLabel: l.favoriteRemove,
+                      onPressed: remove,
+                    ),
+                  ],
+                ),
+                Text(
+                  thikr.text,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontFamily: settings.useQuranFont ? kQuranFont : kThikrFont,
+                    fontSize: 22,
+                    height: 2,
+                    color: t.ink,
                   ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        footer,
+                        style: MishkatType.caption(t).copyWith(fontSize: 11.5),
+                      ),
+                    ),
+                    IconCircleButton(
+                      icon: MIcon.share,
+                      size: 40,
+                      iconSize: 16,
+                      background: t.bg,
+                      semanticLabel: l.share,
+                      onPressed: () => showShareSheet(context, thikr),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: Text(
-                thikr.text,
-                style: TextStyle(
-                  fontFamily: settings.useQuranFont ? kQuranFont : kThikrFont,
-                  fontSize: 19,
-                  height: 2.05,
-                  color: t.ink,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              library.referenceLine(thikr, settings.language.name),
-              style: TextStyle(fontSize: 12, color: t.faint),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _EmptyState extends StatelessWidget {
+class _EmptyState extends ConsumerWidget {
   const _EmptyState();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
     final l = L.of(context);
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const IconHalo(icon: MIcon.heart, iconSize: 34),
+            const SizedBox(height: 20),
             Text(
               l.favEmptyTitle,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, color: t.muted),
+              style: MishkatType.headline(t).copyWith(fontSize: 18),
             ),
             const SizedBox(height: 8),
             Text(
               l.favEmptyBody,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, height: 1.8, color: t.muted),
+              style: MishkatType.bodyMuted(t).copyWith(fontSize: 13.5),
+            ),
+            const SizedBox(height: 20),
+            SecondaryButton(
+              label: l.browseAthkar,
+              expand: false,
+              onPressed: () =>
+                  ref.read(shellTabProvider.notifier).select(ShellTab.home),
             ),
           ],
         ),

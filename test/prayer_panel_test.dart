@@ -53,7 +53,7 @@ void main() {
   testWidgets('prayer mode shows today\'s computed times', (tester) async {
     await openPrayerMode(tester);
 
-    expect(find.byType(PrayerPanel), findsOneWidget);
+    expect(find.byType(PrayerTimesCard), findsOneWidget);
     expect(find.text('الفجر'), findsOneWidget);
     expect(find.text('العصر'), findsOneWidget);
     expect(find.text('المغرب'), findsOneWidget);
@@ -68,11 +68,13 @@ void main() {
     tester,
   ) async {
     await openPrayerMode(tester);
-    await tester.scrollUntilVisible(find.text('النافذة المجدولة'), 200);
+    final window = find.textContaining('مجدولة حتى');
+    await tester.scrollUntilVisible(window, 200);
 
-    // Three anchored slots across 14 days, plus nothing repeating (sleep off).
-    expect(find.textContaining('٤٢'), findsWidgets);
-    expect(find.textContaining('٦٤'), findsWidgets);
+    // Three anchored slots across 14 days, plus nothing repeating (sleep off),
+    // against the iOS cap.
+    final line = tester.widget<Text>(window).data!;
+    expect(line, contains('٤٢ من ٦٤'));
   });
 
   testWidgets('changing the calculation method changes the times', (
@@ -110,7 +112,7 @@ void main() {
     tester,
   ) async {
     await openPrayerMode(tester);
-    await tester.scrollUntilVisible(find.text('الموقع'), 200);
+    // The place sits in the header of today's times.
     expect(find.text('مكة المكرمة · يدوي'), findsOneWidget);
 
     final before = harness.notifications.applied.last.entries.first.at;
@@ -145,8 +147,6 @@ void main() {
     tester,
   ) async {
     await openPrayerMode(tester, city: 'london', language: 'en');
-    await tester.scrollUntilVisible(find.text('Location'), 200);
-
     expect(find.text('London · manual'), findsOneWidget);
     expect(find.text('Fajr'), findsOneWidget);
   });
@@ -168,13 +168,13 @@ void main() {
 
   testWidgets('the window sentence appears once, not twice', (tester) async {
     await openPrayerMode(tester);
-    await tester.scrollUntilVisible(find.text('النافذة المجدولة'), 200);
+    await tester.scrollUntilVisible(find.textContaining('مجدولة حتى'), 200);
 
     final windowLines = tester
         .widgetList<Text>(find.byType(Text))
         .map((t) => t.data)
         .whereType<String>()
-        .where((s) => s.startsWith('الأيام المجدولة'))
+        .where((s) => s.startsWith('مجدولة حتى'))
         .toList();
     expect(windowLines, hasLength(1));
   });
@@ -184,6 +184,6 @@ void main() {
     await tester.tap(find.text('التذكيرات').last);
     await tester.pumpAndSettle();
 
-    expect(find.byType(PrayerPanel), findsNothing);
+    expect(find.byType(PrayerTimesCard), findsNothing);
   });
 }

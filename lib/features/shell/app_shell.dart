@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/clock.dart';
-import '../../core/format/hijri_date.dart';
-import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/mishkat_icon.dart';
-import '../../core/widgets/streak_ring.dart';
-import '../../data/repositories/progress_providers.dart';
 import '../favorites/favorites_tab.dart';
 import '../home/home_tab.dart';
 import '../progress/progress_tab.dart';
 import '../reminders/reminders_tab.dart';
-import '../settings/settings_controller.dart';
-import '../settings/settings_sheet.dart';
 
 enum ShellTab { home, reminders, favorites, progress }
 
@@ -29,22 +22,15 @@ class ShellTabController extends Notifier<ShellTab> {
   void select(ShellTab tab) => state = tab;
 }
 
+/// The four tabs and the bottom navigation. Each tab draws its own header:
+/// Home has the brand row, the others a page title.
 class AppShell extends ConsumerWidget {
   const AppShell({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
-    final l = L.of(context);
     final tab = ref.watch(shellTabProvider);
-    final lang = ref.watch(settingsProvider).language;
-
-    final title = switch (tab) {
-      ShellTab.home => l.titleHome,
-      ShellTab.reminders => l.titleReminders,
-      ShellTab.favorites => l.titleFavorites,
-      ShellTab.progress => l.titleProgress,
-    };
 
     return Scaffold(
       backgroundColor: t.bg,
@@ -52,12 +38,6 @@ class AppShell extends ConsumerWidget {
         bottom: false,
         child: Column(
           children: [
-            _Header(
-              title: title,
-              languageCode: lang.name,
-              now: ref.watch(clockProvider)(),
-              streakDays: ref.watch(progressStatsProvider).currentStreak,
-            ),
             Expanded(
               child: IndexedStack(
                 index: tab.index,
@@ -77,98 +57,8 @@ class AppShell extends ConsumerWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.title,
-    required this.languageCode,
-    required this.now,
-    required this.streakDays,
-  });
-
-  final String title;
-  final String languageCode;
-  final DateTime now;
-  final int streakDays;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.2,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  formatHijriHeader(now, languageCode),
-                  style: TextStyle(fontSize: 13, color: t.muted),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: t.surface,
-              border: Border.all(color: t.border),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Row(
-              children: [
-                StreakRing(percent: (streakDays % 30) / 30 * 100),
-                const SizedBox(width: 8),
-                Text(
-                  '${localizeDigits(streakDays, languageCode)} ${L.of(context).dayUnit}',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Semantics(
-            button: true,
-            label: L.of(context).settings,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => showSettingsSheet(context),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: t.surface,
-                  border: Border.all(color: t.border),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: MishkatIcon(
-                  MIcon.settings,
-                  color: t.muted,
-                  semanticLabel: L.of(context).settings,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
+/// Four items with labels always shown. The active one sits on a 56×30
+/// glowSoft pill.
 class _BottomNav extends ConsumerWidget {
   const _BottomNav();
 
@@ -180,47 +70,70 @@ class _BottomNav extends ConsumerWidget {
 
     Widget item(ShellTab tab, MIcon icon, String label) {
       final selected = tab == current;
+      final fg = selected ? t.ink : t.inkFaint;
       return Expanded(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => ref.read(shellTabProvider.notifier).select(tab),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                MishkatIcon(icon, color: selected ? t.accent : t.navOff),
-                const SizedBox(height: 5),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w600,
-                    color: selected ? t.accent : t.navOff,
+        child: Semantics(
+          selected: selected,
+          button: true,
+          label: label,
+          excludeSemantics: true,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => ref.read(shellTabProvider.notifier).select(tab),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: Sizes.touchMin),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AnimatedContainer(
+                    duration: Motion.of(context, Motion.base),
+                    curve: Motion.curve,
+                    width: 56,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? t.glowSoft
+                          : t.glowSoft.withValues(alpha: 0),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    alignment: Alignment.center,
+                    child: MishkatIcon(icon, color: fg),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: kUiFont,
+                      fontSize: 10.5,
+                      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
+                      color: fg,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       );
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: t.surface,
-        border: Border(top: BorderSide(color: t.border)),
-      ),
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
+    return ColoredBox(
+      color: t.bg,
       child: SafeArea(
         top: false,
-        child: Row(
-          children: [
-            item(ShellTab.home, MIcon.home, l.navHome),
-            item(ShellTab.reminders, MIcon.bell, l.navReminders),
-            item(ShellTab.favorites, MIcon.heart, l.navFavorites),
-            item(ShellTab.progress, MIcon.progress, l.navProgress),
-          ],
+        minimum: const EdgeInsets.only(bottom: 14),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 8, 10, 0),
+          child: Row(
+            children: [
+              item(ShellTab.home, MIcon.home, l.navHome),
+              item(ShellTab.reminders, MIcon.bell, l.navReminders),
+              item(ShellTab.favorites, MIcon.heart, l.navFavorites),
+              item(ShellTab.progress, MIcon.progress, l.navProgress),
+            ],
+          ),
         ),
       ),
     );

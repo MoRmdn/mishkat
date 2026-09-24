@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/buttons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../services/permission_service.dart';
 import '../settings/settings_controller.dart';
 import 'reminder_controller.dart';
@@ -12,7 +14,7 @@ import 'reminder_controller.dart';
 Future<void> showOemSheet(BuildContext context) =>
     showAppSheet(context, (_) => const OemSheet());
 
-/// Guidance for vendors that kill background apps.
+/// Board 4.4: guidance for vendors that kill background apps.
 ///
 /// This is the single biggest cause of "the reminder never came", and no app —
 /// native or Flutter — can fix it from code. Phrased as a one-time setup step
@@ -28,34 +30,25 @@ class OemSheet extends ConsumerWidget {
     final permissions = ref.watch(permissionsProvider);
 
     final vendor = permissions.manufacturer;
-    final steps = [l.oemStep1, l.oemStep2, l.oemStep3, l.oemStep4];
+    final steps = [l.oemStep1, l.oemStep2, l.oemStep3];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          vendor.isEmpty ? l.oemTitle : l.oemHeading(vendor),
-          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          l.oemBody,
-          style: TextStyle(fontSize: 13.5, height: 1.9, color: t.muted),
-        ),
+        SheetTitle(vendor.isEmpty ? l.oemTitle : l.oemHeading(vendor)),
+        const SizedBox(height: 8),
+        Text(l.oemBody, style: MishkatType.bodyMuted(t).copyWith(fontSize: 13)),
         if (!PermissionService.needsOemGuidance(vendor)) ...[
-          const SizedBox(height: 8),
-          Text(
-            l.oemGenericHint,
-            style: TextStyle(fontSize: 12.5, height: 1.7, color: t.faint),
-          ),
+          const SizedBox(height: 4),
+          Text(l.oemGenericHint, style: MishkatType.caption(t)),
         ],
-        const SizedBox(height: 18),
+        const SizedBox(height: 16),
         for (var i = 0; i < steps.length; i++) ...[
-          if (i > 0) const SizedBox(height: 10),
+          if (i > 0) const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: t.s2,
+              color: t.bg,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -66,15 +59,15 @@ class OemSheet extends ConsumerWidget {
                   height: 24,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: t.accent,
+                    color: t.isDark ? t.cta : t.primary,
                     shape: BoxShape.circle,
                   ),
                   child: Text(
                     localizeDigits(i + 1, lang),
                     style: TextStyle(
+                      fontFamily: kUiFont,
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: t.onAccent,
+                      color: t.isDark ? t.onCta : t.onPrimary,
                     ),
                   ),
                 ),
@@ -82,7 +75,9 @@ class OemSheet extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     steps[i],
-                    style: const TextStyle(fontSize: 13.5, height: 1.8),
+                    style: MishkatType.body(
+                      t,
+                    ).copyWith(fontSize: 13, height: 1.7),
                   ),
                 ),
               ],
@@ -90,32 +85,18 @@ class OemSheet extends ConsumerWidget {
           ),
         ],
         const SizedBox(height: 18),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () =>
+        PrimaryButton(
+          label: l.openBattery,
+          icon: MIcon.external,
+          trailingIcon: true,
+          onPressed: () =>
               ref.read(permissionsProvider.notifier).requestBatteryExemption(),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: t.accent,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              l.openBattery,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: t.onAccent,
-              ),
-            ),
-          ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         Text(
           permissions.batteryExempt ? l.batteryOn : l.batteryOff,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12, color: t.faint),
+          style: MishkatType.caption(t),
         ),
       ],
     );

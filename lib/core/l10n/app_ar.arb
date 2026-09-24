@@ -1,18 +1,13 @@
 {
   "@@locale": "ar",
-
-  "appName": "تطبيق الأذكار",
-
+  "appName": "مشكاة الورد",
   "navHome": "الرئيسية",
   "navReminders": "التذكيرات",
   "navFavorites": "المفضلة",
   "navProgress": "التقدّم",
-
-  "titleHome": "الأذكار",
   "titleReminders": "التذكيرات",
   "titleFavorites": "المفضلة",
   "titleProgress": "التقدّم",
-
   "catMorning": "أذكار الصباح",
   "catEvening": "أذكار المساء",
   "catSleep": "أذكار النوم",
@@ -20,198 +15,147 @@
   "catAfterPrayer": "أذكار بعد الصلاة",
   "catMisc": "أذكار متفرقة",
   "catTasbih": "السبحة",
-
-  "nextReminder": "التذكير القادم",
-  "edit": "تعديل",
-  "minutesLabel": "{minutesCount, plural, =1{دقيقة} =2{دقيقتين} few{{minutes} دقائق} other{{minutes} دقيقة}}",
-  "@minutesLabel": {
-    "placeholders": {
-      "minutesCount": { "type": "num", "format": "compact" },
-      "minutes": { "type": "String" }
-    }
-  },
-  "inHours": "{hoursCount, plural, =0{بعد {minutesText}} =1{بعد ساعة و{minutesText}} =2{بعد ساعتين و{minutesText}} few{بعد {hours} ساعات و{minutesText}} other{بعد {hours} ساعة و{minutesText}}}",
-  "@inHours": {
-    "placeholders": {
-      "hoursCount": { "type": "num", "format": "compact" },
-      "hours": { "type": "String" },
-      "minutesText": { "type": "String" }
-    }
-  },
-  "prayerBased": "محسوب على مواقيت اليوم",
-
   "schedFixed": "مجدولة يومياً — لا تحتاج فتح التطبيق",
-  "schedPrayer": "مجدولة حتى {date} ({days} يوماً)",
-  "@schedPrayer": {
-    "placeholders": { "date": { "type": "String" }, "days": { "type": "String" } }
-  },
-
-  "tasbihTitle": "السبحة",
-  "tasbihSub": "عدّاد حر — انقر على الشاشة للتسبيح",
-
-  "dayUnit": "يوم",
-  "dayUnitPl": "يوماً",
-  "sessions": "جلسة",
-
   "fixedMode": "وقت ثابت",
-  "prayerMode": "حسب مواقيت الصلاة",
-
-  "exactTitle": "التنبيهات الدقيقة غير مسموحة",
-  "exactBody": "قد تتأخر التذكيرات بضع دقائق. يمكنك السماح بها من إعدادات النظام.",
-  "exactAllow": "السماح بالتنبيهات الدقيقة",
-
-  "daily": "يومياً · يتكرر تلقائياً",
+  "prayerMode": "حسب الصلاة",
   "off": "معطّل",
-
   "slotWake": "أذكار الاستيقاظ",
   "slotMorning": "أذكار الصباح",
   "slotEvening": "أذكار المساء",
   "slotSleep": "أذكار النوم",
-
-  "slotPrayerWake": "قبل الفجر بـ ١٥ دقيقة",
-  "slotPrayerMorning": "بعد الفجر بـ ٣٠ دقيقة",
-  "slotPrayerEvening": "بعد العصر بـ ٤٥ دقيقة",
+  "slotPrayerWake": "قبل الفجر بـ ١٥ د",
+  "slotPrayerMorning": "بعد الفجر بـ ٣٠ د",
+  "slotPrayerEvening": "بعد العصر بـ ٤٥ د",
   "slotPrayerSleep": "وقت ثابت دائماً",
-
   "cityAuto": "{city} · تلقائي",
-  "@cityAuto": { "placeholders": { "city": { "type": "String" } } },
+  "@cityAuto": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
   "cityManual": "{city} · يدوي",
-  "@cityManual": { "placeholders": { "city": { "type": "String" } } },
+  "@cityManual": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
   "locationPending": "جارٍ تحديد الموقع…",
   "chooseCity": "اختر المدينة",
   "useMyLocation": "استخدام موقع الجهاز",
-  "todayTimesFor": "مواقيت اليوم — {city}",
-  "@todayTimesFor": { "placeholders": { "city": { "type": "String" } } },
   "todayTimes": "مواقيت اليوم",
   "fajr": "الفجر",
   "asr": "العصر",
   "maghrib": "المغرب",
-
-  "windowLabel": "النافذة المجدولة",
-  "windowText": "الأيام المجدولة: {days} · التنبيهات المعلّقة: {pending} من {cap}",
-  "@windowText": {
-    "placeholders": { "days": { "type": "String" }, "pending": { "type": "String" }, "cap": { "type": "String" } }
-  },
-
   "method": "طريقة الحساب",
-  "madhab": "المذهب في العصر",
+  "madhab": "مذهب العصر",
   "location": "الموقع",
   "methodUmmAlQura": "أم القرى",
   "methodMwl": "رابطة العالم الإسلامي",
   "methodEgypt": "الهيئة المصرية",
   "madhabStandard": "الجمهور",
   "madhabHanafi": "الحنفي",
-
   "oemTitle": "التذكيرات لا تصل؟",
-  "oemHintOn": "الجهاز مستثنى من موفّر البطارية ✓",
-  "oemHintOff": "دليل خاص بجهازك — {vendor}",
-  "@oemHintOff": { "placeholders": { "vendor": { "type": "String" } } },
-  "oemBody": "أنظمة بعض الشركات توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات التالية مرة واحدة.",
+  "oemBody": "بعض الأجهزة توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات مرة واحدة.",
   "oemHeading": "إعدادات {vendor}",
-  "@oemHeading": { "placeholders": { "vendor": { "type": "String" } } },
-  "oemStep1": "الإعدادات ← التطبيقات ← إدارة التطبيقات ← مشكاة",
-  "oemStep2": "فعّل «التشغيل التلقائي» إن كان متاحاً على جهازك",
-  "oemStep3": "من «موفّر البطارية» اختر «بدون قيود»",
-  "oemStep4": "ثبّت التطبيق من شاشة التطبيقات الحديثة",
+  "@oemHeading": {
+    "placeholders": {
+      "vendor": {
+        "type": "String"
+      }
+    }
+  },
+  "oemStep1": "الإعدادات ← التطبيقات ← مشكاة",
+  "oemStep2": "فعّل «التشغيل التلقائي»",
+  "oemStep3": "موفّر البطارية ← «لا قيود»",
   "oemGenericHint": "خطوات عامة — قد تختلف التسميات قليلاً بين الأجهزة",
   "openBattery": "فتح إعدادات البطارية",
-  "batteryOn": "التطبيق مستثنى حالياً ✓",
-  "batteryOff": "التطبيق غير مستثنى",
-
-  "favEmptyTitle": "لا توجد أذكار محفوظة بعد",
-  "favEmptyBody": "اضغط على القلب أثناء القراءة لحفظ الذكر هنا.",
-
-  "currentStreak": "تتابع مستمر",
-  "longest": "أطول تتابع",
-  "totalSessions": "إجمالي الجلسات",
+  "batteryOn": "التطبيق مستثنى حالياً",
+  "batteryOff": "التطبيق غير مستثنى حالياً",
+  "favEmptyTitle": "لا شيء محفوظ بعد",
+  "favEmptyBody": "اضغط على القلب أثناء القراءة ليُحفظ الذكر هنا.",
+  "currentStreak": "التتابع الحالي",
+  "longest": "الأطول",
+  "totalSessions": "الجلسات",
   "last14": "آخر ١٤ يوماً",
-  "byCategory": "حسب الفئة — هذا الأسبوع",
-
-  "countOf": "من",
+  "byCategory": "هذا الأسبوع",
   "once": "مرة واحدة",
-  "tapHint": "انقر في أي مكان للعد · الشاشة تبقى مضاءة",
-  "completedToday": "أُكملت اليوم",
-  "athkarCount": "{count} أذكار",
-  "@athkarCount": { "placeholders": { "count": { "type": "String" } } },
-
   "prev": "السابق",
   "reset": "تصفير",
   "next": "التالي",
-
-  "donePrefix": "تمّت",
-  "doneTitle": "تمّت — {category}",
-  "@doneTitle": { "placeholders": { "category": { "type": "String" } } },
-  "doneStreak": "تتابعك الآن {days} يوماً. التذكير القادم {time}.",
-  "@doneStreak": {
-    "placeholders": { "days": { "type": "String" }, "time": { "type": "String" } }
-  },
   "shareAsImage": "مشاركة كصورة",
   "backHome": "العودة للرئيسية",
   "shareTitle": "مشاركة الذكر",
-  "saveImage": "حفظ كصورة",
   "share": "مشاركة",
-
   "settings": "الإعدادات",
   "language": "اللغة",
   "appearance": "المظهر",
   "light": "فاتح",
   "dark": "غامق",
   "system": "النظام",
-  "themeLabel": "لون التطبيق",
-  "themeTeal": "أخضر حجري",
-  "themeIndigo": "نيلي",
-  "themeOlive": "زيتوني",
-  "fontSize": "حجم الخط",
+  "fontSize": "حجم نص الذكر",
   "fontSizeSmall": "صغير",
   "fontSizeMedium": "متوسط",
   "fontSizeLarge": "كبير",
   "quranFont": "الخط القرآني",
   "done": "تم",
-
   "saveReschedule": "حفظ وإعادة الجدولة",
   "timeOf": "وقت {slot}",
-  "@timeOf": { "placeholders": { "slot": { "type": "String" } } },
+  "@timeOf": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
   "repeatsDaily": "يتكرر يومياً",
   "am": "ص",
   "pm": "م",
-
   "onb1Title": "اذكر الله في وقته",
-  "onb1Body": "تذكيرات لطيفة لأذكار الصباح والمساء والنوم والاستيقاظ — تعمل بالكامل دون إنترنت.",
-  "onb1NoteLabel": "بدون حساب",
-  "onb1Note": "لا تسجيل دخول ولا بيانات تُرسل. كل شيء محفوظ على جهازك.",
+  "onb1Body": "تذكيرات لأذكار الصباح والمساء والنوم والاستيقاظ، تُجدول على جهازك وتعمل دون إنترنت. بلا حساب.",
   "onb1Primary": "لنبدأ",
-  "onb1Secondary": "تخطي التهيئة",
-
+  "onb1Secondary": "تخطي",
   "onb2Title": "نحتاج إذن التنبيهات",
-  "onb2Body": "التذكيرات تُجدول على جهازك مباشرة، لذلك لا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.",
-  "onb2NoteLabel": "لماذا الآن",
-  "onb2Note": "يمكنك السماح لاحقاً من الإعدادات، ولكن التذكيرات ستبقى معطلة حتى ذلك الحين.",
+  "onb2Body": "التذكيرات تُجدول على جهازك مباشرة، فلا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.",
+  "onb2Note": "يمكنك السماح لاحقاً من الإعدادات، لكن التذكيرات ستبقى معطّلة حتى ذلك الحين.",
   "onb2Primary": "السماح بالتنبيهات",
   "onb2Secondary": "ليس الآن",
-
   "onb3Title": "وقت دقيق للتذكير",
-  "onb3Body": "ليصل التذكير في وقته بالضبط، يحتاج التطبيق إذن «التنبيهات الدقيقة» من نظام أندرويد.",
-  "onb3NoteLabel": "إن رفضت",
-  "onb3Note": "سيستمر التطبيق في العمل، لكن قد يتأخر التذكير بضع دقائق، وسنخبرك بذلك في الإعدادات.",
+  "onb3Body": "ليصل التذكير في دقيقته، يحتاج التطبيق إذن «التنبيهات الدقيقة» من أندرويد.",
+  "onb3Note": "إن رفضت، يستمر التطبيق في العمل لكن قد يتأخر التذكير بضع دقائق — وسنوضح ذلك في التذكيرات.",
   "onb3Primary": "السماح",
   "onb3Secondary": "المتابعة بدون دقة",
-
-  "onb4Title": "حرّر التطبيق من موفّر البطارية",
-  "onb4Body": "أنظمة بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات المجدولة. استثناء واحد يحل المشكلة نهائياً.",
-  "onb4NoteLabel": "خطوة واحدة",
-  "onb4Note": "سنفتح لك شاشة الإعدادات الصحيحة لجهازك، ثم ننتهي.",
+  "onb4Title": "استثناء من موفّر البطارية",
+  "onb4Body": "بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات. استثناء واحد يكفي.",
+  "onb4Note": "سنفتح الشاشة الصحيحة لجهازك.",
   "onb4Primary": "استثناء التطبيق",
   "onb4Secondary": "لاحقاً",
-
   "notifBody": "{thikr} · {count} أذكار · {minutes} دقائق",
   "@notifBody": {
-    "placeholders": { "thikr": { "type": "String" }, "count": { "type": "String" }, "minutes": { "type": "String" } }
+    "placeholders": {
+      "thikr": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
   },
   "scheduleThroughShort": "مجدولة حتى {date}",
-  "@scheduleThroughShort": { "placeholders": { "date": { "type": "String" } } },
+  "@scheduleThroughShort": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "prayerFallbackNotice": "تعذّر حساب المواقيت — تُستخدم الأوقات الثابتة مؤقتاً",
-  "notificationsBlocked": "التنبيهات غير مسموحة — لن تصل التذكيرات",
-  "enableNotifications": "تفعيل التنبيهات",
   "notifTitleMorning": "وقت أذكار الصباح",
   "notifTitleEvening": "وقت أذكار المساء",
   "notifTitleSleep": "وقت أذكار النوم",
@@ -222,5 +166,274 @@
   "brandName": "مشكاة",
   "brandWird": "الورد",
   "shareStyleAubergine": "بنفسجي",
-  "shareStyleStone": "حجري"
+  "shareStyleStone": "حجري",
+  "nowLabel": "الآن",
+  "nextLabel": "التالي",
+  "begin": "ابدأ",
+  "editTimes": "تعديل الأوقات",
+  "athkarCountLabel": "{count, plural, =1{ذكر واحد} =2{ذكران} few{{digits} أذكار} many{{digits} ذكراً} other{{digits} ذكر}}",
+  "@athkarCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutMinutes": "{count, plural, =1{نحو دقيقة} =2{نحو دقيقتين} few{نحو {digits} دقائق} other{نحو {digits} دقيقة}}",
+  "@aboutMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "streakDays": "{count, plural, =1{يوم واحد متتالٍ} =2{يومان متتاليان} few{{digits} أيام متتالية} many{{digits} يوماً متتالياً} other{{digits} يوم متتالٍ}}",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "streakStart": "ابدأ تتابعك اليوم",
+  "daysCount": "{count, plural, =1{يوم واحد} =2{يومان} few{{digits} أيام} many{{digits} يوماً} other{{digits} يوم}}",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "daysUnit": "{count, plural, =1{يوم} =2{يومان} few{أيام} many{يوماً} other{يوم}}",
+  "@daysUnit": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "bandWake": "استيقاظ",
+  "bandMorning": "صباح",
+  "bandEvening": "مساء",
+  "bandSleep": "نوم",
+  "bandSemantics": "{routine}، {time}، {state}",
+  "@bandSemantics": {
+    "placeholders": {
+      "routine": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "stateDone": "تمّت",
+  "stateNow": "الآن",
+  "stateLater": "لاحقاً",
+  "allDoneTitle": "أتممت أذكار اليوم",
+  "tomorrowAt": "{routine} غداً {time}",
+  "@tomorrowAt": {
+    "placeholders": {
+      "routine": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOffTitle": "التنبيهات معطّلة",
+  "notifOffBody": "لن تصل أي تذكيرات حتى تسمح بها.",
+  "openSettings": "فتح الإعدادات",
+  "remindersAllOff": "كل التذكيرات متوقفة — الأوقات للعرض فقط",
+  "libAfterPrayer": "بعد الصلاة",
+  "libMisc": "متفرقة",
+  "close": "إغلاق",
+  "tasbihRound": "الدورة {round} · من {target}",
+  "@tasbihRound": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihFree": "عدّ حر",
+  "tasbihNoLimit": "بلا حد",
+  "tasbihHint": "المس أي مكان للعد · اهتزاز خفيف عند كل ٣٣",
+  "favoriteAdd": "حفظ في المفضلة",
+  "favoriteRemove": "إزالة من المفضلة",
+  "scrollToContinue": "مرّر للمتابعة",
+  "counterOf": "من {total}",
+  "@counterOf": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "counterRemaining": "المتبقي {remaining} من {total}",
+  "@counterRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "positionOf": "{index} من {total}",
+  "@positionOf": {
+    "placeholders": {
+      "index": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "doneRoutine": "تمّت {routine}",
+  "@doneRoutine": {
+    "placeholders": {
+      "routine": {
+        "type": "String"
+      }
+    }
+  },
+  "streakNow": "{count, plural, =0{ابدأ تتابعك اليوم.} =1{تتابعك الآن يوم واحد.} =2{تتابعك الآن يومان.} few{تتابعك الآن {digits} أيام.} many{تتابعك الآن {digits} يوماً.} other{تتابعك الآن {digits} يوم.}}",
+  "@streakNow": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "nextReminderLine": "التذكير القادم {routine} {time}.",
+  "@nextReminderLine": {
+    "placeholders": {
+      "routine": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "shareChooseTitle": "اختر ذكراً للمشاركة",
+  "exactBanner": "قد تتأخر التذكيرات بضع دقائق — التنبيهات الدقيقة غير مسموحة.",
+  "allow": "السماح",
+  "slotDaily": "يومياً",
+  "pendingShort": "{count} معلّقة",
+  "@pendingShort": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "windowShort": "مجدولة حتى {date} · {pending} من {cap} معلّقة",
+  "@windowShort": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "pending": {
+        "type": "String"
+      },
+      "cap": {
+        "type": "String"
+      }
+    }
+  },
+  "timeSheetHint": "يتكرر يومياً · خطوات ٥ دقائق",
+  "favHint": "اضغط على الذكر لقراءته · اسحب لإزالته",
+  "browseAthkar": "تصفّح الأذكار",
+  "legendFull": "كامل",
+  "legendPartial": "جزئي",
+  "legendNone": "لا شيء",
+  "weekRatio": "{done} / {target}",
+  "@weekRatio": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "errorTitle": "تعذّر تحميل الأذكار",
+  "errorBody": "حدث خطأ غير متوقع. تذكيراتك المجدولة لم تتأثر.",
+  "retry": "إعادة المحاولة",
+  "onb4NoteVendor": "جهازك: {vendor} · سنفتح الشاشة الصحيحة",
+  "@onb4NoteVendor": {
+    "placeholders": {
+      "vendor": {
+        "type": "String"
+      }
+    }
+  },
+  "languageArabic": "العربية",
+  "languageEnglish": "English",
+  "onbStep": "الخطوة {index} من {total}",
+  "@onbStep": {
+    "placeholders": {
+      "index": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "slotWakeShort": "الاستيقاظ",
+  "slotMorningShort": "الصباح",
+  "slotEveningShort": "المساء",
+  "slotSleepShort": "النوم",
+  "hourUp": "زيادة الساعة",
+  "hourDown": "إنقاص الساعة",
+  "minuteUp": "زيادة الدقائق",
+  "minuteDown": "إنقاص الدقائق",
+  "timesCount": "{count, plural, =1{مرة واحدة} =2{مرتان} few{{digits} مرات} other{{digits} مرة}}",
+  "@timesCount": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "textSmaller": "تصغير نص الذكر",
+  "textLarger": "تكبير نص الذكر"
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
+import '../theme/mishkat_tokens.dart';
 
-/// The app's bottom-sheet chrome: scrim, 26px top radius, grabber, and a
-/// max height of 88% with internal scrolling.
+/// The app's bottom sheet: 28px top radius, grab handle, surface fill, the
+/// token scrim, and the only shadow in the system. Scrolls internally past
+/// 88% of the screen.
 Future<T?> showAppSheet<T>(BuildContext context, WidgetBuilder builder) {
   final t = context.tokens;
   return showModalBottomSheet<T>(
@@ -11,6 +12,10 @@ Future<T?> showAppSheet<T>(BuildContext context, WidgetBuilder builder) {
     backgroundColor: Colors.transparent,
     barrierColor: t.scrim,
     isScrollControlled: true,
+    // Sheets slide at the system's pace unless motion is reduced.
+    sheetAnimationStyle: Motion.reduced(context)
+        ? AnimationStyle.noAnimation
+        : null,
     builder: (context) => AppSheet(child: Builder(builder: builder)),
   );
 }
@@ -29,36 +34,62 @@ class AppSheet extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: t.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [
+          BoxShadow(
+            color: MishkatTokens.dark.bg.withValues(alpha: 0.18),
+            blurRadius: 32,
+            offset: const Offset(0, -8),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: Container(
-                width: 38,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: t.s3,
-                  borderRadius: BorderRadius.circular(3),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(22, 10, 22, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 18),
+                  decoration: BoxDecoration(
+                    color: t.line,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            child,
-          ],
+              child,
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// Small caps section label used throughout the sheets and settings.
+/// A sheet's title, 19/500.
+class SheetTitle extends StatelessWidget {
+  const SheetTitle(this.text, {super.key});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    header: true,
+    child: Text(
+      text,
+      style: MishkatType.title(context.tokens).copyWith(fontSize: 19),
+    ),
+  );
+}
+
+/// A small section label in sheets and settings, 12/500 muted.
 class SheetSectionLabel extends StatelessWidget {
-  const SheetSectionLabel(this.text, {super.key, this.topPadding = 20});
+  const SheetSectionLabel(this.text, {super.key, this.topPadding = 16});
 
   final String text;
   final double topPadding;
@@ -70,10 +101,10 @@ class SheetSectionLabel extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
+          fontFamily: kUiFont,
           fontSize: 12,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.4,
-          color: context.tokens.muted,
+          fontWeight: FontWeight.w500,
+          color: context.tokens.inkMuted,
         ),
       ),
     );

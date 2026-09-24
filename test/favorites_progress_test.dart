@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/features/favorites/favorites_tab.dart';
 import 'package:mishkat/features/progress/progress_tab.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
@@ -27,9 +26,9 @@ void main() {
       await openTab(tester, 'المفضلة');
 
       expect(find.byType(FavoritesTab), findsOneWidget);
-      expect(find.text('لا توجد أذكار محفوظة بعد'), findsOneWidget);
+      expect(find.text('لا شيء محفوظ بعد'), findsOneWidget);
       expect(
-        find.text('اضغط على القلب أثناء القراءة لحفظ الذكر هنا.'),
+        find.text('اضغط على القلب أثناء القراءة ليُحفظ الذكر هنا.'),
         findsOneWidget,
       );
     });
@@ -39,18 +38,18 @@ void main() {
     ) async {
       await harness.pump(tester);
 
-      await tester.tap(find.text('أذكار المساء'));
+      await tester.tap(find.text('مساء'));
       await tester.pumpAndSettle();
       expect(find.byType(ReaderScreen), findsOneWidget);
 
-      await tester.tap(find.bySemanticsLabel('favorite'));
+      await tester.tap(find.bySemanticsLabel('حفظ في المفضلة'));
       await AppHarness.settleWithDatabase(tester);
 
-      await tester.tap(find.bySemanticsLabel('close'));
+      await tester.tap(find.bySemanticsLabel('إغلاق'));
       await tester.pumpAndSettle();
       await openTab(tester, 'المفضلة');
 
-      expect(find.text('لا توجد أذكار محفوظة بعد'), findsNothing);
+      expect(find.text('لا شيء محفوظ بعد'), findsNothing);
       expect(find.textContaining('أَمْسَيْنَا'), findsOneWidget);
       // The card names the category it came from.
       expect(find.text('أذكار المساء'), findsWidgets);
@@ -63,10 +62,10 @@ void main() {
 
       expect(find.byType(FavoritesTab), findsOneWidget);
       // Targeted by widget: the favourites tab has exactly one heart per card.
-      await tester.tap(findIcon(MIcon.heartFilled).first);
+      await tester.tap(find.bySemanticsLabel('إزالة من المفضلة'));
       await AppHarness.settleWithDatabase(tester);
 
-      expect(find.text('لا توجد أذكار محفوظة بعد'), findsOneWidget);
+      expect(find.text('لا شيء محفوظ بعد'), findsOneWidget);
       expect(await harness.db.allFavorites(), isEmpty);
     });
 
@@ -74,7 +73,7 @@ void main() {
       await harness.db.addFavorite('mo2', DateTime(2026, 9, 7));
       await harness.pump(tester);
       await openTab(tester, 'المفضلة');
-      expect(find.text('لا توجد أذكار محفوظة بعد'), findsNothing);
+      expect(find.text('لا شيء محفوظ بعد'), findsNothing);
     });
   });
 
@@ -86,8 +85,8 @@ void main() {
       await openTab(tester, 'التقدّم');
 
       expect(find.byType(ProgressTab), findsOneWidget);
-      expect(find.text('تتابع مستمر'), findsOneWidget);
-      expect(find.textContaining('أطول تتابع: ٠'), findsOneWidget);
+      expect(find.text('التتابع الحالي'), findsOneWidget);
+      expect(find.text('٠ يوم'), findsOneWidget, reason: 'longest');
     });
 
     testWidgets('finishing a session records a streak and a completion', (
@@ -98,11 +97,11 @@ void main() {
       // On waking is the shortest category: two athkar, once each. `.last` is
       // the grid card — the same name now also appears in the next-reminder
       // card, since waking is genuinely the next slot at the pinned clock.
-      await tester.tap(find.text('أذكار الاستيقاظ').last);
+      await tester.tap(find.text('استيقاظ'));
       await tester.pumpAndSettle();
 
       for (var i = 0; i < 2; i++) {
-        await tester.tap(find.byType(ReaderScreen));
+        await tester.tapAt(const Offset(195, 400));
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 600));
         await tester.pumpAndSettle();
@@ -119,31 +118,31 @@ void main() {
       await AppHarness.settleWithDatabase(tester);
       await openTab(tester, 'التقدّم');
 
-      expect(find.textContaining('إجمالي الجلسات: ١'), findsOneWidget);
-      expect(find.textContaining('أطول تتابع: ١'), findsOneWidget);
+      expect(find.text('يوم واحد'), findsOneWidget, reason: 'longest');
     });
 
-    testWidgets('the home card marks a category completed today', (
-      tester,
-    ) async {
+    testWidgets('the day band ticks a routine completed today', (tester) async {
       await harness.db.recordCompletion('morning', DateTime(2026, 9, 7, 7));
-      await harness.pump(tester);
+      await harness.pump(tester, now: DateTime(2026, 9, 7, 9, 41));
 
-      expect(find.text('أُكملت اليوم'), findsOneWidget);
+      final handle = tester.ensureSemantics();
+      expect(
+        find.bySemanticsLabel(RegExp('أذكار الصباح.*تمّت')),
+        findsOneWidget,
+      );
+      handle.dispose();
     });
 
     testWidgets('the 14-day grid renders a cell per day', (tester) async {
       await harness.pump(tester);
       await openTab(tester, 'التقدّم');
 
-      // Cells are numbered 1..14; the last one proves the grid is complete.
-      // The scrollable must be named: the inner GridView creates a second one.
-      await tester.scrollUntilVisible(
-        find.text('١٤'),
-        200,
-        scrollable: find.byType(Scrollable).first,
+      final grid = find.byType(GridView);
+      expect(grid, findsOneWidget);
+      expect(
+        find.descendant(of: grid, matching: find.byType(Container)),
+        findsNWidgets(14),
       );
-      expect(find.text('١٤'), findsOneWidget);
     });
   });
 

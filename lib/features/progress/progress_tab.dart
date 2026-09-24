@@ -3,28 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
-import '../../core/widgets/streak_ring.dart';
-import '../../data/repositories/progress_repository.dart';
+import '../../core/l10n/labels.dart';
+import '../../core/theme/mishkat_tokens.dart';
+import '../../core/widgets/surfaces.dart';
+import '../../data/models/thikr.dart';
 import '../../data/repositories/progress_providers.dart';
-import '../home/home_tab.dart' show categoryLabel;
+import '../../data/repositories/progress_repository.dart';
 import '../settings/settings_controller.dart';
 
+/// Board 5.3.
 class ProgressTab extends ConsumerWidget {
   const ProgressTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = L.of(context);
     final stats = ref.watch(progressStatsProvider);
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 22),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
       children: [
+        PageTitle(l.titleProgress),
+        const SizedBox(height: 12),
         _StreakCard(stats: stats),
-        const SizedBox(height: 14),
-        _LastFourteenCard(days: stats.last14Days),
-        const SizedBox(height: 14),
-        _CategoryCard(categories: stats.byCategory),
+        const SizedBox(height: 12),
+        _LastFourteenCard(levels: stats.last14Routines),
+        const SizedBox(height: 12),
+        _WeekCard(categories: stats.byCategory),
       ],
     );
   }
@@ -40,127 +45,79 @@ class _StreakCard extends ConsumerWidget {
     final t = context.tokens;
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
+    String digits(int n) => localizeDigits(n, lang);
+
+    final small = TextStyle(
+      fontFamily: kUiFont,
+      fontSize: 11.5,
+      fontWeight: FontWeight.w300,
+      color: t.onPrimaryMuted,
+    );
+    final figure = TextStyle(
+      fontFamily: kUiFont,
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: t.onPrimary,
+    );
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: t.surface,
-        border: Border.all(color: t.border),
-        borderRadius: BorderRadius.circular(22),
+        color: t.primary,
+        borderRadius: BorderRadius.circular(Radii.xl),
+        border: t.isDark ? Border.all(color: t.glowLine) : null,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          SizedBox(
-            width: 96,
-            height: 96,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // The ring fills over a 30-day cycle, so a long streak keeps
-                // showing movement rather than sitting pinned at full.
-                StreakRing(
-                  percent: (stats.currentStreak % 30) / 30 * 100,
-                  size: 96,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      localizeDigits(stats.currentStreak, lang),
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w600,
-                        height: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      l.dayUnit,
-                      style: TextStyle(fontSize: 11, color: t.muted),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   l.currentStreak,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                  style: TextStyle(
+                    fontFamily: kUiFont,
+                    fontSize: 12,
+                    color: t.ctaOnPrimaryLabel,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  '${l.longest}: ${localizeDigits(stats.longestStreak, lang)} '
-                  '${l.dayUnitPl}\n'
-                  '${l.totalSessions}: '
-                  '${localizeDigits(stats.totalSessions, lang)} ${l.sessions}',
-                  style: TextStyle(fontSize: 13, height: 1.8, color: t.muted),
+                const SizedBox(height: 4),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      digits(stats.currentStreak),
+                      style: TextStyle(
+                        fontFamily: kUiFont,
+                        fontSize: 52,
+                        fontWeight: FontWeight.w300,
+                        height: 1,
+                        color: t.onPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      l.daysUnit(stats.currentStreak),
+                      style: small.copyWith(fontSize: 15),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LastFourteenCard extends ConsumerWidget {
-  const _LastFourteenCard({required this.days});
-
-  final List<bool> days;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.tokens;
-    final l = L.of(context);
-    final lang = ref.watch(settingsProvider).language.name;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: t.surface,
-        border: Border.all(color: t.border),
-        borderRadius: BorderRadius.circular(22),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l.last14,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 16),
-          GridView.count(
-            crossAxisCount: 7,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              for (var i = 0; i < days.length; i++)
-                Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: days[i] ? t.accent : t.s2,
-                    border: Border.all(color: days[i] ? t.accent : t.border),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    localizeDigits(i + 1, lang),
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: days[i] ? t.onAccent : t.faint,
-                    ),
-                  ),
-                ),
+              Text(l.longest, style: small),
+              Text(
+                l.daysCount(stats.longestStreak, digits(stats.longestStreak)),
+                style: figure,
+              ),
+              const SizedBox(height: 6),
+              Text(l.totalSessions, style: small),
+              Text(digits(stats.totalSessions), style: figure),
             ],
           ),
         ],
@@ -169,8 +126,93 @@ class _LastFourteenCard extends ConsumerWidget {
   }
 }
 
-class _CategoryCard extends ConsumerWidget {
-  const _CategoryCard({required this.categories});
+class _LastFourteenCard extends StatelessWidget {
+  const _LastFourteenCard({required this.levels});
+
+  /// Oldest first; routines completed each day, out of four.
+  final List<int> levels;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final l = L.of(context);
+    final full = t.isDark ? t.cta : t.primary;
+
+    Widget swatch(Color? fill, {Color? border}) => Container(
+      width: 10,
+      height: 10,
+      decoration: BoxDecoration(
+        color: fill,
+        border: border == null ? null : Border.all(color: border),
+        borderRadius: BorderRadius.circular(3),
+      ),
+    );
+
+    Widget legend(Widget mark, String label) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        mark,
+        const SizedBox(width: 5),
+        Text(label, style: MishkatType.caption(t).copyWith(fontSize: 11)),
+      ],
+    );
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(Radii.lg),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l.last14, style: MishkatType.label(t).copyWith(fontSize: 13)),
+          const SizedBox(height: 12),
+          GridView.count(
+            crossAxisCount: 7,
+            mainAxisSpacing: 6,
+            crossAxisSpacing: 6,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              for (var i = 0; i < levels.length; i++)
+                Container(
+                  decoration: BoxDecoration(
+                    color: levels[i] >= kDailyRoutines.length
+                        ? full
+                        : levels[i] > 0
+                        ? t.glow
+                        : t.bg,
+                    border: levels[i] > 0
+                        ? null
+                        : Border.all(
+                            // Today is outlined, so it reads as still open.
+                            color: i == levels.length - 1 ? full : t.line,
+                            width: i == levels.length - 1 ? 1.5 : 1,
+                          ),
+                    borderRadius: BorderRadius.circular(Radii.sm),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 14,
+            runSpacing: 6,
+            children: [
+              legend(swatch(full), l.legendFull),
+              legend(swatch(t.glow), l.legendPartial),
+              legend(swatch(null, border: t.line), l.legendNone),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WeekCard extends ConsumerWidget {
+  const _WeekCard({required this.categories});
 
   final List<CategoryProgress> categories;
 
@@ -180,49 +222,64 @@ class _CategoryCard extends ConsumerWidget {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
 
+    String name(ThikrCategory c) => switch (c) {
+      ThikrCategory.wake => l.slotWakeShort,
+      ThikrCategory.morning => l.slotMorningShort,
+      ThikrCategory.evening => l.slotEveningShort,
+      ThikrCategory.sleep => l.slotSleepShort,
+      _ => libraryLabel(l, c),
+    };
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: t.surface,
-        border: Border.all(color: t.border),
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(Radii.lg),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             l.byCategory,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            style: MishkatType.label(t).copyWith(fontSize: 13),
           ),
-          const SizedBox(height: 16),
           for (final c in categories) ...[
-            if (c != categories.first) const SizedBox(height: 14),
+            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    categoryLabel(l, c.category),
-                    style: const TextStyle(fontSize: 13),
+                    name(c.category),
+                    style: MishkatType.body(
+                      t,
+                    ).copyWith(fontSize: 12.5, height: 1.4),
                   ),
                 ),
                 Text(
-                  '${localizeDigits(c.done, lang)} / '
-                  '${localizeDigits(c.target, lang)}',
-                  style: TextStyle(fontSize: 13, color: t.muted),
+                  l.weekRatio(
+                    localizeDigits(c.done, lang),
+                    localizeDigits(c.target, lang),
+                  ),
+                  style: MishkatType.caption(
+                    t,
+                  ).copyWith(fontSize: 12.5, fontWeight: FontWeight.w400),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Container(
+              borderRadius: BorderRadius.circular(3),
+              child: SizedBox(
                 height: 6,
-                color: t.s3,
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: FractionallySizedBox(
-                    widthFactor: c.fraction,
-                    child: Container(color: t.accent),
+                child: ColoredBox(
+                  color: t.lineSoft,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: FractionallySizedBox(
+                      heightFactor: 1,
+                      widthFactor: c.fraction,
+                      child: ColoredBox(color: t.isDark ? t.cta : t.primary),
+                    ),
                   ),
                 ),
               ),

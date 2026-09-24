@@ -1,30 +1,40 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/l10n/labels.dart';
+import '../../core/theme/mishkat_tokens.dart';
+import '../../core/widgets/app_sheet.dart';
+import '../../core/widgets/brand_mark.dart';
+import '../../core/widgets/buttons.dart';
 import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
-import '../../data/models/app_settings.dart';
-import '../../data/repositories/progress_providers.dart' as progress;
-import '../home/home_tab.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
+import '../share/share_card.dart';
 import 'reader_controller.dart';
 
 /// Opens [category] as a full-screen reading session.
+///
+/// [subset] reads only [items] — a single saved thikr, say — instead of the
+/// whole routine.
 Future<void> openReader(
   BuildContext context,
   WidgetRef ref,
   ThikrCategory category,
-  List<Thikr> items,
-) {
+  List<Thikr> items, {
+  bool subset = false,
+}) {
   if (items.isEmpty) return Future.value();
-  ref.read(readerControllerProvider.notifier).open(category, items);
+  ref
+      .read(readerControllerProvider.notifier)
+      .open(category, items, subset: subset);
   return Navigator.of(context).push(
     MaterialPageRoute(
       fullscreenDialog: true,
@@ -33,6 +43,7 @@ Future<void> openReader(
   );
 }
 
+/// Boards 3.1–3.4. Follows the app's appearance: light or dark, never forced.
 class ReaderScreen extends ConsumerStatefulWidget {
   const ReaderScreen({super.key, required this.category});
 
@@ -43,63 +54,193 @@ class ReaderScreen extends ConsumerStatefulWidget {
 }
 
 class _ReaderScreenState extends ConsumerState<ReaderScreen> {
-  bool _tapped = false;
+  bool _pressed = false;
+  Timer? _pulse;
 
   @override
   void initState() {
     super.initState();
-    // The copy promises the screen stays awake while counting.
+    // Counting is hands-busy; the screen stays awake while reading.
     WakelockPlus.enable();
   }
 
   @override
   void dispose() {
+    _pulse?.cancel();
     WakelockPlus.disable();
     super.dispose();
   }
 
-  void _flashTap() {
-    setState(() => _tapped = true);
-    Future.delayed(const Duration(milliseconds: 130), () {
-      if (mounted) setState(() => _tapped = false);
+  void _count(List<Thikr> items) {
+    ref.read(readerControllerProvider.notifier).countOne(items);
+    if (Motion.reduced(context)) return;
+    setState(() => _pressed = true);
+    _pulse?.cancel();
+    _pulse = Timer(Motion.tapPulse, () {
+      if (mounted) setState(() => _pressed = false);
     });
+  }
+
+  void _close() {
+    ref.read(readerControllerProvider.notifier).close();
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
     final library = ref.watch(athkarLibraryProvider).value;
-    final state = ref.watch(readerControllerProvider);
-    final session = state.session;
+    final session = ref.watch(readerControllerProvider).session;
 
     if (library == null || session == null) {
-      return Scaffold(backgroundColor: t.rdBg, body: const SizedBox.shrink());
+      return Scaffold(backgroundColor: t.bg, body: const SizedBox.shrink());
     }
-
-    final items = library[session.category];
-    final controller = ref.read(readerControllerProvider.notifier);
+    final items = session.itemsFrom(library);
 
     return Scaffold(
-      backgroundColor: t.rdBg,
+      backgroundColor: t.bg,
       body: SafeArea(
-        child: Column(
-          children: [
-            _ReaderHeader(items: items, session: session),
-            _ProgressBar(items: items, session: session),
-            Expanded(
-              child: session.finished
-                  ? _DoneView(category: session.category)
-                  : _CountingView(
+        child: session.finished
+            ? _DoneView(
+                category: session.category,
+                items: items,
+                onHome: _close,
+              )
+            : GestureDetector(
+                // The whole page is the counter.
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _count(items),
+                child: Column(
+                  children: [
+                    _ReaderHeader(
                       items: items,
-                      session: session,
-                      library: library,
-                      tapped: _tapped,
-                      onTap: () {
-                        _flashTap();
-                        controller.countOne(items);
-                      },
+                      index: session.index,
+                      category: session.category,
+                      onClose: _close,
                     ),
+                    _Progress(items: items, index: session.index),
+                    Expanded(
+                      child: _Page(
+                        thikr: items[session.index],
+                        library: library,
+                      ),
+                    ),
+                    _Counter(
+                      items: items,
+                      index: session.index,
+                      pressed: _pressed,
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class _ReaderHeader extends ConsumerWidget {
+  const _ReaderHeader({
+    required this.items,
+    required this.index,
+    required this.category,
+    required this.onClose,
+  });
+
+  final List<Thikr> items;
+  final int index;
+  final ThikrCategory category;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.tokens;
+    final l = L.of(context);
+    final lang = ref.watch(settingsProvider).language.name;
+    final current = items[index];
+    final saved = ref.watch(favoriteIdsProvider).contains(current.id);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
+      child: Row(
+        children: [
+          IconCircleButton(
+            icon: MIcon.close,
+            iconSize: 18,
+            semanticLabel: l.close,
+            onPressed: onClose,
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  categoryLabel(l, category),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: MishkatType.headline(t).copyWith(fontSize: 15),
+                ),
+                Text(
+                  l.positionOf(
+                    localizeDigits(index + 1, lang),
+                    localizeDigits(items.length, lang),
+                  ),
+                  style: MishkatType.caption(t).copyWith(fontSize: 11.5),
+                ),
+              ],
             ),
+          ),
+          IconCircleButton(
+            icon: MIcon.share,
+            iconSize: 18,
+            semanticLabel: l.share,
+            onPressed: () => showShareSheet(context, current),
+          ),
+          IconCircleButton(
+            icon: saved ? MIcon.heartFilled : MIcon.heart,
+            iconSize: 18,
+            color: saved ? t.accentText : t.ink,
+            semanticLabel: saved ? l.favoriteRemove : l.favoriteAdd,
+            onPressed: () => ref
+                .read(readerControllerProvider.notifier)
+                .toggleFavorite(current.id),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One 3px segment per thikr: done, current, still to come.
+class _Progress extends StatelessWidget {
+  const _Progress({required this.items, required this.index});
+
+  final List<Thikr> items;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 0),
+      child: ExcludeSemantics(
+        child: Row(
+          children: [
+            for (var i = 0; i < items.length; i++) ...[
+              if (i > 0) const SizedBox(width: 4),
+              Expanded(
+                child: AnimatedContainer(
+                  duration: Motion.of(context, Motion.base),
+                  height: 3,
+                  decoration: BoxDecoration(
+                    color: i < index
+                        ? (t.isDark ? t.ink : t.primary)
+                        : i == index
+                        ? t.glow
+                        : t.line,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -107,489 +248,453 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   }
 }
 
-class _ReaderHeader extends ConsumerWidget {
-  const _ReaderHeader({required this.items, required this.session});
+/// The reader page. Text is set at the fixed size the user chose; a thikr
+/// longer than the page scrolls inside it, with a fade and a cue, and never
+/// shrinks.
+class _Page extends ConsumerStatefulWidget {
+  const _Page({required this.thikr, required this.library});
 
-  final List<Thikr> items;
-  final ReaderSession session;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.tokens;
-    final l = L.of(context);
-    final lang = ref.watch(settingsProvider).language.name;
-    final favorites = ref.watch(favoriteIdsProvider);
-    final current = items[session.index];
-
-    Widget iconButton(Widget child, VoidCallback onTap, String label) {
-      return Semantics(
-        button: true,
-        label: label,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(9),
-            decoration: BoxDecoration(
-              color: t.rdFill,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: child,
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      child: Row(
-        children: [
-          iconButton(MishkatIcon(MIcon.close, color: t.rdInk, size: 20), () {
-            ref.read(readerControllerProvider.notifier).close();
-            Navigator.of(context).pop();
-          }, 'close'),
-          Expanded(
-            child: Column(
-              children: [
-                Text(
-                  categoryLabel(l, session.category),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: t.rdInk,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  '${localizeDigits(session.index + 1, lang)} ${l.countOf} '
-                  '${localizeDigits(items.length, lang)}',
-                  style: TextStyle(fontSize: 11.5, color: t.rdDim),
-                ),
-              ],
-            ),
-          ),
-          iconButton(
-            MishkatIcon(
-              favorites.contains(current.id) ? MIcon.heartFilled : MIcon.heart,
-              color: t.accentText,
-              size: 20,
-            ),
-            () => ref
-                .read(readerControllerProvider.notifier)
-                .toggleFavorite(current.id),
-            'favorite',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProgressBar extends ConsumerWidget {
-  const _ProgressBar({required this.items, required this.session});
-
-  final List<Thikr> items;
-  final ReaderSession session;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.tokens;
-    final state = ref.watch(readerControllerProvider);
-
-    // Session progress: whole athkar done, plus the fraction of the current one.
-    final current = items[session.index];
-    final withinCurrent =
-        (current.count - state.remainingFor(current)) / current.count;
-    final fraction = session.finished
-        ? 1.0
-        : ((session.index + withinCurrent) / items.length).clamp(0.0, 1.0);
-
-    return Container(
-      height: 3,
-      margin: const EdgeInsets.symmetric(horizontal: 18),
-      decoration: BoxDecoration(
-        color: t.rdFill,
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: FractionallySizedBox(
-          widthFactor: fraction,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            decoration: BoxDecoration(
-              color: t.gold,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CountingView extends ConsumerWidget {
-  const _CountingView({
-    required this.items,
-    required this.session,
-    required this.library,
-    required this.tapped,
-    required this.onTap,
-  });
-
-  final List<Thikr> items;
-  final ReaderSession session;
+  final Thikr thikr;
   final AthkarLibrary library;
-  final bool tapped;
-  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_Page> createState() => _PageState();
+}
+
+class _PageState extends ConsumerState<_Page> {
+  final _scroll = ScrollController();
+  bool _moreBelow = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_measure);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+  }
+
+  @override
+  void didUpdateWidget(_Page old) {
+    super.didUpdateWidget(old);
+    if (old.thikr.id != widget.thikr.id && _scroll.hasClients) {
+      _scroll.jumpTo(0);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _measure() {
+    if (!mounted || !_scroll.hasClients) return;
+    final p = _scroll.position;
+    final more = p.maxScrollExtent - p.pixels > 4;
+    if (more != _moreBelow) setState(() => _moreBelow = more);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = context.tokens;
     final l = L.of(context);
     final settings = ref.watch(settingsProvider);
     final lang = settings.language.name;
-    final state = ref.watch(readerControllerProvider);
-    final controller = ref.read(readerControllerProvider.notifier);
+    final thikr = widget.thikr;
+    final english = !settings.language.isRtl;
 
-    final thikr = items[session.index];
-    final remaining = state.remainingFor(thikr);
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          thikr.text,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.rtl,
+          style: MishkatType.thikr(
+            t,
+            settings.textSize,
+            quranScript: settings.useQuranFont,
+          ),
+        ),
+        if (english && thikr.meaningEn.isNotEmpty) ...[
+          const SizedBox(height: 14),
+          Divider(height: 1, thickness: 1, color: t.lineSoft),
+          const SizedBox(height: 14),
+          Text(
+            thikr.meaningEn,
+            textAlign: TextAlign.center,
+            style: MishkatType.bodyMuted(
+              t,
+            ).copyWith(fontSize: 14, height: 1.75),
+          ),
+        ],
+        SizedBox(height: english ? 12 : 16),
+        Text(
+          widget.library.referenceLine(thikr, lang),
+          textAlign: TextAlign.center,
+          style: MishkatType.caption(t),
+        ),
+      ],
+    );
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Column(
-        children: [
-          Expanded(
-            // Centre the thikr in the available space, while still allowing a
-            // long one at the largest text size to scroll. A Column cannot
-            // centre inside an unbounded scroll view, hence the min-height box.
-            child: LayoutBuilder(
-              builder: (context, viewport) => SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 10),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: viewport.maxHeight - 34,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // The Arabic is always shown in full; a translation never
-                        // replaces it.
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Text(
-                            thikr.text,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: settings.useQuranFont
-                                  ? kQuranFont
-                                  : kThikrFont,
-                              fontSize: settings.textSize.px,
-                              height: 2.25,
-                              color: t.rdInk,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(26),
+        child: ColoredBox(
+          color: t.surface,
+          child: Stack(
+            children: [
+              LayoutBuilder(
+                builder: (context, box) =>
+                    NotificationListener<ScrollMetricsNotification>(
+                      onNotification: (_) {
+                        _measure();
+                        return false;
+                      },
+                      child: SingleChildScrollView(
+                        controller: _scroll,
+                        padding: EdgeInsets.fromLTRB(
+                          22,
+                          28,
+                          22,
+                          _moreBelow ? 60 : 28,
+                        ),
+                        child: ConstrainedBox(
+                          // Centred while it fits; scrolls from the top when
+                          // it does not.
+                          constraints: BoxConstraints(
+                            minHeight: (box.maxHeight - 56).clamp(
+                              0,
+                              double.infinity,
                             ),
                           ),
+                          child: Center(child: content),
                         ),
-                        if (settings.language == AppLanguage.en) ...[
-                          const SizedBox(height: 16),
+                      ),
+                    ),
+              ),
+              if (_moreBelow)
+                PositionedDirectional(
+                  start: 0,
+                  end: 0,
+                  bottom: 0,
+                  child: IgnorePointer(
+                    child: Container(
+                      height: 70,
+                      padding: const EdgeInsets.only(bottom: 10),
+                      alignment: Alignment.bottomCenter,
+                      decoration: BoxDecoration(
+                        // Solid by the time it reaches the cue, so the cue
+                        // never sits on a half-faded line.
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0, 0.6],
+                          colors: [t.surface.withValues(alpha: 0), t.surface],
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           Text(
-                            thikr.meaningEn,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.5,
-                              height: 1.85,
-                              color: t.rdDim,
-                            ),
+                            l.scrollToContinue,
+                            style: MishkatType.caption(
+                              t,
+                            ).copyWith(fontSize: 11.5),
+                          ),
+                          const SizedBox(width: 6),
+                          MishkatIcon(
+                            MIcon.chevronDown,
+                            color: t.inkMuted,
+                            size: 14,
                           ),
                         ],
-                        const SizedBox(height: 18),
-                        Text(
-                          library.referenceLine(thikr, lang),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12, color: t.rdFaint),
-                        ),
-                        if (thikr.hasVirtue) ...[
-                          const SizedBox(height: 14),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              color: t.rdFill,
-                              border: Border.all(color: t.softBorder),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Text(
-                              thikr.virtue(lang) ?? '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                height: 1.9,
-                                color: t.rdDim,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
-            child: Column(
-              children: [
-                AnimatedScale(
-                  scale: tapped ? 0.955 : 1,
-                  duration: const Duration(milliseconds: 120),
-                  child: _CountRing(
-                    remaining: remaining,
-                    total: thikr.count,
-                    languageCode: lang,
-                    label: thikr.count > 1
-                        ? '${l.countOf} ${localizeDigits(thikr.count, lang)}'
-                        : l.once,
-                  ),
-                ),
-                const SizedBox(height: 14),
-                Text(
-                  l.tapHint,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12.5, height: 1.6, color: t.rdDim),
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _ReaderButton(label: l.prev, onTap: controller.previous),
-                    const SizedBox(width: 8),
-                    _ReaderButton(
-                      label: l.reset,
-                      dim: true,
-                      onTap: () => controller.resetCurrent(items),
-                    ),
-                    const SizedBox(width: 8),
-                    _ReaderButton(
-                      label: l.next,
-                      onTap: () => controller.advance(items),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CountRing extends StatelessWidget {
-  const _CountRing({
-    required this.remaining,
-    required this.total,
-    required this.languageCode,
-    required this.label,
-  });
-
-  final int remaining, total;
-  final String languageCode, label;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    final fraction = total == 0 ? 0.0 : (total - remaining) / total;
-
-    return SizedBox(
-      width: 148,
-      height: 148,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: SweepGradient(
-                startAngle: -1.5708,
-                endAngle: 4.7124,
-                colors: [t.gold, t.gold, t.rdFill, t.rdFill],
-                stops: [0, fraction, fraction, 1],
-              ),
-            ),
-          ),
-          Container(
-            width: 124,
-            height: 124,
-            decoration: BoxDecoration(
-              color: t.rdSurface,
-              shape: BoxShape.circle,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  localizeDigits(remaining, languageCode),
-                  style: TextStyle(
-                    fontSize: 42,
-                    fontWeight: FontWeight.w600,
-                    height: 1,
-                    letterSpacing: -1,
-                    color: t.rdInk,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(label, style: TextStyle(fontSize: 11.5, color: t.rdDim)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReaderButton extends StatelessWidget {
-  const _ReaderButton({
-    required this.label,
-    required this.onTap,
-    this.dim = false,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-  final bool dim;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: t.rdFill,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(fontSize: 13, color: dim ? t.rdDim : t.rdInk),
         ),
       ),
     );
   }
 }
 
-class _DoneView extends ConsumerWidget {
-  const _DoneView({required this.category});
+/// The counter row: previous, the remaining count, next.
+///
+/// Up to 11 repetitions show as beads; more show "of N"; a single one says
+/// "once".
+class _Counter extends ConsumerWidget {
+  const _Counter({
+    required this.items,
+    required this.index,
+    required this.pressed,
+  });
 
-  final ThikrCategory category;
+  final List<Thikr> items;
+  final int index;
+  final bool pressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
-    final streak = ref.watch(progress.progressStatsProvider).currentStreak;
-    final next = ref.watch(currentScheduleProvider).entries.firstOrNull;
+    final state = ref.watch(readerControllerProvider);
+    final controller = ref.read(readerControllerProvider.notifier);
+    final thikr = items[index];
+    final remaining = state.remainingFor(thikr);
+    final counted = thikr.count - remaining;
+    final captionStyle = MishkatType.caption(t).copyWith(fontSize: 11.5);
+
+    final Widget detail;
+    if (thikr.count == 1) {
+      detail = Text(l.once, style: captionStyle);
+    } else if (thikr.count <= 11) {
+      detail = Wrap(
+        spacing: 8,
+        runSpacing: 6,
+        alignment: WrapAlignment.center,
+        children: [
+          for (var i = 0; i < thikr.count; i++)
+            AnimatedContainer(
+              duration: Motion.of(context, Motion.fast),
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: i < counted ? t.glow : null,
+                border: i < counted
+                    ? null
+                    : Border.all(
+                        color: t.isDark ? t.ink : t.primary,
+                        width: 1.5,
+                      ),
+              ),
+            ),
+        ],
+      );
+    } else {
+      detail = Text(
+        l.counterOf(localizeDigits(thikr.count, lang)),
+        style: captionStyle,
+      );
+    }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      padding: const EdgeInsets.fromLTRB(18, 20, 18, 28),
+      child: Row(
         children: [
-          Container(
-            width: 88,
-            height: 88,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: t.rdFill,
-              shape: BoxShape.circle,
-              border: Border.all(color: t.softBorder),
-            ),
-            child: MishkatIcon(MIcon.check, color: t.accentText, size: 36),
+          IconCircleButton(
+            icon: MIcon.chevronLeft,
+            size: 52,
+            iconSize: 18,
+            semanticLabel: l.prev,
+            onPressed: index == 0 ? null : controller.previous,
           ),
-          const SizedBox(height: 22),
-          Text(
-            l.doneTitle(categoryLabel(l, category)),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: t.rdInk,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l.doneStreak(
-              localizeDigits(streak, lang),
-              next == null
-                  ? '—'
-                  : formatClock(
-                      next.at.hour,
-                      next.at.minute,
-                      lang,
-                      am: l.am,
-                      pm: l.pm,
+          Expanded(
+            child: Semantics(
+              liveRegion: true,
+              label: l.counterRemaining(
+                localizeDigits(remaining, lang),
+                localizeDigits(thikr.count, lang),
+              ),
+              excludeSemantics: true,
+              child: AnimatedScale(
+                scale: pressed ? 0.97 : 1,
+                duration: Motion.of(context, Motion.tapPulse),
+                curve: Motion.curve,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      localizeDigits(remaining, lang),
+                      style: MishkatType.counter(t),
                     ),
-            ),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, height: 1.9, color: t.rdDim),
-          ),
-          const SizedBox(height: 22),
-          SizedBox(
-            width: double.infinity,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {},
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  color: t.gold,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  l.shareAsImage,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: t.onGold,
-                  ),
+                    const SizedBox(height: 10),
+                    detail,
+                  ],
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                ref.read(readerControllerProvider.notifier).close();
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: t.softBorder),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Text(
-                  l.backHome,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: t.rdInk),
-                ),
-              ),
-            ),
+          IconCircleButton(
+            icon: MIcon.chevronRight,
+            size: 52,
+            iconSize: 18,
+            semanticLabel: l.next,
+            onPressed: () => controller.advance(items),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Board 3.4: the session is complete.
+class _DoneView extends ConsumerWidget {
+  const _DoneView({
+    required this.category,
+    required this.items,
+    required this.onHome,
+  });
+
+  final ThikrCategory category;
+  final List<Thikr> items;
+  final VoidCallback onHome;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.tokens;
+    final l = L.of(context);
+    final lang = ref.watch(settingsProvider).language.name;
+    final streak = ref.watch(progressStatsProvider).currentStreak;
+    final next = ref.watch(currentScheduleProvider).entries.firstOrNull;
+
+    final lines = [
+      l.streakNow(streak, localizeDigits(streak, lang)),
+      if (next != null)
+        l.nextReminderLine(
+          categoryLabel(l, next.slot.category),
+          formatTime(next.at, lang, am: l.am, pm: l.pm),
+        ),
+    ];
+
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 120,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: t.glowSoft,
+                      shape: BoxShape.circle,
+                    ),
+                    child: BrandMark(
+                      size: 64,
+                      showTile: false,
+                      arch: t.isDark ? t.ink : t.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    l.doneRoutine(categoryLabel(l, category)),
+                    textAlign: TextAlign.center,
+                    style: MishkatType.display(
+                      t,
+                    ).copyWith(fontSize: 28, height: 1.4),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    lines.join(' '),
+                    textAlign: TextAlign.center,
+                    style: MishkatType.bodyMuted(t).copyWith(height: 1.9),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(22, 0, 22, 30),
+          child: Column(
+            children: [
+              PrimaryButton(label: l.backHome, onPressed: onHome),
+              const SizedBox(height: 10),
+              SecondaryButton(
+                label: l.shareAsImage,
+                icon: MIcon.share,
+                onPressed: () => _pickAndShare(context, items),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// A session has several athkar and a card shows one, so ask which.
+  static Future<void> _pickAndShare(BuildContext context, List<Thikr> items) {
+    if (items.length == 1) return showShareSheet(context, items.single);
+    return showAppSheet<void>(
+      context,
+      (sheetContext) => _SharePicker(
+        items: items,
+        onPick: (thikr) {
+          Navigator.of(sheetContext).pop();
+          showShareSheet(context, thikr);
+        },
+      ),
+    );
+  }
+}
+
+class _SharePicker extends StatelessWidget {
+  const _SharePicker({required this.items, required this.onPick});
+
+  final List<Thikr> items;
+  final ValueChanged<Thikr> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final l = L.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SheetTitle(l.shareChooseTitle),
+        const SizedBox(height: 12),
+        for (final thikr in items) ...[
+          Semantics(
+            button: true,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => onPick(thikr),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: t.bg,
+                  borderRadius: BorderRadius.circular(Radii.lg),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        thikr.text,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                          fontFamily: kThikrFont,
+                          fontSize: 19,
+                          height: 1.8,
+                          color: t.ink,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    MishkatIcon(MIcon.share, color: t.inkMuted, size: 18),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ],
     );
   }
 }

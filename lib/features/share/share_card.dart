@@ -252,9 +252,7 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
       reference: library?.referenceLine(widget.thikr, lang) ?? '',
       brandName: l.brandName,
       brandWird: l.brandWird,
-      language: settings.language.isRtl
-          ? TextDirection.rtl
-          : TextDirection.ltr,
+      language: settings.language.isRtl ? TextDirection.rtl : TextDirection.ltr,
       style: _style,
     );
 

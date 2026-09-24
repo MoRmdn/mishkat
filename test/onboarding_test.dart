@@ -42,7 +42,7 @@ void main() {
     await start(tester);
 
     // 1 — the offline promise.
-    expect(find.text('بدون حساب'), findsOneWidget);
+    expect(find.textContaining('بلا حساب'), findsOneWidget);
     await tester.tap(find.text('لنبدأ'));
     await tester.pumpAndSettle();
 
@@ -60,7 +60,7 @@ void main() {
     expect(harness.permissions.exactAlarms, isTrue);
 
     // 4 — battery exemption, then into the app.
-    expect(find.text('حرّر التطبيق من موفّر البطارية'), findsOneWidget);
+    expect(find.text('استثناء من موفّر البطارية'), findsOneWidget);
     await tester.tap(find.text('استثناء التطبيق'));
     await tester.pumpAndSettle();
 
@@ -72,7 +72,7 @@ void main() {
   ) async {
     await start(tester);
 
-    await tester.tap(find.text('تخطي التهيئة'));
+    await tester.tap(find.text('تخطي'));
     await tester.pumpAndSettle();
 
     expect(find.byType(AppShell), findsOneWidget);
@@ -94,7 +94,7 @@ void main() {
     // "المتابعة بدون دقة" — carry on without exact alarms.
     await tester.tap(find.text('المتابعة بدون دقة'));
     await tester.pumpAndSettle();
-    expect(find.text('حرّر التطبيق من موفّر البطارية'), findsOneWidget);
+    expect(find.text('استثناء من موفّر البطارية'), findsOneWidget);
     expect(harness.permissions.exactAlarms, isFalse);
 
     await tester.tap(find.text('لاحقاً'));
@@ -104,7 +104,7 @@ void main() {
 
   testWidgets('completing onboarding is remembered', (tester) async {
     await start(tester);
-    await tester.tap(find.text('تخطي التهيئة'));
+    await tester.tap(find.text('تخطي'));
     await tester.pumpAndSettle();
 
     await harness.pump(tester, resetPrefs: false);

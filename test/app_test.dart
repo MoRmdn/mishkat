@@ -15,7 +15,7 @@ void main() {
     await harness.pump(tester);
 
     expect(shellDirection(tester), TextDirection.rtl);
-    expect(find.text('الأذكار'), findsOneWidget);
+    expect(find.text('مشكاة'), findsOneWidget);
     expect(find.text('الرئيسية'), findsOneWidget);
   });
 
@@ -23,7 +23,7 @@ void main() {
     await harness.pump(tester, language: 'en');
 
     expect(shellDirection(tester), TextDirection.ltr);
-    expect(find.text('Athkar'), findsOneWidget);
+    expect(find.text('Mishkat'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
   });
 
@@ -77,6 +77,6 @@ void main() {
     await harness.pump(tester, resetPrefs: false);
 
     expect(shellDirection(tester), TextDirection.ltr);
-    expect(find.text('Athkar'), findsOneWidget);
+    expect(find.text('Mishkat'), findsOneWidget);
   });
 }

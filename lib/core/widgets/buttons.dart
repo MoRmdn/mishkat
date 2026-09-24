@@ -13,6 +13,7 @@ class PrimaryButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
+    this.trailingIcon = false,
     this.expand = true,
     this.cta = false,
   });
@@ -20,6 +21,9 @@ class PrimaryButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final MIcon? icon;
+
+  /// Puts [icon] after the label — for an action that leaves the app.
+  final bool trailingIcon;
 
   /// False sizes the pill to its label, as on the error screen.
   final bool expand;
@@ -46,6 +50,7 @@ class PrimaryButton extends StatelessWidget {
       icon: icon,
       iconColor: fg,
       expand: expand,
+      trailingIcon: trailingIcon,
     );
   }
 }
@@ -173,11 +178,7 @@ class IconCircleButton extends StatelessWidget {
                 color: background ?? t.surface,
                 shape: BoxShape.circle,
               ),
-              child: MishkatIcon(
-                icon,
-                color: color ?? t.ink,
-                size: iconSize,
-              ),
+              child: MishkatIcon(icon, color: color ?? t.ink, size: iconSize),
             ),
           ),
         ),
@@ -195,6 +196,7 @@ class _Pill extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     required this.expand,
+    this.trailingIcon = false,
   });
 
   final String label;
@@ -204,6 +206,7 @@ class _Pill extends StatelessWidget {
   final MIcon? icon;
   final Color iconColor;
   final bool expand;
+  final bool trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +215,7 @@ class _Pill extends StatelessWidget {
       mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (icon != null) ...[
+        if (icon != null && !trailingIcon) ...[
           MishkatIcon(icon!, color: iconColor, size: 18),
           const SizedBox(width: Space.xs),
         ],
@@ -225,6 +228,10 @@ class _Pill extends StatelessWidget {
             style: style,
           ),
         ),
+        if (icon != null && trailingIcon) ...[
+          const SizedBox(width: Space.xs),
+          MishkatIcon(icon!, color: iconColor, size: 16),
+        ],
       ],
     );
     return Semantics(

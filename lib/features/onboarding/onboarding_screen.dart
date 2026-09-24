@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/brand_mark.dart';
+import '../../core/widgets/buttons.dart';
+import '../../core/widgets/mishkat_icon.dart';
+import '../../core/widgets/surfaces.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
 
@@ -13,6 +16,7 @@ import '../settings/settings_controller.dart';
 /// declined; no denial blocks the app.
 enum OnboardingStep { intro, notifications, exactAlarm, battery }
 
+/// Boards 1.1–1.4.
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -69,202 +73,304 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
-    final l = L.of(context);
-    final copy = _copyFor(l, _step);
-
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomRight,
-            colors: [t.onb1, t.onb2],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(22, 28, 22, 22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    for (final s in OnboardingStep.values) ...[
-                      Expanded(
-                        child: Container(
-                          height: 3,
-                          decoration: BoxDecoration(
-                            color: s.index <= _step.index ? t.gold : t.onbLine,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ),
-                      if (s != OnboardingStep.values.last)
-                        const SizedBox(width: 6),
-                    ],
-                  ],
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 78,
-                        height: 78,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: t.onbFill,
-                          border: Border.all(color: t.onbLine),
-                          borderRadius: BorderRadius.circular(26),
-                        ),
-                        child: const BrandMark(size: 38),
-                      ),
-                      const SizedBox(height: 26),
-                      Text(
-                        copy.title,
-                        style: TextStyle(
-                          fontSize: 30,
-                          height: 1.35,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.2,
-                          color: t.onbInk,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      Text(
-                        copy.body,
-                        style: TextStyle(
-                          fontSize: 16,
-                          height: 1.85,
-                          color: t.onbDim,
-                        ),
-                      ),
-                      const SizedBox(height: 26),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: t.onbFill,
-                          border: Border.all(color: t.onbLine),
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              copy.noteLabel,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.4,
-                                color: t.gold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              copy.note,
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 1.8,
-                                color: t.onbDim,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _primary,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 17),
-                    decoration: BoxDecoration(
-                      color: t.gold,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      copy.primary,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: t.onGold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _secondary,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    child: Text(
-                      copy.secondary,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: t.onbDim),
-                    ),
-                  ),
-                ),
-              ],
+      backgroundColor: t.bg,
+      body: _step == OnboardingStep.intro
+          ? _Welcome(onStart: _primary, onSkip: _secondary, busy: _busy)
+          : _PermissionStep(
+              step: _step,
+              busy: _busy,
+              onPrimary: _primary,
+              onSecondary: _secondary,
             ),
-          ),
-        ),
+    );
+  }
+}
+
+/// Step dots: done, current (a wider pill), still to come.
+class _Dots extends StatelessWidget {
+  const _Dots({required this.current, required this.onPrimary});
+
+  final int current;
+
+  /// On the welcome hero the dots sit on the primary panel.
+  final bool onPrimary;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final l = L.of(context);
+    final total = OnboardingStep.values.length;
+    Color colour(int i) {
+      if (onPrimary) {
+        return i == current
+            ? t.cta
+            : Color.alphaBlend(t.onPrimary.withValues(alpha: 0.3), t.primary);
+      }
+      if (i == current) return t.glow;
+      return i < current ? (t.isDark ? t.ink : t.primary) : t.trackOff;
+    }
+
+    return Semantics(
+      label: l.onbStep('${current + 1}', '$total'),
+      excludeSemantics: true,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < total; i++) ...[
+            if (i > 0) const SizedBox(width: 6),
+            AnimatedContainer(
+              duration: Motion.of(context, Motion.base),
+              width: i == current ? 18 : 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: colour(i),
+                borderRadius: BorderRadius.circular(3),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
 }
 
-class _OnboardingCopy {
-  const _OnboardingCopy({
-    required this.title,
-    required this.body,
-    required this.noteLabel,
-    required this.note,
-    required this.primary,
-    required this.secondary,
+/// 1.1: the aubergine hero with the lamp, then the promise.
+class _Welcome extends StatelessWidget {
+  const _Welcome({
+    required this.onStart,
+    required this.onSkip,
+    required this.busy,
   });
 
-  final String title, body, noteLabel, note, primary, secondary;
+  final VoidCallback onStart, onSkip;
+  final bool busy;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final l = L.of(context);
+    final top = MediaQuery.paddingOf(context).top;
+    final heroHeight = (MediaQuery.sizeOf(context).height * 0.51).clamp(
+      260.0,
+      370.0 + top,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          height: heroHeight,
+          padding: EdgeInsets.fromLTRB(26, top + 14, 26, 24),
+          decoration: BoxDecoration(
+            color: t.primary,
+            border: t.isDark
+                ? Border(bottom: BorderSide(color: t.glowLine))
+                : null,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(34),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Center(
+                  child: BrandMark.onPrimary(
+                    context,
+                    size: (heroHeight * 0.38).clamp(96.0, 140.0),
+                  ),
+                ),
+              ),
+              const _Dots(current: 0, onPrimary: true),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(26, 28, 26, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    l.onb1Title,
+                    style: MishkatType.display(t).copyWith(height: 1.4),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  l.onb1Body,
+                  style: MishkatType.bodyMuted(t).copyWith(height: 1.9),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SafeArea(
+          top: false,
+          minimum: const EdgeInsets.only(bottom: 16),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(22, 0, 22, 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: PrimaryButton(
+                    label: l.onb1Primary,
+                    onPressed: busy ? null : onStart,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SecondaryButton(
+                  label: l.onb1Secondary,
+                  expand: false,
+                  muted: true,
+                  onPressed: onSkip,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-_OnboardingCopy _copyFor(L l, OnboardingStep step) => switch (step) {
-  OnboardingStep.intro => _OnboardingCopy(
-    title: l.onb1Title,
-    body: l.onb1Body,
-    noteLabel: l.onb1NoteLabel,
-    note: l.onb1Note,
-    primary: l.onb1Primary,
-    secondary: l.onb1Secondary,
-  ),
-  OnboardingStep.notifications => _OnboardingCopy(
-    title: l.onb2Title,
-    body: l.onb2Body,
-    noteLabel: l.onb2NoteLabel,
-    note: l.onb2Note,
-    primary: l.onb2Primary,
-    secondary: l.onb2Secondary,
-  ),
-  OnboardingStep.exactAlarm => _OnboardingCopy(
-    title: l.onb3Title,
-    body: l.onb3Body,
-    noteLabel: l.onb3NoteLabel,
-    note: l.onb3Note,
-    primary: l.onb3Primary,
-    secondary: l.onb3Secondary,
-  ),
-  OnboardingStep.battery => _OnboardingCopy(
-    title: l.onb4Title,
-    body: l.onb4Body,
-    noteLabel: l.onb4NoteLabel,
-    note: l.onb4Note,
-    primary: l.onb4Primary,
-    secondary: l.onb4Secondary,
-  ),
-};
+/// 1.2–1.4: one permission, why it matters, and what happens without it.
+class _PermissionStep extends ConsumerWidget {
+  const _PermissionStep({
+    required this.step,
+    required this.busy,
+    required this.onPrimary,
+    required this.onSecondary,
+  });
+
+  final OnboardingStep step;
+  final bool busy;
+  final VoidCallback onPrimary, onSecondary;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.tokens;
+    final l = L.of(context);
+    final vendor = ref.watch(permissionsProvider).manufacturer;
+
+    final (icon, title, body, note, primary, secondary) = switch (step) {
+      OnboardingStep.notifications => (
+        MIcon.bell,
+        l.onb2Title,
+        l.onb2Body,
+        l.onb2Note,
+        l.onb2Primary,
+        l.onb2Secondary,
+      ),
+      OnboardingStep.exactAlarm => (
+        MIcon.clock,
+        l.onb3Title,
+        l.onb3Body,
+        l.onb3Note,
+        l.onb3Primary,
+        l.onb3Secondary,
+      ),
+      _ => (
+        MIcon.battery,
+        l.onb4Title,
+        l.onb4Body,
+        vendor.isEmpty ? l.onb4Note : l.onb4NoteVendor(vendor),
+        l.onb4Primary,
+        l.onb4Secondary,
+      ),
+    };
+    final isBattery = step == OnboardingStep.battery;
+
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(26, 22, 26, 0),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: _Dots(current: step.index, onPrimary: false),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 26),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconTile(icon),
+                    const SizedBox(height: 26),
+                    Semantics(
+                      header: true,
+                      child: Text(
+                        title,
+                        style: MishkatType.display(
+                          t,
+                        ).copyWith(fontSize: 28, height: 1.4),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      body,
+                      style: MishkatType.bodyMuted(t).copyWith(height: 1.9),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: isBattery ? 12 : 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: t.surface,
+                        borderRadius: BorderRadius.circular(Radii.lg),
+                      ),
+                      child: Row(
+                        children: [
+                          if (isBattery) ...[
+                            MishkatIcon(
+                              MIcon.device,
+                              color: t.inkMuted,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 10),
+                          ],
+                          Expanded(
+                            child: Text(
+                              note,
+                              style: MishkatType.caption(t).copyWith(
+                                fontSize: isBattery ? 12.5 : 13,
+                                height: 1.8,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(22, 0, 22, 30),
+            child: Column(
+              children: [
+                PrimaryButton(
+                  label: primary,
+                  onPressed: busy ? null : onPrimary,
+                ),
+                const SizedBox(height: 6),
+                TextAction(label: secondary, onPressed: onSecondary),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -9,7 +9,7 @@ class LAr extends L {
   LAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'تطبيق الأذكار';
+  String get appName => 'مشكاة الورد';
 
   @override
   String get navHome => 'الرئيسية';
@@ -22,9 +22,6 @@ class LAr extends L {
 
   @override
   String get navProgress => 'التقدّم';
-
-  @override
-  String get titleHome => 'الأذكار';
 
   @override
   String get titleReminders => 'التذكيرات';
@@ -57,93 +54,13 @@ class LAr extends L {
   String get catTasbih => 'السبحة';
 
   @override
-  String get nextReminder => 'التذكير القادم';
-
-  @override
-  String get edit => 'تعديل';
-
-  @override
-  String minutesLabel(num minutesCount, String minutes) {
-    final intl.NumberFormat minutesCountNumberFormat =
-        intl.NumberFormat.compact(locale: localeName);
-    final String minutesCountString = minutesCountNumberFormat.format(
-      minutesCount,
-    );
-
-    String _temp0 = intl.Intl.pluralLogic(
-      minutesCount,
-      locale: localeName,
-      other: '$minutes دقيقة',
-      few: '$minutes دقائق',
-      two: 'دقيقتين',
-      one: 'دقيقة',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String inHours(num hoursCount, String hours, String minutesText) {
-    final intl.NumberFormat hoursCountNumberFormat = intl.NumberFormat.compact(
-      locale: localeName,
-    );
-    final String hoursCountString = hoursCountNumberFormat.format(hoursCount);
-
-    String _temp0 = intl.Intl.pluralLogic(
-      hoursCount,
-      locale: localeName,
-      other: 'بعد $hours ساعة و$minutesText',
-      few: 'بعد $hours ساعات و$minutesText',
-      two: 'بعد ساعتين و$minutesText',
-      one: 'بعد ساعة و$minutesText',
-      zero: 'بعد $minutesText',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get prayerBased => 'محسوب على مواقيت اليوم';
-
-  @override
   String get schedFixed => 'مجدولة يومياً — لا تحتاج فتح التطبيق';
-
-  @override
-  String schedPrayer(String date, String days) {
-    return 'مجدولة حتى $date ($days يوماً)';
-  }
-
-  @override
-  String get tasbihTitle => 'السبحة';
-
-  @override
-  String get tasbihSub => 'عدّاد حر — انقر على الشاشة للتسبيح';
-
-  @override
-  String get dayUnit => 'يوم';
-
-  @override
-  String get dayUnitPl => 'يوماً';
-
-  @override
-  String get sessions => 'جلسة';
 
   @override
   String get fixedMode => 'وقت ثابت';
 
   @override
-  String get prayerMode => 'حسب مواقيت الصلاة';
-
-  @override
-  String get exactTitle => 'التنبيهات الدقيقة غير مسموحة';
-
-  @override
-  String get exactBody =>
-      'قد تتأخر التذكيرات بضع دقائق. يمكنك السماح بها من إعدادات النظام.';
-
-  @override
-  String get exactAllow => 'السماح بالتنبيهات الدقيقة';
-
-  @override
-  String get daily => 'يومياً · يتكرر تلقائياً';
+  String get prayerMode => 'حسب الصلاة';
 
   @override
   String get off => 'معطّل';
@@ -161,13 +78,13 @@ class LAr extends L {
   String get slotSleep => 'أذكار النوم';
 
   @override
-  String get slotPrayerWake => 'قبل الفجر بـ ١٥ دقيقة';
+  String get slotPrayerWake => 'قبل الفجر بـ ١٥ د';
 
   @override
-  String get slotPrayerMorning => 'بعد الفجر بـ ٣٠ دقيقة';
+  String get slotPrayerMorning => 'بعد الفجر بـ ٣٠ د';
 
   @override
-  String get slotPrayerEvening => 'بعد العصر بـ ٤٥ دقيقة';
+  String get slotPrayerEvening => 'بعد العصر بـ ٤٥ د';
 
   @override
   String get slotPrayerSleep => 'وقت ثابت دائماً';
@@ -192,11 +109,6 @@ class LAr extends L {
   String get useMyLocation => 'استخدام موقع الجهاز';
 
   @override
-  String todayTimesFor(String city) {
-    return 'مواقيت اليوم — $city';
-  }
-
-  @override
   String get todayTimes => 'مواقيت اليوم';
 
   @override
@@ -209,18 +121,10 @@ class LAr extends L {
   String get maghrib => 'المغرب';
 
   @override
-  String get windowLabel => 'النافذة المجدولة';
-
-  @override
-  String windowText(String days, String pending, String cap) {
-    return 'الأيام المجدولة: $days · التنبيهات المعلّقة: $pending من $cap';
-  }
-
-  @override
   String get method => 'طريقة الحساب';
 
   @override
-  String get madhab => 'المذهب في العصر';
+  String get madhab => 'مذهب العصر';
 
   @override
   String get location => 'الموقع';
@@ -244,16 +148,8 @@ class LAr extends L {
   String get oemTitle => 'التذكيرات لا تصل؟';
 
   @override
-  String get oemHintOn => 'الجهاز مستثنى من موفّر البطارية ✓';
-
-  @override
-  String oemHintOff(String vendor) {
-    return 'دليل خاص بجهازك — $vendor';
-  }
-
-  @override
   String get oemBody =>
-      'أنظمة بعض الشركات توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات التالية مرة واحدة.';
+      'بعض الأجهزة توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات مرة واحدة.';
 
   @override
   String oemHeading(String vendor) {
@@ -261,16 +157,13 @@ class LAr extends L {
   }
 
   @override
-  String get oemStep1 => 'الإعدادات ← التطبيقات ← إدارة التطبيقات ← مشكاة';
+  String get oemStep1 => 'الإعدادات ← التطبيقات ← مشكاة';
 
   @override
-  String get oemStep2 => 'فعّل «التشغيل التلقائي» إن كان متاحاً على جهازك';
+  String get oemStep2 => 'فعّل «التشغيل التلقائي»';
 
   @override
-  String get oemStep3 => 'من «موفّر البطارية» اختر «بدون قيود»';
-
-  @override
-  String get oemStep4 => 'ثبّت التطبيق من شاشة التطبيقات الحديثة';
+  String get oemStep3 => 'موفّر البطارية ← «لا قيود»';
 
   @override
   String get oemGenericHint =>
@@ -280,48 +173,34 @@ class LAr extends L {
   String get openBattery => 'فتح إعدادات البطارية';
 
   @override
-  String get batteryOn => 'التطبيق مستثنى حالياً ✓';
+  String get batteryOn => 'التطبيق مستثنى حالياً';
 
   @override
-  String get batteryOff => 'التطبيق غير مستثنى';
+  String get batteryOff => 'التطبيق غير مستثنى حالياً';
 
   @override
-  String get favEmptyTitle => 'لا توجد أذكار محفوظة بعد';
+  String get favEmptyTitle => 'لا شيء محفوظ بعد';
 
   @override
-  String get favEmptyBody => 'اضغط على القلب أثناء القراءة لحفظ الذكر هنا.';
+  String get favEmptyBody => 'اضغط على القلب أثناء القراءة ليُحفظ الذكر هنا.';
 
   @override
-  String get currentStreak => 'تتابع مستمر';
+  String get currentStreak => 'التتابع الحالي';
 
   @override
-  String get longest => 'أطول تتابع';
+  String get longest => 'الأطول';
 
   @override
-  String get totalSessions => 'إجمالي الجلسات';
+  String get totalSessions => 'الجلسات';
 
   @override
   String get last14 => 'آخر ١٤ يوماً';
 
   @override
-  String get byCategory => 'حسب الفئة — هذا الأسبوع';
-
-  @override
-  String get countOf => 'من';
+  String get byCategory => 'هذا الأسبوع';
 
   @override
   String get once => 'مرة واحدة';
-
-  @override
-  String get tapHint => 'انقر في أي مكان للعد · الشاشة تبقى مضاءة';
-
-  @override
-  String get completedToday => 'أُكملت اليوم';
-
-  @override
-  String athkarCount(String count) {
-    return '$count أذكار';
-  }
 
   @override
   String get prev => 'السابق';
@@ -333,19 +212,6 @@ class LAr extends L {
   String get next => 'التالي';
 
   @override
-  String get donePrefix => 'تمّت';
-
-  @override
-  String doneTitle(String category) {
-    return 'تمّت — $category';
-  }
-
-  @override
-  String doneStreak(String days, String time) {
-    return 'تتابعك الآن $days يوماً. التذكير القادم $time.';
-  }
-
-  @override
   String get shareAsImage => 'مشاركة كصورة';
 
   @override
@@ -353,9 +219,6 @@ class LAr extends L {
 
   @override
   String get shareTitle => 'مشاركة الذكر';
-
-  @override
-  String get saveImage => 'حفظ كصورة';
 
   @override
   String get share => 'مشاركة';
@@ -379,19 +242,7 @@ class LAr extends L {
   String get system => 'النظام';
 
   @override
-  String get themeLabel => 'لون التطبيق';
-
-  @override
-  String get themeTeal => 'أخضر حجري';
-
-  @override
-  String get themeIndigo => 'نيلي';
-
-  @override
-  String get themeOlive => 'زيتوني';
-
-  @override
-  String get fontSize => 'حجم الخط';
+  String get fontSize => 'حجم نص الذكر';
 
   @override
   String get fontSizeSmall => 'صغير';
@@ -430,34 +281,24 @@ class LAr extends L {
 
   @override
   String get onb1Body =>
-      'تذكيرات لطيفة لأذكار الصباح والمساء والنوم والاستيقاظ — تعمل بالكامل دون إنترنت.';
-
-  @override
-  String get onb1NoteLabel => 'بدون حساب';
-
-  @override
-  String get onb1Note =>
-      'لا تسجيل دخول ولا بيانات تُرسل. كل شيء محفوظ على جهازك.';
+      'تذكيرات لأذكار الصباح والمساء والنوم والاستيقاظ، تُجدول على جهازك وتعمل دون إنترنت. بلا حساب.';
 
   @override
   String get onb1Primary => 'لنبدأ';
 
   @override
-  String get onb1Secondary => 'تخطي التهيئة';
+  String get onb1Secondary => 'تخطي';
 
   @override
   String get onb2Title => 'نحتاج إذن التنبيهات';
 
   @override
   String get onb2Body =>
-      'التذكيرات تُجدول على جهازك مباشرة، لذلك لا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.';
-
-  @override
-  String get onb2NoteLabel => 'لماذا الآن';
+      'التذكيرات تُجدول على جهازك مباشرة، فلا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.';
 
   @override
   String get onb2Note =>
-      'يمكنك السماح لاحقاً من الإعدادات، ولكن التذكيرات ستبقى معطلة حتى ذلك الحين.';
+      'يمكنك السماح لاحقاً من الإعدادات، لكن التذكيرات ستبقى معطّلة حتى ذلك الحين.';
 
   @override
   String get onb2Primary => 'السماح بالتنبيهات';
@@ -470,14 +311,11 @@ class LAr extends L {
 
   @override
   String get onb3Body =>
-      'ليصل التذكير في وقته بالضبط، يحتاج التطبيق إذن «التنبيهات الدقيقة» من نظام أندرويد.';
-
-  @override
-  String get onb3NoteLabel => 'إن رفضت';
+      'ليصل التذكير في دقيقته، يحتاج التطبيق إذن «التنبيهات الدقيقة» من أندرويد.';
 
   @override
   String get onb3Note =>
-      'سيستمر التطبيق في العمل، لكن قد يتأخر التذكير بضع دقائق، وسنخبرك بذلك في الإعدادات.';
+      'إن رفضت، يستمر التطبيق في العمل لكن قد يتأخر التذكير بضع دقائق — وسنوضح ذلك في التذكيرات.';
 
   @override
   String get onb3Primary => 'السماح';
@@ -486,17 +324,14 @@ class LAr extends L {
   String get onb3Secondary => 'المتابعة بدون دقة';
 
   @override
-  String get onb4Title => 'حرّر التطبيق من موفّر البطارية';
+  String get onb4Title => 'استثناء من موفّر البطارية';
 
   @override
   String get onb4Body =>
-      'أنظمة بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات المجدولة. استثناء واحد يحل المشكلة نهائياً.';
+      'بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات. استثناء واحد يكفي.';
 
   @override
-  String get onb4NoteLabel => 'خطوة واحدة';
-
-  @override
-  String get onb4Note => 'سنفتح لك شاشة الإعدادات الصحيحة لجهازك، ثم ننتهي.';
+  String get onb4Note => 'سنفتح الشاشة الصحيحة لجهازك.';
 
   @override
   String get onb4Primary => 'استثناء التطبيق';
@@ -517,12 +352,6 @@ class LAr extends L {
   @override
   String get prayerFallbackNotice =>
       'تعذّر حساب المواقيت — تُستخدم الأوقات الثابتة مؤقتاً';
-
-  @override
-  String get notificationsBlocked => 'التنبيهات غير مسموحة — لن تصل التذكيرات';
-
-  @override
-  String get enableNotifications => 'تفعيل التنبيهات';
 
   @override
   String get notifTitleMorning => 'وقت أذكار الصباح';
@@ -556,4 +385,355 @@ class LAr extends L {
 
   @override
   String get shareStyleStone => 'حجري';
+
+  @override
+  String get nowLabel => 'الآن';
+
+  @override
+  String get nextLabel => 'التالي';
+
+  @override
+  String get begin => 'ابدأ';
+
+  @override
+  String get editTimes => 'تعديل الأوقات';
+
+  @override
+  String athkarCountLabel(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits ذكر',
+      many: '$digits ذكراً',
+      few: '$digits أذكار',
+      two: 'ذكران',
+      one: 'ذكر واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String aboutMinutes(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'نحو $digits دقيقة',
+      few: 'نحو $digits دقائق',
+      two: 'نحو دقيقتين',
+      one: 'نحو دقيقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String streakDays(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits يوم متتالٍ',
+      many: '$digits يوماً متتالياً',
+      few: '$digits أيام متتالية',
+      two: 'يومان متتاليان',
+      one: 'يوم واحد متتالٍ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakStart => 'ابدأ تتابعك اليوم';
+
+  @override
+  String daysCount(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits يوم',
+      many: '$digits يوماً',
+      few: '$digits أيام',
+      two: 'يومان',
+      one: 'يوم واحد',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysUnit(num count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'يوم',
+      many: 'يوماً',
+      few: 'أيام',
+      two: 'يومان',
+      one: 'يوم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bandWake => 'استيقاظ';
+
+  @override
+  String get bandMorning => 'صباح';
+
+  @override
+  String get bandEvening => 'مساء';
+
+  @override
+  String get bandSleep => 'نوم';
+
+  @override
+  String bandSemantics(String routine, String time, String state) {
+    return '$routine، $time، $state';
+  }
+
+  @override
+  String get stateDone => 'تمّت';
+
+  @override
+  String get stateNow => 'الآن';
+
+  @override
+  String get stateLater => 'لاحقاً';
+
+  @override
+  String get allDoneTitle => 'أتممت أذكار اليوم';
+
+  @override
+  String tomorrowAt(String routine, String time) {
+    return '$routine غداً $time';
+  }
+
+  @override
+  String get notifOffTitle => 'التنبيهات معطّلة';
+
+  @override
+  String get notifOffBody => 'لن تصل أي تذكيرات حتى تسمح بها.';
+
+  @override
+  String get openSettings => 'فتح الإعدادات';
+
+  @override
+  String get remindersAllOff => 'كل التذكيرات متوقفة — الأوقات للعرض فقط';
+
+  @override
+  String get libAfterPrayer => 'بعد الصلاة';
+
+  @override
+  String get libMisc => 'متفرقة';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String tasbihRound(String round, String target) {
+    return 'الدورة $round · من $target';
+  }
+
+  @override
+  String get tasbihFree => 'عدّ حر';
+
+  @override
+  String get tasbihNoLimit => 'بلا حد';
+
+  @override
+  String get tasbihHint => 'المس أي مكان للعد · اهتزاز خفيف عند كل ٣٣';
+
+  @override
+  String get favoriteAdd => 'حفظ في المفضلة';
+
+  @override
+  String get favoriteRemove => 'إزالة من المفضلة';
+
+  @override
+  String get scrollToContinue => 'مرّر للمتابعة';
+
+  @override
+  String counterOf(String total) {
+    return 'من $total';
+  }
+
+  @override
+  String counterRemaining(String remaining, String total) {
+    return 'المتبقي $remaining من $total';
+  }
+
+  @override
+  String positionOf(String index, String total) {
+    return '$index من $total';
+  }
+
+  @override
+  String doneRoutine(String routine) {
+    return 'تمّت $routine';
+  }
+
+  @override
+  String streakNow(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'تتابعك الآن $digits يوم.',
+      many: 'تتابعك الآن $digits يوماً.',
+      few: 'تتابعك الآن $digits أيام.',
+      two: 'تتابعك الآن يومان.',
+      one: 'تتابعك الآن يوم واحد.',
+      zero: 'ابدأ تتابعك اليوم.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nextReminderLine(String routine, String time) {
+    return 'التذكير القادم $routine $time.';
+  }
+
+  @override
+  String get shareChooseTitle => 'اختر ذكراً للمشاركة';
+
+  @override
+  String get exactBanner =>
+      'قد تتأخر التذكيرات بضع دقائق — التنبيهات الدقيقة غير مسموحة.';
+
+  @override
+  String get allow => 'السماح';
+
+  @override
+  String get slotDaily => 'يومياً';
+
+  @override
+  String pendingShort(String count) {
+    return '$count معلّقة';
+  }
+
+  @override
+  String windowShort(String date, String pending, String cap) {
+    return 'مجدولة حتى $date · $pending من $cap معلّقة';
+  }
+
+  @override
+  String get timeSheetHint => 'يتكرر يومياً · خطوات ٥ دقائق';
+
+  @override
+  String get favHint => 'اضغط على الذكر لقراءته · اسحب لإزالته';
+
+  @override
+  String get browseAthkar => 'تصفّح الأذكار';
+
+  @override
+  String get legendFull => 'كامل';
+
+  @override
+  String get legendPartial => 'جزئي';
+
+  @override
+  String get legendNone => 'لا شيء';
+
+  @override
+  String weekRatio(String done, String target) {
+    return '$done / $target';
+  }
+
+  @override
+  String get errorTitle => 'تعذّر تحميل الأذكار';
+
+  @override
+  String get errorBody => 'حدث خطأ غير متوقع. تذكيراتك المجدولة لم تتأثر.';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String onb4NoteVendor(String vendor) {
+    return 'جهازك: $vendor · سنفتح الشاشة الصحيحة';
+  }
+
+  @override
+  String get languageArabic => 'العربية';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String onbStep(String index, String total) {
+    return 'الخطوة $index من $total';
+  }
+
+  @override
+  String get slotWakeShort => 'الاستيقاظ';
+
+  @override
+  String get slotMorningShort => 'الصباح';
+
+  @override
+  String get slotEveningShort => 'المساء';
+
+  @override
+  String get slotSleepShort => 'النوم';
+
+  @override
+  String get hourUp => 'زيادة الساعة';
+
+  @override
+  String get hourDown => 'إنقاص الساعة';
+
+  @override
+  String get minuteUp => 'زيادة الدقائق';
+
+  @override
+  String get minuteDown => 'إنقاص الدقائق';
+
+  @override
+  String timesCount(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits مرة',
+      few: '$digits مرات',
+      two: 'مرتان',
+      one: 'مرة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get textSmaller => 'تصغير نص الذكر';
+
+  @override
+  String get textLarger => 'تكبير نص الذكر';
 }

@@ -18,16 +18,30 @@ class ReaderSession {
     required this.category,
     required this.index,
     this.finished = false,
+    this.itemIds,
   });
 
   final ThikrCategory category;
   final int index;
   final bool finished;
 
+  /// Set when the session reads a hand-picked subset — a saved thikr opened
+  /// from Favourites — rather than the whole routine. Such a session is not
+  /// the routine, so finishing it records no completion.
+  final List<String>? itemIds;
+
+  bool get isWholeRoutine => itemIds == null;
+
+  /// The athkar this session reads, in order.
+  List<Thikr> itemsFrom(AthkarLibrary library) => itemIds == null
+      ? library[category]
+      : [for (final id in itemIds!) ?library.byId(id)];
+
   ReaderSession copyWith({int? index, bool? finished}) => ReaderSession(
     category: category,
     index: index ?? this.index,
     finished: finished ?? this.finished,
+    itemIds: itemIds,
   );
 }
 
@@ -64,7 +78,9 @@ class ReaderController extends Notifier<AthkarState> {
   }
 
   /// Opens [category] as a fresh session with every count restored.
-  void open(ThikrCategory category, List<Thikr> items) {
+  ///
+  /// Pass [subset] to read only those athkar, as Favourites does.
+  void open(ThikrCategory category, List<Thikr> items, {bool subset = false}) {
     _advanceTimer?.cancel();
     final counts = Map<String, int>.from(state.remaining);
     for (final t in items) {
@@ -72,7 +88,11 @@ class ReaderController extends Notifier<AthkarState> {
     }
     state = state.copyWith(
       remaining: counts,
-      session: ReaderSession(category: category, index: 0),
+      session: ReaderSession(
+        category: category,
+        index: 0,
+        itemIds: subset ? [for (final t in items) t.id] : null,
+      ),
     );
   }
 
@@ -131,7 +151,7 @@ class ReaderController extends Notifier<AthkarState> {
     state = state.copyWith(session: s.copyWith(finished: true));
 
     // The tasbih is an open-ended counter, so it never completes a session.
-    if (s.category.isCountedSession) {
+    if (s.category.isCountedSession && s.isWholeRoutine) {
       ref
           .read(appDatabaseProvider)
           .recordCompletion(s.category.key, ref.read(clockProvider)())

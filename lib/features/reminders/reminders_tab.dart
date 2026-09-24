@@ -1,20 +1,26 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // `show` because intl also exports a TextDirection that shadows Flutter's.
 import 'package:intl/intl.dart' show DateFormat;
 
+import '../../core/clock.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/l10n/labels.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/mishkat_icon.dart';
 import '../../core/widgets/segmented_control.dart';
+import '../../core/widgets/surfaces.dart';
 import '../../data/models/reminder_settings.dart';
+import '../home/home_now.dart' show slotTimeOn;
 import '../settings/settings_controller.dart';
 import 'oem_sheet.dart';
 import 'prayer_panel.dart';
 import 'reminder_controller.dart';
 import 'slot_time_sheet.dart';
 
+/// Boards 4.1 (fixed times) and 4.2 (prayer times).
 class RemindersTab extends ConsumerWidget {
   const RemindersTab({super.key});
 
@@ -23,10 +29,13 @@ class RemindersTab extends ConsumerWidget {
     final l = L.of(context);
     final settings = ref.watch(reminderSettingsProvider);
     final permissions = ref.watch(permissionsProvider);
+    final prayer = settings.mode == ReminderMode.prayer;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 22),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
       children: [
+        PageTitle(l.titleReminders),
+        const SizedBox(height: 12),
         SegmentedControl<ReminderMode>(
           value: settings.mode,
           onChanged: ref.read(reminderSettingsProvider.notifier).setMode,
@@ -36,159 +45,55 @@ class RemindersTab extends ConsumerWidget {
           ],
         ),
         if (!permissions.notifications) ...[
-          const SizedBox(height: 14),
-          _WarningCard(
-            title: l.notificationsBlocked,
-            body: l.onb2Body,
-            action: l.enableNotifications,
-            onAction: () =>
-                ref.read(permissionsProvider.notifier).requestNotifications(),
+          const SizedBox(height: 12),
+          NoticeBanner(
+            title: l.notifOffTitle,
+            body: l.notifOffBody,
+            actionLabel: l.openSettings,
+            onAction: () async {
+              final granted = await ref
+                  .read(permissionsProvider.notifier)
+                  .requestNotifications();
+              if (!granted) {
+                await AppSettings.openAppSettings(
+                  type: AppSettingsType.notification,
+                );
+              }
+            },
           ),
-        ],
-        if (permissions.notifications && !permissions.exactAlarms) ...[
-          const SizedBox(height: 14),
-          _WarningCard(
-            title: l.exactTitle,
-            body: l.exactBody,
-            action: l.exactAllow,
+        ] else if (!permissions.exactAlarms) ...[
+          // Persistent while exact alarms are denied: reminders still fire,
+          // inexactly, and the user should know why one came late.
+          const SizedBox(height: 12),
+          NoticeBanner(
+            body: l.exactBanner,
+            actionLabel: l.allow,
+            inlineAction: true,
             onAction: () =>
                 ref.read(permissionsProvider.notifier).requestExactAlarms(),
           ),
         ],
-        const SizedBox(height: 14),
-        const _SlotList(),
-        if (settings.mode == ReminderMode.prayer) ...[
-          const SizedBox(height: 14),
-          const PrayerPanel(),
-        ],
-        const SizedBox(height: 14),
-        const _OemCard(),
+        if (prayer) ...[const SizedBox(height: 12), const PrayerTimesCard()],
+        const SizedBox(height: 12),
+        GroupCard(
+          children: [
+            for (final slot in settings.slots)
+              _SlotRow(slot: slot, mode: settings.mode),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (prayer) ...[
+          const PrayerSettingsCard(),
+          const SizedBox(height: 12),
+          const PrayerWindow(),
+        ] else
+          const _ScheduleState(),
+        const SizedBox(height: 12),
+        const _OemRow(),
       ],
     );
   }
 }
-
-class _WarningCard extends StatelessWidget {
-  const _WarningCard({
-    required this.title,
-    required this.body,
-    required this.action,
-    required this.onAction,
-  });
-
-  final String title, body, action;
-  final VoidCallback onAction;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: t.warnBg,
-        border: Border.all(color: t.warnBorder),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: MishkatIcon(MIcon.warning, color: t.warnBtn, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: t.warnInk,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  body,
-                  style: TextStyle(
-                    fontSize: 13,
-                    height: 1.8,
-                    color: t.warnBody,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: onAction,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 9,
-                    ),
-                    decoration: BoxDecoration(
-                      color: t.warnBtn,
-                      borderRadius: BorderRadius.circular(11),
-                    ),
-                    child: Text(
-                      action,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: t.warnBtnInk,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SlotList extends ConsumerWidget {
-  const _SlotList();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.tokens;
-    final settings = ref.watch(reminderSettingsProvider);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: t.surface,
-        border: Border.all(color: t.border),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          for (final slot in settings.slots)
-            _SlotRow(slot: slot, mode: settings.mode),
-          const _ScheduleStateRow(),
-        ],
-      ),
-    );
-  }
-}
-
-String slotLabel(L l, ReminderSlotId id) => switch (id) {
-  ReminderSlotId.wake => l.slotWake,
-  ReminderSlotId.morning => l.slotMorning,
-  ReminderSlotId.evening => l.slotEvening,
-  ReminderSlotId.sleep => l.slotSleep,
-};
-
-String slotPrayerRule(L l, ReminderSlotId id) => switch (id) {
-  ReminderSlotId.wake => l.slotPrayerWake,
-  ReminderSlotId.morning => l.slotPrayerMorning,
-  ReminderSlotId.evening => l.slotPrayerEvening,
-  ReminderSlotId.sleep => l.slotPrayerSleep,
-};
 
 class _SlotRow extends ConsumerWidget {
   const _SlotRow({required this.slot, required this.mode});
@@ -202,96 +107,92 @@ class _SlotRow extends ConsumerWidget {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
     final locked = slot.lockedInPrayerMode(mode);
+    final prayerTimes = ref.watch(prayerTimesResolverProvider);
+    final now = ref.watch(clockProvider)();
 
-    final subtitle = mode == ReminderMode.prayer
-        ? slotPrayerRule(l, slot.id)
-        : slot.enabled
-        ? l.daily
-        : l.off;
+    String clock(DateTime at) => formatTime(at, lang, am: l.am, pm: l.pm);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: t.borderSoft)),
-      ),
-      child: Row(
-        children: [
-          Semantics(
-            label: slotLabel(l, slot.id),
-            toggled: slot.enabled,
-            child: AppSwitch(
+    final String subtitle;
+    if (mode == ReminderMode.prayer) {
+      // The rule, then the time it produces today.
+      final at = slotTimeOn(slot, mode, prayerTimes, now);
+      subtitle = locked
+          ? '${slotPrayerRule(l, slot.id)} · ${clock(at)}'
+          : slotPrayerRule(l, slot.id);
+    } else {
+      subtitle = slot.enabled ? l.slotDaily : l.off;
+    }
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: locked ? 58 : 62),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _shortName(l, slot.id),
+                    style: MishkatType.body(t).copyWith(
+                      fontSize: locked ? 14 : 14.5,
+                      height: 1.4,
+                      color: slot.enabled ? t.ink : t.inkMuted,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: MishkatType.caption(
+                      t,
+                    ).copyWith(fontSize: 11.5, height: 1.5),
+                  ),
+                ],
+              ),
+            ),
+            // A prayer-anchored slot has no clock time of its own to edit.
+            if (!locked) ...[
+              const SizedBox(width: 8),
+              TimeChip(
+                label: formatClock(
+                  slot.hour,
+                  slot.minute,
+                  lang,
+                  am: l.am,
+                  pm: l.pm,
+                ),
+                enabled: slot.enabled,
+                semanticLabel: l.timeOf(slotLabel(l, slot.id)),
+                onTap: () => showSlotTimeSheet(context, slot.id),
+              ),
+            ],
+            const SizedBox(width: 4),
+            AppSwitch(
               value: slot.enabled,
+              semanticLabel: slotLabel(l, slot.id),
               onChanged: () => ref
                   .read(reminderSettingsProvider.notifier)
                   .toggleSlot(slot.id),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  slotLabel(l, slot.id),
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: slot.enabled ? t.ink : t.faint,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(fontSize: 12.5, height: 1.6, color: t.muted),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            // A prayer-anchored slot has no clock time of its own to edit.
-            onTap: locked ? null : () => showSlotTimeSheet(context, slot.id),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-              decoration: BoxDecoration(
-                color: slot.enabled ? t.softBg : t.disBg,
-                border: Border.all(
-                  color: slot.enabled ? t.softBorder : t.disBorder,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                locked
-                    ? '—'
-                    : formatClock(
-                        slot.hour,
-                        slot.minute,
-                        lang,
-                        am: l.am,
-                        pm: l.pm,
-                      ),
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: slot.enabled ? t.accent : t.disFg,
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
+  /// The list names the time of day; the routine is implied by the tab.
+  static String _shortName(L l, ReminderSlotId id) => switch (id) {
+    ReminderSlotId.wake => l.slotWakeShort,
+    ReminderSlotId.morning => l.slotMorningShort,
+    ReminderSlotId.evening => l.slotEveningShort,
+    ReminderSlotId.sleep => l.slotSleepShort,
+  };
 }
 
-/// Prints what the OS is actually holding.
-///
-/// The design treats the schedule as visible state: fixed mode says it never
-/// needs the app opened, prayer mode names the date coverage runs out and how
-/// many notifications are pending against the iOS cap.
-class _ScheduleStateRow extends ConsumerWidget {
-  const _ScheduleStateRow();
+/// Fixed mode's line of schedule state: what the OS holds, in plain words.
+class _ScheduleState extends ConsumerWidget {
+  const _ScheduleState();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -299,104 +200,81 @@ class _ScheduleStateRow extends ConsumerWidget {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
     final schedule = ref.watch(currentScheduleProvider);
+    final pending =
+        ref.watch(pendingCountProvider).value ?? schedule.pendingCount;
 
     final through = schedule.scheduledThrough;
-    final text = schedule.usedFixedFallback
-        ? l.prayerFallbackNotice
-        : through == null
-        ? l.schedFixed
-        : l.scheduleThroughShort(
-            // DateFormat emits Latin digits even under `ar`, and the rest of
-            // this sentence is Arabic-Indic.
-            localizeDigits(DateFormat.MMMd(lang).format(through), lang),
-          );
+    final String state;
+    if (schedule.usedFixedFallback) {
+      state = l.prayerFallbackNotice;
+    } else if (through == null) {
+      state = l.schedFixed;
+    } else {
+      // DateFormat emits Latin digits even under `ar`, and the rest of this
+      // sentence is Arabic-Indic.
+      state = l.scheduleThroughShort(
+        localizeDigits(DateFormat.MMMd(lang).format(through), lang),
+      );
+    }
+    final text = '$state · ${l.pendingShort(localizeDigits(pending, lang))}';
 
-    return Container(
-      width: double.infinity,
-      color: t.s2,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: MishkatIcon(MIcon.check, color: t.accent, size: 16),
+            padding: const EdgeInsets.only(top: 3),
+            child: MishkatIcon(MIcon.check, color: t.inkMuted, size: 14),
           ),
           const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  text,
-                  style: TextStyle(fontSize: 12.5, height: 1.6, color: t.muted),
-                ),
-              ],
-            ),
-          ),
+          Expanded(child: Text(text, style: MishkatType.caption(t))),
         ],
       ),
     );
   }
 }
 
-class _OemCard extends ConsumerWidget {
-  const _OemCard();
+class _OemRow extends ConsumerWidget {
+  const _OemRow();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
     final l = L.of(context);
-    final permissions = ref.watch(permissionsProvider);
 
-    final hint = permissions.batteryExempt
-        ? l.oemHintOn
-        : l.oemHintOff(
-            permissions.manufacturer.isEmpty
-                ? l.oemTitle
-                : permissions.manufacturer,
-          );
-
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => showOemSheet(context),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: t.surface,
-          border: Border.all(color: t.border),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l.oemTitle,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    hint,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      height: 1.6,
-                      color: t.muted,
-                    ),
-                  ),
-                ],
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => showOemSheet(context),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: t.surface,
+            borderRadius: BorderRadius.circular(Radii.lg),
+          ),
+          child: Row(
+            children: [
+              MishkatIcon(
+                MIcon.battery,
+                color: t.isDark ? t.accentText : t.primary,
+                size: 20,
               ),
-            ),
-            const SizedBox(width: 12),
-            // Mirrors itself under RTL, so it always points the way the
-            // sheet opens.
-            MishkatIcon(MIcon.chevronRight, color: t.muted, size: 18),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l.oemTitle,
+                  style: MishkatType.body(
+                    t,
+                  ).copyWith(fontSize: 13.5, height: 1.4),
+                ),
+              ),
+              // Mirrors itself under RTL, so it always points the way the
+              // sheet opens.
+              MishkatIcon(MIcon.chevronRight, color: t.inkMuted, size: 16),
+            ],
+          ),
         ),
       ),
     );

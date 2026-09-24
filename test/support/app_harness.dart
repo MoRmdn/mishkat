@@ -143,11 +143,18 @@ class AppHarness {
     DateTime? now,
     Map<String, Object> extraPrefs = const {},
 
+    /// Logical screen size. Defaults to a 390×844 phone; goldens compared
+    /// against the design board pass its 340×720 frame.
+    Size size = const Size(390, 844),
+
+    /// Makes the athkar corpus fail to load, for the error screen.
+    Object? libraryError,
+
     /// Pass false to relaunch against whatever the previous pump left in the
     /// store — that is what makes a persistence test meaningful.
     bool resetPrefs = true,
   }) async {
-    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.physicalSize = size * 3;
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
     // One teardown so the order is explicit rather than LIFO-dependent:
@@ -179,7 +186,11 @@ class AppHarness {
           sharedPreferencesProvider.overrideWithValue(prefs),
           // Preloaded: otherwise pumpAndSettle races the asset read and
           // settles on an empty screen.
-          athkarLibraryProvider.overrideWith((ref) => library),
+          athkarLibraryProvider.overrideWith(
+            (ref) => libraryError == null
+                ? library
+                : Future<AthkarLibrary>.error(libraryError),
+          ),
           appDatabaseProvider.overrideWithValue(db),
           notificationServiceProvider.overrideWithValue(notifications),
           permissionServiceProvider.overrideWithValue(permissions),

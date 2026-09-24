@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
+import '../theme/mishkat_tokens.dart';
+import 'mishkat_icon.dart';
 
 class SegmentedOption<T> {
-  const SegmentedOption(this.value, this.label);
+  const SegmentedOption(this.value, this.label, {this.icon});
 
   final T value;
   final String label;
+  final MIcon? icon;
 }
 
-/// Pill segmented control — a track in `s3` with the selected segment raised
-/// onto `surface`. Used for language, appearance, and the reminder mode switch.
+/// The 2a segmented control: a pill track with the selected segment raised
+/// onto [MishkatTokens.surfaceRaised]. 40px segments; no shadow — the system
+/// is flat.
+///
+/// The track is [MishkatTokens.lineSoft] on a page and [MishkatTokens.bg]
+/// inside a sheet, so it always reads as a recess in whatever it sits on.
 class SegmentedControl<T> extends StatelessWidget {
   const SegmentedControl({
     super.key,
     required this.options,
     required this.value,
     required this.onChanged,
+    this.onSurface = false,
   });
 
   final List<SegmentedOption<T>> options;
   final T value;
   final ValueChanged<T> onChanged;
+
+  /// True inside a sheet or card, where the page colour is the recess.
+  final bool onSurface;
 
   @override
   Widget build(BuildContext context) {
@@ -29,42 +39,17 @@ class SegmentedControl<T> extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: t.s3,
-        borderRadius: BorderRadius.circular(14),
+        color: onSurface ? t.bg : t.lineSoft,
+        borderRadius: BorderRadius.circular(Radii.pill),
       ),
       child: Row(
         children: [
           for (final o in options)
             Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
+              child: _Segment(
+                option: o,
+                selected: o.value == value,
                 onTap: () => onChanged(o.value),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 160),
-                  padding: const EdgeInsets.symmetric(vertical: 11),
-                  decoration: BoxDecoration(
-                    color: o.value == value ? t.surface : Colors.transparent,
-                    borderRadius: BorderRadius.circular(11),
-                    boxShadow: o.value == value
-                        ? [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.18),
-                              blurRadius: 3,
-                              offset: const Offset(0, 1),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Text(
-                    o.label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: o.value == value ? t.ink : t.muted,
-                    ),
-                  ),
-                ),
               ),
             ),
         ],
@@ -73,51 +58,131 @@ class SegmentedControl<T> extends StatelessWidget {
   }
 }
 
-/// The 46×28 track-and-knob switch used for slot toggles and the Quranic-font
-/// option. Knob travel respects text direction.
-class AppSwitch extends StatelessWidget {
-  const AppSwitch({super.key, required this.value, this.onChanged});
+class _Segment<T> extends StatelessWidget {
+  const _Segment({
+    required this.option,
+    required this.selected,
+    required this.onTap,
+  });
 
-  final bool value;
-  final VoidCallback? onChanged;
+  final SegmentedOption<T> option;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
-    return GestureDetector(
-      onTap: onChanged,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        width: 46,
-        height: 28,
-        decoration: BoxDecoration(
-          color: value ? t.accent : t.trackOff,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Stack(
-          children: [
-            AnimatedPositionedDirectional(
-              duration: const Duration(milliseconds: 180),
-              curve: Curves.easeOut,
-              top: 3,
-              start: value ? 21 : 3,
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 3,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
+    final fg = selected ? t.ink : t.inkMuted;
+    return Semantics(
+      button: true,
+      selected: selected,
+      inMutuallyExclusiveGroup: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: Motion.of(context, Motion.base),
+          curve: Motion.curve,
+          constraints: const BoxConstraints(minHeight: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected
+                ? t.surfaceRaised
+                : t.surfaceRaised.withValues(alpha: 0),
+            borderRadius: BorderRadius.circular(Radii.pill),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (option.icon != null) ...[
+                MishkatIcon(option.icon!, color: fg, size: 16),
+                const SizedBox(width: 6),
+              ],
+              Flexible(
+                child: Text(
+                  option.label,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: kUiFont,
+                    fontSize: 13.5,
+                    fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
+                    color: fg,
+                  ),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The 46×28 switch. On is primary (the rose CTA in dark, where primary is a
+/// surface); off is [MishkatTokens.trackOff]. The knob travels toward the
+/// end edge, so it follows text direction.
+class AppSwitch extends StatelessWidget {
+  const AppSwitch({
+    super.key,
+    required this.value,
+    this.onChanged,
+    this.semanticLabel,
+  });
+
+  final bool value;
+  final VoidCallback? onChanged;
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final duration = Motion.of(context, Motion.base);
+    final on = t.isDark ? t.cta : t.primary;
+    final knob = t.isDark ? t.ink : t.surfaceRaised;
+    return Semantics(
+      toggled: value,
+      label: semanticLabel,
+      enabled: onChanged != null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onChanged,
+        // A 48px target around the 28px track.
+        child: SizedBox(
+          width: 52,
+          height: Sizes.touchMin,
+          child: Center(
+            child: AnimatedContainer(
+              duration: duration,
+              curve: Motion.curve,
+              width: 46,
+              height: 28,
+              decoration: BoxDecoration(
+                color: value ? on : t.trackOff,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Stack(
+                children: [
+                  AnimatedPositionedDirectional(
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOut,
+                    top: 3,
+                    start: value ? 21 : 3,
+                    child: Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: knob,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );

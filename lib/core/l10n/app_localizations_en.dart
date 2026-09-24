@@ -9,7 +9,7 @@ class LEn extends L {
   LEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Athkar';
+  String get appName => 'Mishkat Al-Wird';
 
   @override
   String get navHome => 'Home';
@@ -24,9 +24,6 @@ class LEn extends L {
   String get navProgress => 'Progress';
 
   @override
-  String get titleHome => 'Athkar';
-
-  @override
   String get titleReminders => 'Reminders';
 
   @override
@@ -36,16 +33,16 @@ class LEn extends L {
   String get titleProgress => 'Progress';
 
   @override
-  String get catMorning => 'Morning';
+  String get catMorning => 'Morning athkar';
 
   @override
-  String get catEvening => 'Evening';
+  String get catEvening => 'Evening athkar';
 
   @override
-  String get catSleep => 'Before sleep';
+  String get catSleep => 'Sleep athkar';
 
   @override
-  String get catWake => 'On waking';
+  String get catWake => 'Waking athkar';
 
   @override
   String get catAfterPrayer => 'After prayer';
@@ -57,89 +54,13 @@ class LEn extends L {
   String get catTasbih => 'Tasbih';
 
   @override
-  String get nextReminder => 'Next reminder';
-
-  @override
-  String get edit => 'Edit';
-
-  @override
-  String minutesLabel(num minutesCount, String minutes) {
-    final intl.NumberFormat minutesCountNumberFormat =
-        intl.NumberFormat.compact(locale: localeName);
-    final String minutesCountString = minutesCountNumberFormat.format(
-      minutesCount,
-    );
-
-    String _temp0 = intl.Intl.pluralLogic(
-      minutesCount,
-      locale: localeName,
-      other: '$minutes minutes',
-      one: '1 minute',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String inHours(num hoursCount, String hours, String minutesText) {
-    final intl.NumberFormat hoursCountNumberFormat = intl.NumberFormat.compact(
-      locale: localeName,
-    );
-    final String hoursCountString = hoursCountNumberFormat.format(hoursCount);
-
-    String _temp0 = intl.Intl.pluralLogic(
-      hoursCount,
-      locale: localeName,
-      other: 'in $hours hours $minutesText',
-      one: 'in 1 hour $minutesText',
-      zero: 'in $minutesText',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get prayerBased => 'Computed from today’s prayer times';
-
-  @override
   String get schedFixed => 'Repeats daily — no need to open the app';
-
-  @override
-  String schedPrayer(String date, String days) {
-    return 'Scheduled through $date ($days days)';
-  }
-
-  @override
-  String get tasbihTitle => 'Tasbih counter';
-
-  @override
-  String get tasbihSub => 'Free counter — tap anywhere to count';
-
-  @override
-  String get dayUnit => 'days';
-
-  @override
-  String get dayUnitPl => 'days';
-
-  @override
-  String get sessions => 'sessions';
 
   @override
   String get fixedMode => 'Fixed time';
 
   @override
-  String get prayerMode => 'By prayer times';
-
-  @override
-  String get exactTitle => 'Exact alarms not allowed';
-
-  @override
-  String get exactBody =>
-      'Reminders may arrive a few minutes late. You can allow exact alarms in system settings.';
-
-  @override
-  String get exactAllow => 'Allow exact alarms';
-
-  @override
-  String get daily => 'Daily · repeats automatically';
+  String get prayerMode => 'By prayer';
 
   @override
   String get off => 'Off';
@@ -188,12 +109,7 @@ class LEn extends L {
   String get useMyLocation => 'Use my device location';
 
   @override
-  String todayTimesFor(String city) {
-    return 'Today’s times — $city';
-  }
-
-  @override
-  String get todayTimes => 'Today’s times';
+  String get todayTimes => 'Today’s prayer times';
 
   @override
   String get fajr => 'Fajr';
@@ -203,14 +119,6 @@ class LEn extends L {
 
   @override
   String get maghrib => 'Maghrib';
-
-  @override
-  String get windowLabel => 'Scheduled window';
-
-  @override
-  String windowText(String days, String pending, String cap) {
-    return 'Days scheduled: $days · Pending notifications: $pending of $cap';
-  }
 
   @override
   String get method => 'Calculation method';
@@ -240,16 +148,8 @@ class LEn extends L {
   String get oemTitle => 'Reminders not arriving?';
 
   @override
-  String get oemHintOn => 'Device is exempt from battery saver ✓';
-
-  @override
-  String oemHintOff(String vendor) {
-    return 'Guide for your device — $vendor';
-  }
-
-  @override
   String get oemBody =>
-      'Some manufacturers stop apps in the background, which cancels scheduled reminders. These steps fix it once.';
+      'Some devices stop apps in the background, which cancels reminders. Follow these steps once.';
 
   @override
   String oemHeading(String vendor) {
@@ -257,16 +157,13 @@ class LEn extends L {
   }
 
   @override
-  String get oemStep1 => 'Settings → Apps → Manage apps → Mishkat';
+  String get oemStep1 => 'Settings → Apps → Mishkat';
 
   @override
-  String get oemStep2 => 'Turn on “Autostart” if your device offers it';
+  String get oemStep2 => 'Turn on “Autostart”';
 
   @override
-  String get oemStep3 => 'Under “Battery saver” choose “No restrictions”';
-
-  @override
-  String get oemStep4 => 'Lock the app from the recent-apps screen';
+  String get oemStep3 => 'Battery saver → “No restrictions”';
 
   @override
   String get oemGenericHint =>
@@ -276,10 +173,10 @@ class LEn extends L {
   String get openBattery => 'Open battery settings';
 
   @override
-  String get batteryOn => 'App is currently exempt ✓';
+  String get batteryOn => 'App is currently exempt';
 
   @override
-  String get batteryOff => 'App is not exempt';
+  String get batteryOff => 'The app is not exempt yet';
 
   @override
   String get favEmptyTitle => 'Nothing saved yet';
@@ -292,33 +189,19 @@ class LEn extends L {
   String get currentStreak => 'Current streak';
 
   @override
-  String get longest => 'Longest streak';
+  String get longest => 'Longest';
 
   @override
-  String get totalSessions => 'Total sessions';
+  String get totalSessions => 'Sessions';
 
   @override
   String get last14 => 'Last 14 days';
 
   @override
-  String get byCategory => 'By category — this week';
-
-  @override
-  String get countOf => 'of';
+  String get byCategory => 'This week';
 
   @override
   String get once => 'once';
-
-  @override
-  String get tapHint => 'Tap anywhere to count · screen stays awake';
-
-  @override
-  String get completedToday => 'Completed today';
-
-  @override
-  String athkarCount(String count) {
-    return '$count athkar';
-  }
 
   @override
   String get prev => 'Previous';
@@ -330,19 +213,6 @@ class LEn extends L {
   String get next => 'Next';
 
   @override
-  String get donePrefix => 'Completed';
-
-  @override
-  String doneTitle(String category) {
-    return 'Completed — $category';
-  }
-
-  @override
-  String doneStreak(String days, String time) {
-    return 'Your streak is now $days days. Next reminder at $time.';
-  }
-
-  @override
   String get shareAsImage => 'Share as image';
 
   @override
@@ -350,9 +220,6 @@ class LEn extends L {
 
   @override
   String get shareTitle => 'Share this thikr';
-
-  @override
-  String get saveImage => 'Save image';
 
   @override
   String get share => 'Share';
@@ -376,19 +243,7 @@ class LEn extends L {
   String get system => 'System';
 
   @override
-  String get themeLabel => 'App colour';
-
-  @override
-  String get themeTeal => 'Stone teal';
-
-  @override
-  String get themeIndigo => 'Indigo';
-
-  @override
-  String get themeOlive => 'Olive';
-
-  @override
-  String get fontSize => 'Text size';
+  String get fontSize => 'Thikr text size';
 
   @override
   String get fontSizeSmall => 'Small';
@@ -427,34 +282,24 @@ class LEn extends L {
 
   @override
   String get onb1Body =>
-      'Gentle reminders for the morning, evening, sleep and waking athkar — fully offline.';
-
-  @override
-  String get onb1NoteLabel => 'NO ACCOUNT';
-
-  @override
-  String get onb1Note =>
-      'No sign-in and nothing sent anywhere. Everything stays on your device.';
+      'Reminders for the morning, evening, sleep and waking athkar, scheduled on your device and working without internet. No account.';
 
   @override
   String get onb1Primary => 'Get started';
 
   @override
-  String get onb1Secondary => 'Skip setup';
+  String get onb1Secondary => 'Skip';
 
   @override
   String get onb2Title => 'Notifications permission';
 
   @override
   String get onb2Body =>
-      'Reminders are scheduled by your device itself, so notifications must be allowed — without them nothing arrives.';
-
-  @override
-  String get onb2NoteLabel => 'WHY NOW';
+      'Reminders are scheduled on your device, so notifications have to be allowed — without them no reminder can arrive.';
 
   @override
   String get onb2Note =>
-      'You can allow it later in settings, but reminders stay off until you do.';
+      'You can allow them later in settings, but reminders stay off until then.';
 
   @override
   String get onb2Primary => 'Allow notifications';
@@ -467,14 +312,11 @@ class LEn extends L {
 
   @override
   String get onb3Body =>
-      'To arrive at the exact minute, the app needs Android’s “exact alarm” permission.';
-
-  @override
-  String get onb3NoteLabel => 'IF YOU DECLINE';
+      'To arrive on the minute, reminders need Android’s “exact alarms” permission.';
 
   @override
   String get onb3Note =>
-      'The app keeps working, but reminders may run a few minutes late — settings will say so.';
+      'If you decline, the app keeps working but a reminder may arrive a few minutes late — the Reminders tab will say so.';
 
   @override
   String get onb3Primary => 'Allow';
@@ -483,18 +325,14 @@ class LEn extends L {
   String get onb3Secondary => 'Continue without it';
 
   @override
-  String get onb4Title => 'Free it from battery saver';
+  String get onb4Title => 'Exempt from battery saver';
 
   @override
   String get onb4Body =>
-      'Some devices kill background apps, cancelling scheduled reminders. One exemption fixes it for good.';
+      'Some devices close apps in the background, which cancels reminders. One exemption is enough.';
 
   @override
-  String get onb4NoteLabel => 'ONE STEP';
-
-  @override
-  String get onb4Note =>
-      'We open the right settings screen for your device, and that’s it.';
+  String get onb4Note => 'We’ll open the right screen for your device.';
 
   @override
   String get onb4Primary => 'Exempt the app';
@@ -515,13 +353,6 @@ class LEn extends L {
   @override
   String get prayerFallbackNotice =>
       'Prayer times unavailable — using fixed times for now';
-
-  @override
-  String get notificationsBlocked =>
-      'Notifications are off — no reminders will arrive';
-
-  @override
-  String get enableNotifications => 'Turn on notifications';
 
   @override
   String get notifTitleMorning => 'Time for the morning athkar';
@@ -555,4 +386,339 @@ class LEn extends L {
 
   @override
   String get shareStyleStone => 'Stone';
+
+  @override
+  String get nowLabel => 'Now';
+
+  @override
+  String get nextLabel => 'Next';
+
+  @override
+  String get begin => 'Begin';
+
+  @override
+  String get editTimes => 'Edit times';
+
+  @override
+  String athkarCountLabel(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits athkar',
+      one: '1 thikr',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String aboutMinutes(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'about $digits minutes',
+      one: 'about 1 minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String streakDays(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits-day streak',
+      one: '1-day streak',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakStart => 'Start your streak today';
+
+  @override
+  String daysCount(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysUnit(num count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'days',
+      one: 'day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bandWake => 'Waking';
+
+  @override
+  String get bandMorning => 'Morning';
+
+  @override
+  String get bandEvening => 'Evening';
+
+  @override
+  String get bandSleep => 'Sleep';
+
+  @override
+  String bandSemantics(String routine, String time, String state) {
+    return '$routine, $time, $state';
+  }
+
+  @override
+  String get stateDone => 'done';
+
+  @override
+  String get stateNow => 'now';
+
+  @override
+  String get stateLater => 'later';
+
+  @override
+  String get allDoneTitle => 'Today’s athkar are done';
+
+  @override
+  String tomorrowAt(String routine, String time) {
+    return '$routine tomorrow, $time';
+  }
+
+  @override
+  String get notifOffTitle => 'Notifications are off';
+
+  @override
+  String get notifOffBody => 'No reminders will arrive until you allow them.';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get remindersAllOff =>
+      'All reminders are off — times shown for reference';
+
+  @override
+  String get libAfterPrayer => 'After prayer';
+
+  @override
+  String get libMisc => 'Assorted';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String tasbihRound(String round, String target) {
+    return 'Round $round · of $target';
+  }
+
+  @override
+  String get tasbihFree => 'Free count';
+
+  @override
+  String get tasbihNoLimit => 'No limit';
+
+  @override
+  String get tasbihHint => 'Tap anywhere to count · a light buzz every 33';
+
+  @override
+  String get favoriteAdd => 'Save';
+
+  @override
+  String get favoriteRemove => 'Remove from saved';
+
+  @override
+  String get scrollToContinue => 'Scroll to continue';
+
+  @override
+  String counterOf(String total) {
+    return 'of $total';
+  }
+
+  @override
+  String counterRemaining(String remaining, String total) {
+    return '$remaining of $total remaining';
+  }
+
+  @override
+  String positionOf(String index, String total) {
+    return '$index of $total';
+  }
+
+  @override
+  String doneRoutine(String routine) {
+    return '$routine complete';
+  }
+
+  @override
+  String streakNow(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Your streak is now $digits days.',
+      one: 'Your streak is now 1 day.',
+      zero: 'Start your streak today.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nextReminderLine(String routine, String time) {
+    return 'Next reminder: $routine at $time.';
+  }
+
+  @override
+  String get shareChooseTitle => 'Choose a thikr to share';
+
+  @override
+  String get exactBanner =>
+      'Reminders may arrive a few minutes late — exact alarms are not allowed.';
+
+  @override
+  String get allow => 'Allow';
+
+  @override
+  String get slotDaily => 'Daily';
+
+  @override
+  String pendingShort(String count) {
+    return '$count pending';
+  }
+
+  @override
+  String windowShort(String date, String pending, String cap) {
+    return 'Scheduled through $date · $pending of $cap pending';
+  }
+
+  @override
+  String get timeSheetHint => 'Repeats daily · 5-minute steps';
+
+  @override
+  String get favHint => 'Tap a thikr to read it · swipe to remove';
+
+  @override
+  String get browseAthkar => 'Browse athkar';
+
+  @override
+  String get legendFull => 'Full';
+
+  @override
+  String get legendPartial => 'Partial';
+
+  @override
+  String get legendNone => 'None';
+
+  @override
+  String weekRatio(String done, String target) {
+    return '$done / $target';
+  }
+
+  @override
+  String get errorTitle => 'Couldn’t load the athkar';
+
+  @override
+  String get errorBody =>
+      'Something unexpected went wrong. Your scheduled reminders are not affected.';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String onb4NoteVendor(String vendor) {
+    return 'Your device: $vendor · we’ll open the right screen';
+  }
+
+  @override
+  String get languageArabic => 'العربية';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String onbStep(String index, String total) {
+    return 'Step $index of $total';
+  }
+
+  @override
+  String get slotWakeShort => 'Waking';
+
+  @override
+  String get slotMorningShort => 'Morning';
+
+  @override
+  String get slotEveningShort => 'Evening';
+
+  @override
+  String get slotSleepShort => 'Sleep';
+
+  @override
+  String get hourUp => 'Increase hour';
+
+  @override
+  String get hourDown => 'Decrease hour';
+
+  @override
+  String get minuteUp => 'Increase minutes';
+
+  @override
+  String get minuteDown => 'Decrease minutes';
+
+  @override
+  String timesCount(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits times',
+      two: 'twice',
+      one: 'once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get textSmaller => 'Smaller thikr text';
+
+  @override
+  String get textLarger => 'Larger thikr text';
 }
