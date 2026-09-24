@@ -5,7 +5,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
@@ -144,19 +144,10 @@ class _ReaderHeader extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       child: Row(
         children: [
-          iconButton(
-            StrokeIcon(
-              AppIcons.close,
-              color: t.rdInk,
-              size: 18,
-              strokeWidth: 1.8,
-            ),
-            () {
-              ref.read(readerControllerProvider.notifier).close();
-              Navigator.of(context).pop();
-            },
-            'close',
-          ),
+          iconButton(MishkatIcon(MIcon.close, color: t.rdInk, size: 20), () {
+            ref.read(readerControllerProvider.notifier).close();
+            Navigator.of(context).pop();
+          }, 'close'),
           Expanded(
             child: Column(
               children: [
@@ -178,7 +169,11 @@ class _ReaderHeader extends ConsumerWidget {
             ),
           ),
           iconButton(
-            HeartIcon(color: t.gold, filled: favorites.contains(current.id)),
+            MishkatIcon(
+              favorites.contains(current.id) ? MIcon.heartFilled : MIcon.heart,
+              color: t.accentText,
+              size: 20,
+            ),
             () => ref
                 .read(readerControllerProvider.notifier)
                 .toggleFavorite(current.id),
@@ -290,8 +285,8 @@ class _CountingView extends ConsumerWidget {
                             style: TextStyle(
                               fontFamily: settings.useQuranFont
                                   ? kQuranFont
-                                  : kUiFont,
-                              fontSize: settings.textSize.sizeFor(thikr.text),
+                                  : kThikrFont,
+                              fontSize: settings.textSize.px,
                               height: 2.25,
                               color: t.rdInk,
                             ),
@@ -517,12 +512,7 @@ class _DoneView extends ConsumerWidget {
               shape: BoxShape.circle,
               border: Border.all(color: t.softBorder),
             ),
-            child: StrokeIcon(
-              AppIcons.check,
-              color: t.gold,
-              size: 36,
-              strokeWidth: 1.6,
-            ),
+            child: MishkatIcon(MIcon.check, color: t.accentText, size: 36),
           ),
           const SizedBox(height: 22),
           Text(

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
@@ -89,7 +89,11 @@ class _FavoriteCard extends ConsumerWidget {
                         .toggleFavorite(thikr.id),
                     child: Padding(
                       padding: const EdgeInsets.all(2),
-                      child: HeartIcon(color: t.accent, filled: true, size: 19),
+                      child: MishkatIcon(
+                        MIcon.heartFilled,
+                        color: t.accent,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
@@ -101,7 +105,7 @@ class _FavoriteCard extends ConsumerWidget {
               child: Text(
                 thikr.text,
                 style: TextStyle(
-                  fontFamily: settings.useQuranFont ? kQuranFont : kUiFont,
+                  fontFamily: settings.useQuranFont ? kQuranFont : kThikrFont,
                   fontSize: 19,
                   height: 2.05,
                   color: t.ink,

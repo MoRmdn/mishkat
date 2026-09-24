@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/theme/palettes.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/segmented_control.dart';
 import '../../data/models/app_settings.dart';
@@ -51,27 +50,6 @@ class SettingsSheet extends ConsumerWidget {
           ],
         ),
 
-        SheetSectionLabel(l.themeLabel, topPadding: 20),
-        Row(
-          children: [
-            for (final p in AppPalette.values) ...[
-              Expanded(
-                child: _PaletteOption(
-                  palette: p,
-                  selected: s.palette == p,
-                  label: switch (p) {
-                    AppPalette.teal => l.themeTeal,
-                    AppPalette.indigo => l.themeIndigo,
-                    AppPalette.olive => l.themeOlive,
-                  },
-                  onTap: () => c.setPalette(p),
-                ),
-              ),
-              if (p != AppPalette.values.last) const SizedBox(width: 10),
-            ],
-          ],
-        ),
-
         Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Row(
@@ -93,9 +71,9 @@ class SettingsSheet extends ConsumerWidget {
                 width: 52,
                 child: Text(
                   switch (s.textSize) {
-                    ThikrTextSize.small => l.fontSizeSmall,
-                    ThikrTextSize.medium => l.fontSizeMedium,
-                    ThikrTextSize.large => l.fontSizeLarge,
+                    ThikrSize.small => l.fontSizeSmall,
+                    ThikrSize.medium => l.fontSizeMedium,
+                    ThikrSize.large => l.fontSizeLarge,
                   },
                   textAlign: TextAlign.center,
                   style: const TextStyle(
@@ -142,7 +120,9 @@ class SettingsSheet extends ConsumerWidget {
                           child: Text(
                             'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
                             style: TextStyle(
-                              fontFamily: s.useQuranFont ? kQuranFont : kUiFont,
+                              fontFamily: s.useQuranFont
+                                  ? kQuranFont
+                                  : kThikrFont,
                               fontSize: 17,
                               color: t.muted,
                             ),
@@ -186,72 +166,6 @@ class SettingsSheet extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _PaletteOption extends StatelessWidget {
-  const _PaletteOption({
-    required this.palette,
-    required this.selected,
-    required this.label,
-    required this.onTap,
-  });
-
-  final AppPalette palette;
-  final bool selected;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    final spec = kPalettes[palette]!;
-    Widget swatch(Color c) => Container(
-      width: 18,
-      height: 18,
-      decoration: BoxDecoration(
-        color: c,
-        borderRadius: BorderRadius.circular(6),
-      ),
-    );
-
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: t.surface,
-          border: Border.all(color: selected ? t.accent : t.border),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                swatch(spec.accentInk),
-                const SizedBox(width: 4),
-                swatch(spec.accent),
-                const SizedBox(width: 4),
-                swatch(spec.gold),
-              ],
-            ),
-            const SizedBox(height: 9),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: selected ? t.accent : t.muted,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

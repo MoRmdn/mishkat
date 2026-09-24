@@ -6,7 +6,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../core/widgets/segmented_control.dart';
 import '../../data/models/reminder_settings.dart';
 import '../settings/settings_controller.dart';
@@ -94,12 +94,7 @@ class _WarningCard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: StrokeIcon(
-              AppIcons.warning,
-              color: t.warnBtn,
-              size: 20,
-              extraShapes: AppIcons.warningShapes,
-            ),
+            child: MishkatIcon(MIcon.warning, color: t.warnBtn, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -325,12 +320,7 @@ class _ScheduleStateRow extends ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: StrokeIcon(
-              AppIcons.check,
-              color: t.accent,
-              size: 14,
-              strokeWidth: 2,
-            ),
+            child: MishkatIcon(MIcon.check, color: t.accent, size: 16),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -403,19 +393,9 @@ class _OemCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Transform.scale(
-              // The glyph points left; mirror it in LTR so it always points
-              // the way the list opens.
-              scaleX: Directionality.of(context) == TextDirection.rtl
-                  ? 1.0
-                  : -1.0,
-              child: StrokeIcon(
-                AppIcons.chevronStart,
-                color: t.muted,
-                size: 18,
-                strokeWidth: 1.8,
-              ),
-            ),
+            // Mirrors itself under RTL, so it always points the way the
+            // sheet opens.
+            MishkatIcon(MIcon.chevronRight, color: t.muted, size: 18),
           ],
         ),
       ),

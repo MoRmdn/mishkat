@@ -9,7 +9,6 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/theme/palettes.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../data/models/thikr.dart';
@@ -43,9 +42,9 @@ class ShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The share card always uses the teal palette's deep ink, so a shared
-    // image is recognisably from this app regardless of the sender's theme.
-    final spec = kPalettes[AppPalette.teal]!;
+    // The share card always uses the light identity, so a shared image is
+    // recognisably from this app regardless of the sender's appearance.
+    const brand = MishkatTokens.light;
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -57,7 +56,7 @@ class ShareCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
-            colors: [spec.accentInk, spec.reader.bg],
+            colors: [brand.primary, brand.primary],
           ),
         ),
         child: Column(
@@ -72,7 +71,7 @@ class ShareCard extends StatelessWidget {
                     fontFamily: kUiFont,
                     fontSize: 14,
                     letterSpacing: 2,
-                    color: spec.gold,
+                    color: brand.cta,
                   ),
                 ),
                 Container(
@@ -80,7 +79,7 @@ class ShareCard extends StatelessWidget {
                   height: 34,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    border: Border.all(color: spec.gold.withValues(alpha: 0.4)),
+                    border: Border.all(color: brand.cta.withValues(alpha: 0.4)),
                     borderRadius: BorderRadius.circular(11),
                   ),
                   child: const BrandMark(size: 20),
@@ -93,7 +92,7 @@ class ShareCard extends StatelessWidget {
                   text,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: kQuranFont,
+                    fontFamily: kThikrFont,
                     // Long athkar step down rather than clipping: no shared
                     // image may ever cut the text.
                     fontSize: _fontSizeFor(text),
@@ -114,7 +113,7 @@ class ShareCard extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: kUiFont,
                       fontSize: 13,
-                      color: spec.gold,
+                      color: brand.cta,
                     ),
                   ),
                 ),

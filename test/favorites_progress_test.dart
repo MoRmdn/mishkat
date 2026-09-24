@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mishkat/core/widgets/app_icons.dart';
+import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/features/favorites/favorites_tab.dart';
 import 'package:mishkat/features/progress/progress_tab.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
@@ -63,7 +63,7 @@ void main() {
 
       expect(find.byType(FavoritesTab), findsOneWidget);
       // Targeted by widget: the favourites tab has exactly one heart per card.
-      await tester.tap(find.byType(HeartIcon).first);
+      await tester.tap(findIcon(MIcon.heartFilled).first);
       await AppHarness.settleWithDatabase(tester);
 
       expect(find.text('لا توجد أذكار محفوظة بعد'), findsOneWidget);

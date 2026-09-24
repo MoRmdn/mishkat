@@ -7,7 +7,7 @@ import '../../core/clock.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
@@ -160,12 +160,7 @@ class _NextReminderCard extends ConsumerWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              StrokeIcon(
-                AppIcons.check,
-                color: t.cardInk,
-                size: 14,
-                strokeWidth: 2,
-              ),
+              MishkatIcon(MIcon.check, color: t.cardInk, size: 16),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -249,14 +244,14 @@ String categoryLabel(L l, ThikrCategory c) => switch (c) {
   ThikrCategory.tasbih => l.catTasbih,
 };
 
-String categoryIconPath(ThikrCategory c) => switch (c) {
-  ThikrCategory.morning => AppIcons.morning,
-  ThikrCategory.evening => AppIcons.evening,
-  ThikrCategory.sleep => AppIcons.sleep,
-  ThikrCategory.wake => AppIcons.wake,
-  ThikrCategory.afterPrayer => AppIcons.afterPrayer,
-  ThikrCategory.misc => AppIcons.misc,
-  ThikrCategory.tasbih => AppIcons.misc,
+MIcon categoryIcon(ThikrCategory c) => switch (c) {
+  ThikrCategory.morning => MIcon.routineMorning,
+  ThikrCategory.evening => MIcon.routineEvening,
+  ThikrCategory.sleep => MIcon.routineSleep,
+  ThikrCategory.wake => MIcon.routineWake,
+  ThikrCategory.afterPrayer => MIcon.routineAfterPrayer,
+  ThikrCategory.misc => MIcon.routineMisc,
+  ThikrCategory.tasbih => MIcon.routineTasbih,
 };
 
 class _CategoryCard extends ConsumerWidget {
@@ -299,15 +294,7 @@ class _CategoryCard extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const SizedBox(height: 0),
-            StrokeIcon(
-              categoryIconPath(category),
-              color: t.accent,
-              size: 24,
-              strokeWidth: 1.5,
-              extraShapes: category == ThikrCategory.misc
-                  ? AppIcons.miscShapes
-                  : '',
-            ),
+            MishkatIcon(categoryIcon(category), color: t.accent, size: 24),
             const SizedBox(height: 24),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

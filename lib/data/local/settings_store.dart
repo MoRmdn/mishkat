@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/theme/palettes.dart';
 import '../models/app_settings.dart';
 import '../models/prayer_settings.dart';
 import '../models/reminder_settings.dart';
@@ -15,7 +14,9 @@ class SettingsStore {
 
   final SharedPreferences _prefs;
 
-  static const _kPalette = 'settings.palette';
+  /// Retired with the three-palette themes in the 2a redesign. Only
+  /// [migrate] reads it, to delete it.
+  static const _kLegacyPalette = 'settings.palette';
   static const _kAppearance = 'settings.appearance';
   static const _kLanguage = 'settings.language';
   static const _kTextSize = 'settings.textSize';
@@ -50,12 +51,21 @@ class SettingsStore {
     if (p.longitude != null) await _prefs.setDouble(_kPrayerLng, p.longitude!);
   }
 
+  /// One-time clean-up of keys earlier versions wrote. Idempotent, and never
+  /// touches a preference the current version still reads.
+  Future<void> migrate() async {
+    if (_prefs.containsKey(_kLegacyPalette)) {
+      await _prefs.remove(_kLegacyPalette);
+    }
+  }
+
   AppSettings read() => AppSettings(
-    palette: AppPalette.fromName(_prefs.getString(_kPalette)),
     appearance: AppearanceMode.fromName(_prefs.getString(_kAppearance)),
     language: AppLanguage.fromName(_prefs.getString(_kLanguage)),
-    textSize: ThikrTextSize.fromIndex(_prefs.getInt(_kTextSize)),
-    useQuranFont: _prefs.getBool(_kQuranFont) ?? true,
+    textSize: ThikrSize.fromIndex(_prefs.getInt(_kTextSize)),
+    // Scheherazade New is the default athkar face since the redesign; a user
+    // who chose either option keeps their choice.
+    useQuranFont: _prefs.getBool(_kQuranFont) ?? false,
     onboardingComplete: _prefs.getBool(_kOnboarding) ?? false,
   );
 
@@ -103,7 +113,6 @@ class SettingsStore {
 
   Future<void> write(AppSettings s) async {
     await Future.wait([
-      _prefs.setString(_kPalette, s.palette.name),
       _prefs.setString(_kAppearance, s.appearance.name),
       _prefs.setString(_kLanguage, s.language.name),
       _prefs.setInt(_kTextSize, s.textSize.index),

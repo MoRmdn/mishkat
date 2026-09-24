@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/app.dart';
+import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/core/clock.dart';
 import 'package:mishkat/data/models/reminder_settings.dart';
 import 'package:mishkat/data/models/thikr.dart';
@@ -137,7 +138,6 @@ class AppHarness {
   Future<void> pump(
     WidgetTester tester, {
     String language = 'ar',
-    String palette = 'teal',
     String appearance = 'light',
     bool onboardingComplete = true,
     DateTime? now,
@@ -167,7 +167,6 @@ class AppHarness {
 
     SharedPreferences.setMockInitialValues({
       'flutter.settings.language': language,
-      'flutter.settings.palette': palette,
       'flutter.settings.appearance': appearance,
       'flutter.settings.onboardingComplete': onboardingComplete,
       for (final e in extraPrefs.entries) 'flutter.${e.key}': e.value,
@@ -208,6 +207,10 @@ class AppHarness {
     await tester.pumpAndSettle();
   }
 }
+
+/// Finds an icon by glyph — icons carry no text to search for.
+Finder findIcon(MIcon icon) =>
+    find.byWidgetPredicate((w) => w is MishkatIcon && w.icon == icon);
 
 TextDirection shellDirection(WidgetTester tester) =>
     Directionality.of(tester.element(find.byType(Scaffold).first));

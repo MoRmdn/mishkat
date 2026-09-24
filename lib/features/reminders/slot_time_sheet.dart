@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../data/models/reminder_settings.dart';
 import '../settings/settings_controller.dart';
@@ -121,7 +121,7 @@ class _Stepper extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
 
-    Widget button(String path, VoidCallback onTap, String label) => Semantics(
+    Widget button(MIcon icon, VoidCallback onTap, String label) => Semantics(
       button: true,
       label: label,
       child: GestureDetector(
@@ -133,14 +133,14 @@ class _Stepper extends StatelessWidget {
             color: t.s2,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: StrokeIcon(path, color: t.accent, size: 16, strokeWidth: 2),
+          child: MishkatIcon(icon, color: t.accent, size: 18),
         ),
       ),
     );
 
     return Column(
       children: [
-        button(AppIcons.chevronUp, onUp, '$semanticsPrefix up'),
+        button(MIcon.chevronUp, onUp, '$semanticsPrefix up'),
         const SizedBox(height: 8),
         SizedBox(
           width: 64,
@@ -155,7 +155,7 @@ class _Stepper extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        button(AppIcons.chevronDown, onDown, '$semanticsPrefix down'),
+        button(MIcon.chevronDown, onDown, '$semanticsPrefix down'),
       ],
     );
   }

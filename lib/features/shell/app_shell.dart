@@ -6,7 +6,7 @@ import '../../core/format/hijri_date.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/app_icons.dart';
+import '../../core/widgets/mishkat_icon.dart';
 import '../../core/widgets/streak_ring.dart';
 import '../../data/repositories/progress_providers.dart';
 import '../favorites/favorites_tab.dart';
@@ -155,7 +155,11 @@ class _Header extends StatelessWidget {
                   border: Border.all(color: t.border),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: GearIcon(color: t.muted),
+                child: MishkatIcon(
+                  MIcon.settings,
+                  color: t.muted,
+                  semanticLabel: L.of(context).settings,
+                ),
               ),
             ),
           ),
@@ -174,7 +178,7 @@ class _BottomNav extends ConsumerWidget {
     final l = L.of(context);
     final current = ref.watch(shellTabProvider);
 
-    Widget item(ShellTab tab, String path, String label) {
+    Widget item(ShellTab tab, MIcon icon, String label) {
       final selected = tab == current;
       return Expanded(
         child: GestureDetector(
@@ -185,7 +189,7 @@ class _BottomNav extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                StrokeIcon(path, color: selected ? t.accent : t.navOff),
+                MishkatIcon(icon, color: selected ? t.accent : t.navOff),
                 const SizedBox(height: 5),
                 Text(
                   label,
@@ -212,10 +216,10 @@ class _BottomNav extends ConsumerWidget {
         top: false,
         child: Row(
           children: [
-            item(ShellTab.home, AppIcons.home, l.navHome),
-            item(ShellTab.reminders, AppIcons.bell, l.navReminders),
-            item(ShellTab.favorites, AppIcons.heart, l.navFavorites),
-            item(ShellTab.progress, AppIcons.chart, l.navProgress),
+            item(ShellTab.home, MIcon.home, l.navHome),
+            item(ShellTab.reminders, MIcon.bell, l.navReminders),
+            item(ShellTab.favorites, MIcon.heart, l.navFavorites),
+            item(ShellTab.progress, MIcon.progress, l.navProgress),
           ],
         ),
       ),

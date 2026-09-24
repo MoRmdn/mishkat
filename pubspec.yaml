@@ -92,20 +92,29 @@ flutter:
 
   assets:
     - assets/data/
+    - assets/icons/
     - assets/branding/
 
   fonts:
-    - family: IBMPlexSansArabic
+    # UI. Static instances of the official variable font — see
+    # assets/fonts/README.md.
+    - family: Alexandria
       fonts:
-        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+        - asset: assets/fonts/Alexandria-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Alexandria-Regular.ttf
           weight: 400
-        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
+        - asset: assets/fonts/Alexandria-Medium.ttf
           weight: 500
-        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
-          weight: 700
-    - family: AmiriQuran
+    # Athkar text.
+    - family: Scheherazade New
+      fonts:
+        - asset: assets/fonts/ScheherazadeNew-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ScheherazadeNew-Medium.ttf
+          weight: 500
+    # Behind the "Quranic script" setting.
+    - family: Amiri Quran
       fonts:
         - asset: assets/fonts/AmiriQuran-Regular.ttf
           weight: 400
