@@ -4,10 +4,14 @@ Arabic/English athkar app whose headline feature is **reminders that actually
 arrive**: أذكار الصباح، المساء، النوم، الاستيقاظ.
 
 Design source of truth: Claude Design project `733cc592-656e-4253-808b-b813f6dca024`.
-`AthkarPhone.dc.html` is a working prototype with a full state machine, three
-themes, two languages and real content — read it before building a screen.
-`ios-frame.jsx` / `android-frame.jsx` are canvas device bezels, **not** app
-design; do not port them.
+The approved visual design is **2a "Dusk Grid"**: `Mishkat 2a Screens.dc.html`
+is the screen board (25 screens and states, AR/EN, light/dark) and its handoff
+— tokens, icons, brand kit, reference PNGs — is kept locally, untracked, in
+`assets/mishkat-2a-handoff/`. Read the board before changing a screen.
+`AthkarPhone.dc.html` is the earlier prototype: still the reference for the
+state machine and content, but its three themes and dark-only reader are
+superseded. `ios-frame.jsx` / `android-frame.jsx` are canvas device bezels,
+**not** app design; do not port them.
 
 ## Working conventions
 
@@ -65,7 +69,7 @@ write.
 
 **Arabic plural agreement is not optional.** "١ ساعات" is wrong; use ICU plural
 forms with a `num` for selection and a separately localized digit string for
-display, as `inHours` and `minutesLabel` do.
+display, as `streakDays` and `athkarCountLabel` do (`test/plurals_test.dart`).
 
 **Diagnostics answer one question.** `Diagnostics` exists to compare reminders
 *scheduled* against reminders *opened*, split by whether exact alarms were
@@ -74,20 +78,45 @@ the field. Do not add events that record what a user read, when they pray, or
 where they are. The default implementation is a no-op; Firebase is not wired
 because it needs a project only the app's owner can create.
 
-**Branding assets are generated, not fetched.** The design project's 1024px and
-512px icon exports exceed DesignSync's 256 KiB per-file limit and come back
-truncated. `test/tools/` regenerates the icon and splash mark from the same
-palette and mark path the app uses. Replace them with the designer's exports
-before release.
+**Branding comes from the 2a handoff's exports.** `assets/branding/png/` holds
+the launcher-icon and splash generator inputs and is **not** bundled;
+`assets/branding/svg/` holds the two marks `BrandMark` draws (the full symbol
+and the small cut used below 32px), recoloured from tokens. Android's adaptive
+and themed icon and the `ic_stat_mishkat` notification icon are vector XML in
+`res/drawable/` — never let a density-qualified `ic_launcher_foreground.png`
+shadow them. Native brand colours are named by role in `values/colors.xml` and
+the `flutter_native_splash` block; `test/branding_test.dart` pins them to
+`MishkatTokens` via `BrandColors`.
 
 **Anything that reads the wall clock goes through `clockProvider`.** Never call
-`DateTime.now()` in a widget or service. The countdown and Hijri header already
-do this; M3's scheduler depends on it, since its correctness is entirely about
+`DateTime.now()` in a widget or service. Home's "now" module and day band do
+this; the scheduler depends on it, since its correctness is entirely about
 what time it thinks it is — and time-dependent UI silently rots golden files.
 
-**Colours come from `AppTokens` only.** Read `context.tokens.accent`, never a
-raw hex and never `kPalettes` directly. Three palettes × light/dark = six
-builds, plus a reader ramp that stays dark-toned in every build.
+**Home's "now" state is derived, never drawn from the board.** `resolveHomeNow`
+(`lib/features/home/home_now.dart`) is pure and unit-tested: each routine owns
+the window from its time to the next routine's. `slotTimeOn` mirrors
+`buildSchedule`'s slot-time rule; change the two together, and
+`test/home_now_test.dart` checks they agree.
+
+**Colours come from `MishkatTokens` only.** Read `context.tokens.primary`,
+never a raw hex. There is one identity with light, dark and system appearance,
+and the reader follows it like every other screen. `glow` is a fill (bars,
+beads, the lamp) and never text — coloured text is `accentText`; a source scan
+in `test/theme_test.dart` enforces this. `primary` in dark is a surface, so
+filled controls switch to `cta` there. Colours used outside the widget tree
+(notification tint, launch screens) go through `BrandColors`.
+
+**Every icon is an SVG in `assets/icons/`, drawn by `MishkatIcon(MIcon.x)`.**
+Directional glyphs set `matchTextDirection`, so write them in LTR terms
+(`chevronRight` is "forward") and never flip one by hand. Alexandria has no
+check glyph: draw `MIcon.check`, never "✓", which renders as a box.
+
+**Typography.** UI is Alexandria 300/400/500 (static instances of the official
+variable font — `assets/fonts/README.md`); athkar are Scheherazade New at a
+fixed 24/29/35 with a 2.0 line height, Amiri Quran behind the Quranic-script
+setting. A long thikr scrolls inside the reader page with a fade and a cue; it
+never shrinks, and a shared card grows taller (1080×1350 and beyond) instead.
 
 **Content accuracy is not an engineering problem.** `assets/data/athkar.json`
 is transcribed from the prototype and is **placeholder** — the board says so
@@ -105,6 +134,7 @@ catches an error here.
 | M5 | `feat/prayer-times` | `adhan`, offsets, rolling window | ✅ done |
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | ✅ done |
 | M7 | `feat/firebase` | Icons, splash, diagnostics seam, store prep | ✅ done (Firebase config pending — see `docs/firebase.md`) |
+| 2a | `feat/redesign-2a` | Dusk Grid redesign: tokens, fonts, icons, brand, every screen | ✅ done |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.
@@ -121,10 +151,10 @@ cannot both be satisfied. Drop both once API 37 ships.
 ## Layout
 
 ```
-lib/core/       theme (palettes, AppTokens), l10n (ARB ar/en), format, widgets
+lib/core/       theme (MishkatTokens, BrandColors), l10n (ARB ar/en, labels), format, widgets
 lib/data/       models, local (prefs, drift), repositories
 lib/services/   notification, scheduler, prayer times, permissions
-lib/features/   onboarding home reader reminders favorites progress settings share shell
+lib/features/   onboarding home reader tasbih reminders favorites progress settings share shell
 ```
 
 ## Commands
@@ -138,11 +168,17 @@ flutter test test/golden --update-goldens   # after an intended visual change
 flutter run -d <device>
 ```
 
-Golden files in `test/golden/images/` cover home, the reader and the settings
-sheet across theme builds and both languages. They load the bundled fonts
-(`test/golden/font_loader.dart`) so Arabic shaping is actually exercised — a
-golden in the fallback font proves nothing. Review the regenerated PNGs before
-committing; they are the cheapest way to see a screen without a device.
+Golden files in `test/golden/images/` are one per 2a board screen, rendered at
+the board's 340×720 frame and numbered like it (`2_1_home_light_ar.png` is
+board 2.1). They load the bundled fonts (`test/golden/font_loader.dart`) so
+Arabic shaping is actually exercised — a golden in the fallback font proves
+nothing. Review regenerated PNGs side by side with
+`assets/mishkat-2a-handoff/screens/` before committing; passing tests are not
+a visual review.
+
+`test/responsive_test.dart` renders every main screen and sheet at 320×640 with
+200% text in AR/EN, light/dark — an overflow fails it. `test/accessibility_test.dart`
+runs Flutter's tap-target, labelled-target and text-contrast guidelines.
 
 Widget tests using the database must await `AppHarness.settleWithDatabase`:
 `pumpAndSettle` only drives the animation clock, so a FutureProvider backed by

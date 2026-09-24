@@ -146,6 +146,63 @@ void main() {
     });
   });
 
+  group('reading and sharing from new places', () {
+    testWidgets('tapping a saved thikr opens just that thikr', (tester) async {
+      await harness.db.addFavorite('mo2', DateTime(2026, 9, 7));
+      await harness.pump(tester);
+      await openTab(tester, 'المفضلة');
+
+      await tester.tap(find.textContaining('اللَّهُمَّ أَنْتَ رَبِّي'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ReaderScreen), findsOneWidget);
+      expect(find.text('١ من ١'), findsOneWidget);
+    });
+
+    testWidgets('reading a single saved thikr records no routine', (
+      tester,
+    ) async {
+      await harness.db.addFavorite('wa1', DateTime(2026, 9, 7));
+      await harness.pump(tester);
+      await openTab(tester, 'المفضلة');
+      await tester.tap(find.byType(GestureDetector).hitTestable().first);
+      await tester.pumpAndSettle();
+      expect(find.byType(ReaderScreen), findsOneWidget);
+
+      await tester.tapAt(const Offset(195, 400));
+      await tester.pump(const Duration(milliseconds: 600));
+      await AppHarness.settleWithDatabase(tester);
+
+      // The one-thikr session did finish…
+      expect(find.text('العودة للرئيسية'), findsOneWidget);
+      // …but it was not the waking routine, so it counts for nothing.
+      expect(await harness.db.allCompletions(), isEmpty);
+    });
+
+    testWidgets('the completion screen shares a thikr it asks for', (
+      tester,
+    ) async {
+      await harness.pump(tester);
+      await tester.tap(find.text('استيقاظ'));
+      await tester.pumpAndSettle();
+      for (var i = 0; i < 2; i++) {
+        await tester.tapAt(const Offset(195, 400));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 600));
+        await tester.pumpAndSettle();
+      }
+      expect(find.text('العودة للرئيسية'), findsOneWidget);
+
+      await tester.tap(find.text('مشاركة كصورة'));
+      await tester.pumpAndSettle();
+      expect(find.text('اختر ذكراً للمشاركة'), findsOneWidget);
+
+      await tester.tap(find.byType(GestureDetector).hitTestable().last);
+      await tester.pumpAndSettle();
+      expect(find.byType(ShareSheet), findsOneWidget);
+    });
+  });
+
   group('sharing', () {
     testWidgets('long-pressing a favourite opens the share sheet', (
       tester,

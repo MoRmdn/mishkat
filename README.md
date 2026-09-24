@@ -1,4 +1,4 @@
-# مشكاة · Mishkat
+# مشكاة الورد · Mishkat Al-Wird
 
 An Arabic/English athkar app for iOS and Android, built in Flutter.
 
@@ -9,21 +9,23 @@ than into the reading UI.
 ## What it does
 
 - **Athkar reader.** The whole screen is the counter: tap anywhere to count
-  down. A ring tracks the current thikr and a bar tracks the session. Reaching
-  zero advances after a beat so the completion is visible.
+  down. Beads track the current thikr and a segmented bar tracks the session.
+  Reaching zero advances after a beat so the completion is visible. Text is set
+  at a fixed size; a long thikr scrolls inside the page and never shrinks.
 - **Timed reminders**, in two modes. Fixed clock times by default, or anchored
   to prayer times (Fajr −15 for waking, Fajr +30 for the morning, Asr +45 for
   the evening; bedtime stays a fixed hour).
-- **Three colour themes** — stone teal, indigo, olive — each in light and dark,
-  plus a reader palette that stays dark-toned in every build for night use.
+- **One identity, "Dusk Grid"**, in light, dark or follow-the-system — the
+  reader included. A home screen that shows the day's four routines and offers
+  the one that is due now.
 - **Fully bilingual.** Arabic is RTL with Arabic-Indic numerals and ص/م;
   English is LTR with Latin numerals and AM/PM. The Arabic text of a thikr is
   never replaced by a translation — in English the meaning sits underneath it.
 - **Favourites, streaks and progress.** A streak counts consecutive days and
   is not broken until a day is missed entirely — it does not read as lost every
   morning before you have opened the app.
-- **Share a thikr as an image**, rendered at 1080×1080 with its تخريج always
-  travelling with the text.
+- **Share a thikr as an image** — aubergine or stone, 1080×1080, taller when
+  the text needs it — with its تخريج always travelling with the text.
 - **Completely offline.** No account, no sign-in, nothing sent anywhere.
 
 ## Two decisions worth knowing up front
@@ -59,9 +61,11 @@ flutter gen-l10n     # after editing lib/core/l10n/*.arb
 lib/core/       theme tokens, ar/en localizations, formatting, shared widgets
 lib/data/       models, local storage, the athkar repository
 lib/services/   notification scheduling, permissions
-lib/features/   onboarding · home · reader · reminders · settings · shell
+lib/features/   onboarding · home · reader · tasbih · reminders · favorites ·
+                progress · settings · share · shell
 assets/data/    athkar.json — the corpus
-assets/fonts/   IBM Plex Sans Arabic (UI) and Amiri Quran (thikr text)
+assets/fonts/   Alexandria (UI), Scheherazade New (athkar), Amiri Quran (optional)
+assets/icons/   the 2a icon set, drawn through MishkatIcon
 ```
 
 The one architectural rule that matters: `lib/services/reminder_scheduler.dart`
@@ -78,10 +82,12 @@ flutter test
 flutter test test/golden --update-goldens   # after an intended visual change
 ```
 
-Golden files under `test/golden/images/` cover home, the reader, the reminders
-tab, onboarding and the settings sheet across theme builds and both languages.
-They render with the real bundled fonts, so Arabic shaping is genuinely
-exercised rather than approximated in a fallback face.
+Golden files under `test/golden/images/` cover every screen on the 2a design
+board, at the board's own frame size and numbered to match it. They render
+with the real bundled fonts, so Arabic shaping is genuinely exercised rather
+than approximated in a fallback face. A layout stress test renders every
+screen at 320px wide with 200% text, and an accessibility test checks tap
+targets, labels and text contrast.
 
 **Notification delivery must be verified on physical hardware.** Emulators do
 not reproduce Doze or the aggressive background-app killing that Xiaomi, Huawei
@@ -130,5 +136,5 @@ Four things stand between this and a store submission, all documented in
 
 ## Licences
 
-Fonts are bundled under the SIL Open Font License: **IBM Plex Sans Arabic** and
-**Amiri Quran**.
+Fonts are bundled under the SIL Open Font License, each with its licence file
+in `assets/fonts/`: **Alexandria**, **Scheherazade New** and **Amiri Quran**.

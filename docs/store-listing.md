@@ -4,8 +4,12 @@ Draft copy for the App Store and Google Play. Arabic is the primary language.
 
 ## Name
 
-- Arabic: **مشكاة**
-- English: **Mishkat — Athkar**
+- Arabic: **مشكاة الورد**
+- English: **Mishkat Al-Wird**
+
+The home-screen label stays short: **مشكاة** / **Mishkat**.
+
+Tagline: نور الذكر اليومي · The Light of Daily Remembrance
 
 ## Subtitle / short description
 
@@ -14,7 +18,7 @@ Draft copy for the App Store and Google Play. Arabic is the primary language.
 
 ## Description (English)
 
-Mishkat is an athkar app built around one thing: reminders that arrive when
+Mishkat Al-Wird is an athkar app built around one thing: reminders that arrive when
 they should.
 
 Reminders are scheduled by your device itself, so they work with no internet
@@ -27,13 +31,13 @@ the evening.
 - A free tasbih counter
 - Streaks and weekly progress
 - Save any thikr, and share it as an image with its reference
-- Three colour themes, each in light and dark
+- Light and dark appearance, or follow your device
 - Full Arabic and English, with Arabic-Indic numerals throughout
 - Completely offline. No account, no tracking, no ads
 
 ## Description (Arabic)
 
-مشكاة تطبيق أذكار همّه الأول أن يصل التذكير في وقته.
+مشكاة الورد تطبيق أذكار همّه الأول أن يصل التذكير في وقته.
 
 التذكيرات تُجدول على جهازك مباشرة، فتعمل دون إنترنت ودون حساب. اختر أوقاتاً
 ثابتة، أو اربطها بمواقيت الصلاة — قبل الفجر لأذكار الاستيقاظ، وبعده لأذكار
@@ -44,7 +48,7 @@ the evening.
 - سبحة حرة
 - تتابع يومي وتقدّم أسبوعي
 - حفظ أي ذكر ومشاركته كصورة مع تخريجه
-- ثلاثة ألوان للتطبيق، لكل منها وضع فاتح وغامق
+- مظهر فاتح وغامق، أو حسب إعداد الجهاز
 - عربي وإنجليزي بالكامل
 - يعمل دون إنترنت. بلا حساب، بلا تتبّع، بلا إعلانات
 
@@ -65,7 +69,11 @@ case declare app interactions and crash logs, not linked to identity.
 
 - [ ] Replace `assets/data/athkar.json` with a human-verified corpus — see the
       warning in that file and in the README.
-- [ ] Replace `assets/branding/app-icon.png` with the designer's 1024px export.
+- [ ] Check the app icon on a real device's home screen, including Android's
+      round mask and themed (monochrome) icons and iOS dark and tinted icons.
+- [ ] Use the 512px Play Store icon from `assets/branding/png/play-store-icon-512.png`.
+- [ ] Convert the lockup SVGs' live Alexandria text to outlines before any
+      print or store-graphic use (see the design handoff README).
 - [ ] Configure a release signing key; the release build currently signs with
       the debug key (`android/app/build.gradle.kts`).
 - [ ] Set up Firebase if diagnostics are wanted — see `docs/firebase.md`.
