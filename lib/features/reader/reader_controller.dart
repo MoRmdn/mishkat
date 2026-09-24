@@ -4,13 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/clock.dart';
+import '../../core/theme/mishkat_tokens.dart' show Motion;
 import '../../data/models/thikr.dart';
 import '../../data/repositories/progress_providers.dart';
 import '../../services/diagnostics.dart';
 
 /// Delay before a thikr whose count has reached zero advances to the next one.
 /// Long enough to register the completion, short enough not to feel like a wait.
-const Duration kAutoAdvanceDelay = Duration(milliseconds: 480);
+const Duration kAutoAdvanceDelay = Motion.autoAdvance;
 
 @immutable
 class ReaderSession {
@@ -100,7 +101,13 @@ class ReaderController extends Notifier<AthkarState> {
   ///
   /// When it reaches zero the next thikr is scheduled rather than shown at
   /// once, so the completed state is visible for a beat.
-  void countOne(List<Thikr> items) {
+  ///
+  /// [advanceDelay] is the pause before moving on; the reader passes zero
+  /// when the system asks for reduced motion.
+  void countOne(
+    List<Thikr> items, {
+    Duration advanceDelay = kAutoAdvanceDelay,
+  }) {
     final s = state.session;
     if (s == null || s.finished || items.isEmpty) return;
 
@@ -111,7 +118,7 @@ class ReaderController extends Notifier<AthkarState> {
 
     if (left == 0) {
       _advanceTimer?.cancel();
-      _advanceTimer = Timer(kAutoAdvanceDelay, () => advance(items));
+      _advanceTimer = Timer(advanceDelay, () => advance(items));
     }
   }
 

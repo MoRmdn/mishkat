@@ -160,13 +160,15 @@ class NoticeBanner extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              actionLabel!,
-                              style: TextStyle(
-                                fontFamily: kUiFont,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: t.onWarnAction,
+                            Flexible(
+                              child: Text(
+                                actionLabel!,
+                                style: TextStyle(
+                                  fontFamily: kUiFont,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: t.onWarnAction,
+                                ),
                               ),
                             ),
                           ],
@@ -204,7 +206,7 @@ class TimeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
     final chip = Container(
-      height: 38,
+      constraints: const BoxConstraints(minHeight: 38),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       alignment: Alignment.center,
       decoration: BoxDecoration(

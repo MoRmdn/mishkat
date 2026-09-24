@@ -98,27 +98,32 @@ class _StreakCard extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      l.daysUnit(stats.currentStreak),
-                      style: small.copyWith(fontSize: 15),
+                    Flexible(
+                      child: Text(
+                        l.daysUnit(stats.currentStreak),
+                        style: small.copyWith(fontSize: 15),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(l.longest, style: small),
-              Text(
-                l.daysCount(stats.longestStreak, digits(stats.longestStreak)),
-                style: figure,
-              ),
-              const SizedBox(height: 6),
-              Text(l.totalSessions, style: small),
-              Text(digits(stats.totalSessions), style: figure),
-            ],
+          const SizedBox(width: 12),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(l.longest, style: small),
+                Text(
+                  l.daysCount(stats.longestStreak, digits(stats.longestStreak)),
+                  style: figure,
+                ),
+                const SizedBox(height: 6),
+                Text(l.totalSessions, style: small),
+                Text(digits(stats.totalSessions), style: figure),
+              ],
+            ),
           ),
         ],
       ),

@@ -244,7 +244,9 @@ class _DayBand extends ConsumerWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(11, 10, 11, 12),
+      // The "Edit times" row brings its own 48px touch height, so the card
+      // needs no top padding when it is shown.
+      padding: EdgeInsets.fromLTRB(11, compact ? 10 : 0, 11, 12),
       decoration: BoxDecoration(
         color: t.surface,
         borderRadius: BorderRadius.circular(Radii.lg),
@@ -262,8 +264,12 @@ class _DayBand extends ConsumerWidget {
                   onTap: () => ref
                       .read(shellTabProvider.notifier)
                       .select(ShellTab.reminders),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 2, 4, 8),
+                  child: ConstrainedBox(
+                    // 48px to the touch, though it reads as a small link.
+                    constraints: const BoxConstraints(
+                      minHeight: Sizes.touchMin,
+                      minWidth: Sizes.touchMin,
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

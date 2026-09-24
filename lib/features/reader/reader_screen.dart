@@ -72,7 +72,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   }
 
   void _count(List<Thikr> items) {
-    ref.read(readerControllerProvider.notifier).countOne(items);
+    ref
+        .read(readerControllerProvider.notifier)
+        .countOne(items, advanceDelay: Motion.of(context, Motion.autoAdvance));
     if (Motion.reduced(context)) return;
     setState(() => _pressed = true);
     _pulse?.cancel();

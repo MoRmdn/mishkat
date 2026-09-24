@@ -132,4 +132,24 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('٠'), findsOneWidget);
   });
+
+  testWidgets('with reduced motion the reader advances at once', (
+    tester,
+  ) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await harness.pump(tester);
+    await openEvening(tester);
+
+    final context = tester.element(find.byType(ReaderScreen));
+    expect(MediaQuery.disableAnimationsOf(context), isTrue);
+
+    await tester.tapAt(const Offset(195, 400));
+    // No 480ms pause: well inside it, the next thikr is already showing.
+    await tester.pump(const Duration(milliseconds: 1));
+    await tester.pump(const Duration(milliseconds: 1));
+
+    expect(find.text('٢ من ٤'), findsOneWidget);
+  });
 }

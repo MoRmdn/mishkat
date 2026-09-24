@@ -37,7 +37,9 @@ class SegmentedControl<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
     return Container(
-      padding: const EdgeInsets.all(4),
+      // No vertical padding here: each segment carries its own 4px, so the
+      // whole 48px height of the track is tappable.
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: onSurface ? t.bg : t.lineSoft,
         borderRadius: BorderRadius.circular(Radii.pill),
@@ -80,40 +82,43 @@ class _Segment<T> extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: Motion.of(context, Motion.base),
-          curve: Motion.curve,
-          constraints: const BoxConstraints(minHeight: 40),
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: selected
-                ? t.surfaceRaised
-                : t.surfaceRaised.withValues(alpha: 0),
-            borderRadius: BorderRadius.circular(Radii.pill),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (option.icon != null) ...[
-                MishkatIcon(option.icon!, color: fg, size: 16),
-                const SizedBox(width: 6),
-              ],
-              Flexible(
-                child: Text(
-                  option.label,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: kUiFont,
-                    fontSize: 13.5,
-                    fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
-                    color: fg,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: AnimatedContainer(
+            duration: Motion.of(context, Motion.base),
+            curve: Motion.curve,
+            constraints: const BoxConstraints(minHeight: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: selected
+                  ? t.surfaceRaised
+                  : t.surfaceRaised.withValues(alpha: 0),
+              borderRadius: BorderRadius.circular(Radii.pill),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (option.icon != null) ...[
+                  MishkatIcon(option.icon!, color: fg, size: 16),
+                  const SizedBox(width: 6),
+                ],
+                Flexible(
+                  child: Text(
+                    option.label,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: kUiFont,
+                      fontSize: 13.5,
+                      fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
+                      color: fg,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -166,8 +171,8 @@ class AppSwitch extends StatelessWidget {
               child: Stack(
                 children: [
                   AnimatedPositionedDirectional(
-                    duration: const Duration(milliseconds: 180),
-                    curve: Curves.easeOut,
+                    duration: duration,
+                    curve: Motion.curve,
                     top: 3,
                     start: value ? 21 : 3,
                     child: Container(

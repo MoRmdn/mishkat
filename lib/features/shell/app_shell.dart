@@ -68,14 +68,16 @@ class _BottomNav extends ConsumerWidget {
     final l = L.of(context);
     final current = ref.watch(shellTabProvider);
 
-    Widget item(ShellTab tab, MIcon icon, String label) {
+    Widget item(ShellTab tab, MIcon iconGlyph, String name) {
       final selected = tab == current;
-      final fg = selected ? t.ink : t.inkFaint;
+      // Inactive icons may be faint; their labels are text and need 4.5:1.
+      final icon = selected ? t.ink : t.inkFaint;
+      final label = selected ? t.ink : t.inkMuted;
       return Expanded(
         child: Semantics(
           selected: selected,
           button: true,
-          label: label,
+          label: name,
           excludeSemantics: true,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -97,18 +99,18 @@ class _BottomNav extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     alignment: Alignment.center,
-                    child: MishkatIcon(icon, color: fg),
+                    child: MishkatIcon(iconGlyph, color: icon),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    label,
+                    name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: kUiFont,
                       fontSize: 10.5,
                       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
-                      color: fg,
+                      color: label,
                     ),
                   ),
                 ],
