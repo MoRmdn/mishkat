@@ -170,15 +170,20 @@ class IconCircleButton extends StatelessWidget {
         child: SizedBox.square(
           dimension: hit,
           child: Center(
-            child: Container(
-              width: size,
-              height: size,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: background ?? t.surface,
-                shape: BoxShape.circle,
+            child: AnimatedOpacity(
+              duration: Motion.of(context, Motion.fast),
+              // Disabled — the reader's "previous" on its first thikr.
+              opacity: onPressed == null ? 0.4 : 1,
+              child: Container(
+                width: size,
+                height: size,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: background ?? t.surface,
+                  shape: BoxShape.circle,
+                ),
+                child: MishkatIcon(icon, color: color ?? t.ink, size: iconSize),
               ),
-              child: MishkatIcon(icon, color: color ?? t.ink, size: iconSize),
             ),
           ),
         ),
