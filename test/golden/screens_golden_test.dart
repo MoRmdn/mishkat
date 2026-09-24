@@ -268,10 +268,16 @@ void main() {
     });
 
     testWidgets('5.3 progress', (tester) async {
-      final h = await withHistory(todayDone: ['wake', 'morning']);
-      // Two partial days inside the fortnight, as on the board.
-      await h.db.recordCompletion('morning', DateTime(2026, 8, 26, 7));
-      await h.db.recordCompletion('morning', DateTime(2026, 8, 27, 7));
+      // As on the board: nothing yet today (its cell is outlined), a run of
+      // full days, one empty day and a couple of partial ones.
+      final h = await withHistory(days: 7);
+      await h.db.recordCompletion('morning', DateTime(2026, 8, 29, 7));
+      await h.db.recordCompletion('morning', DateTime(2026, 8, 25, 7));
+      for (final c in ['wake', 'morning', 'evening', 'sleep']) {
+        for (final d in [24, 26, 27, 28]) {
+          await h.db.recordCompletion(c, DateTime(2026, 8, d, 7));
+        }
+      }
       await h.pump(tester, size: board, now: DateTime(2026, 9, 7, 10, 2));
       await tester.tap(find.text('التقدّم').last);
       await AppHarness.settleWithDatabase(tester);

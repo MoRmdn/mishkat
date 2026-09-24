@@ -11,6 +11,13 @@ import '../../data/repositories/progress_providers.dart';
 import '../../data/repositories/progress_repository.dart';
 import '../settings/settings_controller.dart';
 
+/// The routines the week card lists, in the board's order.
+const _weekRows = [
+  ThikrCategory.morning,
+  ThikrCategory.evening,
+  ThikrCategory.sleep,
+];
+
 /// Board 5.3.
 class ProgressTab extends ConsumerWidget {
   const ProgressTab({super.key});
@@ -29,7 +36,12 @@ class ProgressTab extends ConsumerWidget {
         const SizedBox(height: 12),
         _LastFourteenCard(levels: stats.last14Routines),
         const SizedBox(height: 12),
-        _WeekCard(categories: stats.byCategory),
+        _WeekCard(
+          categories: [
+            for (final c in _weekRows)
+              ...stats.byCategory.where((p) => p.category == c),
+          ],
+        ),
       ],
     );
   }
@@ -68,7 +80,7 @@ class _StreakCard extends ConsumerWidget {
         border: t.isDark ? Border.all(color: t.glowLine) : null,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
@@ -110,19 +122,29 @@ class _StreakCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 12),
+          // Hugs the far edge of the card, as on the board; flexible only so
+          // 200% text can wrap instead of overflowing.
           Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(l.longest, style: small),
-                Text(
-                  l.daysCount(stats.longestStreak, digits(stats.longestStreak)),
-                  style: figure,
-                ),
-                const SizedBox(height: 6),
-                Text(l.totalSessions, style: small),
-                Text(digits(stats.totalSessions), style: figure),
-              ],
+            child: Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                // Lines up on the card's outer edge (left in Arabic).
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(l.longest, style: small),
+                  Text(
+                    l.daysCount(
+                      stats.longestStreak,
+                      digits(stats.longestStreak),
+                    ),
+                    style: figure,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(l.totalSessions, style: small),
+                  Text(digits(stats.totalSessions), style: figure),
+                ],
+              ),
             ),
           ),
         ],
