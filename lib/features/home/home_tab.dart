@@ -116,30 +116,36 @@ class _Header extends ConsumerWidget {
     final streak = ref.watch(progressStatsProvider).currentStreak;
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      spacing: 8,
       children: [
         BrandMark(size: 26, semanticLabel: l.brandName),
-        const SizedBox(width: 8),
         Text(
           l.brandName,
           style: MishkatType.headline(t).copyWith(fontSize: 18),
         ),
-        const Spacer(),
-        Flexible(
-          flex: 4,
-          child: Text(
-            streak == 0
-                ? l.streakStart
-                : l.streakDays(streak, localizeDigits(streak, lang)),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: MishkatType.caption(t),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 6,
+            children: [
+              Text(
+                streak == 0
+                    ? l.streakStart
+                    : l.streakDays(streak, localizeDigits(streak, lang)),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: MishkatType.caption(t),
+              ),
+              const SizedBox(width: 6),
+              IconCircleButton(
+                icon: MIcon.settings,
+                semanticLabel: l.settings,
+                onPressed: () => showSettingsSheet(context),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 6),
-        IconCircleButton(
-          icon: MIcon.settings,
-          semanticLabel: l.settings,
-          onPressed: () => showSettingsSheet(context),
         ),
       ],
     );

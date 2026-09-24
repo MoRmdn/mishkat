@@ -1,5 +1,5 @@
 {
-  "_warning": "PLACEHOLDER CONTENT. Transcribed from the design prototype, which flags it as common Hisn al-Muslim wording. The text and its تخريج must be reviewed and corrected by a qualified human before release. See CLAUDE.md.",
+  "_warning": "PLACEHOLDER CONTENT — source-checking draft. Initial corrections are documented in docs/athkar-content-review.md. Arabic text, meanings, counts, category placement and references still require qualified human approval before release.",
   "schemaVersion": 1,
   "sources": {
     "muslim": {
@@ -23,19 +23,19 @@
     "morning": [
       {
         "id": "mo1",
-        "text": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+        "text": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
         "count": 1,
         "source": "muslim",
         "reference": 2723,
-        "meaningEn": "We have entered a new morning and with it all dominion belongs to Allah. Praise be to Allah; there is no god but Allah alone, without partner."
+        "meaningEn": "We have entered a new morning and with it all dominion belongs to Allah. Praise be to Allah; there is no god but Allah alone, without partner. His is the dominion and all praise, and He has power over everything. My Lord, I ask You for the good in this day and what follows it, and seek Your protection from its evil and the evil that follows it. My Lord, protect me from laziness and the frailty of old age, and from punishment in the Fire and the grave."
       },
       {
         "id": "mo2",
-        "text": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي",
+        "text": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
         "count": 1,
         "source": "bukhari",
         "reference": 6306,
-        "meaningEn": "O Allah, You are my Lord; there is no god but You. You created me and I am Your servant. I acknowledge Your favour upon me and I confess my sin — forgive me.",
+        "meaningEn": "O Allah, You are my Lord; there is no god but You. You created me and I am Your servant. I keep Your covenant and promise as far as I am able. I seek Your protection from the evil I have done. I acknowledge Your favour upon me and confess my sin. Forgive me, for only You forgive sins.",
         "virtue": {
           "ar": "سيّد الاستغفار",
           "en": "The foremost of supplications for forgiveness"
@@ -62,7 +62,7 @@
         "text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
         "count": 100,
         "source": "muslim",
-        "reference": 2691,
+        "reference": 2692,
         "meaningEn": "Glory be to Allah, and praise be to Him."
       },
       {
@@ -77,11 +77,11 @@
     "evening": [
       {
         "id": "ev1",
-        "text": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+        "text": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
         "count": 1,
         "source": "muslim",
         "reference": 2723,
-        "meaningEn": "We have entered a new evening and with it all dominion belongs to Allah. Praise be to Allah; there is no god but Allah alone, without partner."
+        "meaningEn": "We have entered a new evening and with it all dominion belongs to Allah. Praise be to Allah; there is no god but Allah alone, without partner. His is the dominion and all praise, and He has power over everything. My Lord, I ask You for the good in this night and what follows it, and seek Your protection from its evil and the evil that follows it. My Lord, protect me from laziness and the frailty of old age, and from punishment in the Fire and the grave."
       },
       {
         "id": "ev2",
@@ -91,8 +91,8 @@
         "reference": 2709,
         "meaningEn": "I seek refuge in the perfect words of Allah from the evil of what He has created.",
         "virtue": {
-          "ar": "من قالها حين يمسي لم تضره حُمَة تلك الليلة",
-          "en": "Whoever says it at nightfall is protected from harm that night"
+          "ar": "ورد في صحيح مسلم ذكر هذا الدعاء مساءً في سياق الوقاية من لدغة العقرب",
+          "en": "Sahih Muslim relates this evening supplication in the context of protection from a scorpion sting."
         }
       },
       {
@@ -108,7 +108,7 @@
         "text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
         "count": 100,
         "source": "muslim",
-        "reference": 2691,
+        "reference": 2692,
         "meaningEn": "Glory be to Allah, and praise be to Him."
       }
     ],
@@ -123,11 +123,11 @@
       },
       {
         "id": "sl2",
-        "text": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَجْمَعُ عِبَادَكَ",
+        "text": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
         "count": 3,
         "source": "abudawud",
         "reference": 5045,
-        "meaningEn": "O Allah, protect me from Your punishment on the day You gather Your servants."
+        "meaningEn": "O Allah, protect me from Your punishment on the day You raise Your servants."
       },
       {
         "id": "sl3",
@@ -169,11 +169,11 @@
       },
       {
         "id": "wa2",
-        "text": "الْحَمْدُ لِلَّهِ الَّذِي رَدَّ عَلَيَّ رُوحِي وَعَافَانِي فِي جَسَدِي وَأَذِنَ لِي بِذِكْرِهِ",
+        "text": "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي فِي جَسَدِي وَرَدَّ عَلَيَّ رُوحِي وَأَذِنَ لِي بِذِكْرِهِ",
         "count": 1,
         "source": "tirmidhi",
         "reference": 3401,
-        "meaningEn": "Praise be to Allah who returned my soul to me, gave health to my body, and allowed me to remember Him."
+        "meaningEn": "Praise be to Allah who gave health to my body, returned my soul to me, and allowed me to remember Him."
       }
     ],
     "after_prayer": [
@@ -254,5 +254,6 @@
         "meaningEn": "Glory be to Allah, and praise be to Him."
       }
     ]
-  }
+  },
+  "contentVersion": "2026-09-24-draft.1"
 }

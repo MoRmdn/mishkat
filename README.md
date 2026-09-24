@@ -104,6 +104,10 @@ mistaken attribution is the most damaging defect this app could ship. A guard
 test fails if the placeholder marker is removed, so replacing the corpus is a
 deliberate act rather than a quiet one.
 
+The initial source-checking pass and outstanding review decisions for all 26
+entries are recorded in [the content review](docs/athkar-content-review.md).
+Corrections in draft `2026-09-24-draft.1` do not constitute release approval.
+
 ## Status
 
 | Milestone | Scope | State |
