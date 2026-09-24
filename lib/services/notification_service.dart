@@ -6,6 +6,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../core/theme/brand_colors.dart';
 import '../data/models/reminder_settings.dart';
 import 'reminder_scheduler.dart';
 
@@ -70,10 +71,10 @@ class NotificationService {
 
     await _plugin.initialize(
       settings: const InitializationSettings(
-        // A white silhouette with the flame punched through, not the launcher
-        // icon: Android tints notification icons flat and masks anything that
-        // is not a silhouette into a featureless blob.
-        android: AndroidInitializationSettings('@drawable/ic_notification'),
+        // A one-colour niche with the lamp knocked out, not the launcher icon:
+        // Android tints notification icons flat and masks anything that is
+        // not a silhouette into a featureless blob.
+        android: AndroidInitializationSettings('@drawable/ic_stat_mishkat'),
         // Permissions are requested explicitly during onboarding, where the
         // rationale is shown first, not silently at startup.
         iOS: DarwinInitializationSettings(
@@ -151,6 +152,7 @@ class NotificationService {
       importance: Importance.high,
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
+      color: BrandColors.notificationAccent,
       styleInformation: BigTextStyleInformation(text.body),
       actions: <AndroidNotificationAction>[
         AndroidNotificationAction(

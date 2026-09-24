@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The notification small icon is referenced only by name from Dart, so
+     release resource shrinking cannot see it; without this it is stripped and
+     notifications fall back to a blank square. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_stat_mishkat" />

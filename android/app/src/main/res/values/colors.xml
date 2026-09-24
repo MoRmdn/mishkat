@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#123A31</color>
+    <!-- Brand colours, named for what they are. Each is a MishkatTokens value
+         (lib/core/theme/mishkat_tokens.dart); test/branding_test.dart fails if
+         they drift apart. -->
+    <!-- MishkatTokens.light.primary -->
+    <color name="brand_primary">#4A2A4D</color>
+    <!-- MishkatTokens.light.bg -->
+    <color name="brand_bg">#EFEBE7</color>
+    <!-- MishkatTokens.light.glow -->
+    <color name="brand_glow">#C9939A</color>
+
+    <color name="ic_launcher_background">@color/brand_primary</color>
+    <color name="notification_accent">@color/brand_primary</color>
 </resources>

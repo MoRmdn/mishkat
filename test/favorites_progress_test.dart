@@ -172,7 +172,11 @@ void main() {
 
       // A shared image without its تخريج would be worse than not sharing.
       expect(find.textContaining('رواه البخاري'), findsWidgets);
-      expect(find.text('ذِكْر'), findsOneWidget);
+      // Branded with the wordmark from board 3.5.
+      expect(
+        find.textContaining('مشكاة الورد', findRichText: true),
+        findsOneWidget,
+      );
     });
   });
 }

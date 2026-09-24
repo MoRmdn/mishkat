@@ -673,12 +673,6 @@ abstract class L {
   /// **'العودة للرئيسية'**
   String get backHome;
 
-  /// No description provided for @shareCardLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'ذِكْر'**
-  String get shareCardLabel;
-
   /// No description provided for @shareTitle.
   ///
   /// In ar, this message translates to:
@@ -1038,6 +1032,30 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'تذكيرات الأذكار'**
   String get notifChannelName;
+
+  /// No description provided for @brandName.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكاة'**
+  String get brandName;
+
+  /// No description provided for @brandWird.
+  ///
+  /// In ar, this message translates to:
+  /// **'الورد'**
+  String get brandWird;
+
+  /// No description provided for @shareStyleAubergine.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنفسجي'**
+  String get shareStyleAubergine;
+
+  /// No description provided for @shareStyleStone.
+  ///
+  /// In ar, this message translates to:
+  /// **'حجري'**
+  String get shareStyleStone;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

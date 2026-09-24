@@ -55,36 +55,41 @@ dev_dependencies:
   flutter_native_splash: ^2.4.8
   image: ^4.9.2
 
-# Generates the platform icon sets. Build the source art first:
-#   dart run tool/build_branding.dart
-# then:
+# Platform icons and launch screen, from the 2a handoff's exports in
+# assets/branding/png (source files only — not bundled into the app).
+#
 #   dart run flutter_launcher_icons
+#   dart run flutter_native_splash:create
+#
+# The launcher generator writes iOS icons and the legacy Android mipmaps only.
+# Android's adaptive and themed icon is the vector set under
+# android/app/src/main/res (drawable/ic_launcher_{foreground,monochrome}.xml);
+# do not add adaptive_icon_* keys here, and delete any density-qualified
+# ic_launcher_foreground.png a generator leaves behind — it would override
+# the vectors.
+#
+# Colours are MishkatTokens values (light.bg, dark.bg); test/branding_test.dart
+# fails if they drift from lib/core/theme/mishkat_tokens.dart.
 flutter_launcher_icons:
-  image_path: assets/branding/app-icon.png
-  android: true
+  image_path: assets/branding/png/app-icon-ios-1024.png
+  android: ic_launcher
   ios: true
   remove_alpha_ios: true
-  # The teal build's deep ink, so the adaptive icon's background matches the
-  # mark rather than showing white corners.
-  adaptive_icon_background: "#123A31"
-  # The mark alone, sized for the adaptive safe zone — the full icon would be
-  # cropped into by Android's mask.
-  adaptive_icon_foreground: assets/branding/adaptive-foreground.png
+  image_path_ios_dark_transparent: assets/branding/png/app-icon-ios-dark-transparent-1024.png
+  image_path_ios_tinted_grayscale: assets/branding/png/app-icon-ios-tinted-1024.png
+  desaturate_tinted_to_grayscale_ios: true
 
-# Launch screen. Regenerate with:
-#   dart run flutter_native_splash:create
 flutter_native_splash:
-  # The teal build's deep ink, so launch flows into the app rather than
-  # flashing white first.
-  color: "#123A31"
-  color_dark: "#0E1613"
-  image: assets/branding/splash-mark.png
-  image_dark: assets/branding/splash-mark.png
+  color: "#EFEBE7"
+  color_dark: "#1B1320"
+  image: assets/branding/png/splash-mark-1152.png
+  image_dark: assets/branding/png/splash-mark-dark-1152.png
   android_12:
-    color: "#123A31"
-    color_dark: "#0E1613"
-    image: assets/branding/splash-mark.png
-    image_dark: assets/branding/splash-mark.png
+    color: "#EFEBE7"
+    color_dark: "#1B1320"
+    image: assets/branding/png/splash-mark-1152.png
+    image_dark: assets/branding/png/splash-mark-dark-1152.png
+  fullscreen: false
 
 flutter:
   uses-material-design: true
@@ -93,7 +98,10 @@ flutter:
   assets:
     - assets/data/
     - assets/icons/
-    - assets/branding/
+    # Only the marks the app draws at runtime. The rest of the brand kit lives
+    # in the design handoff; assets/branding/png holds generator inputs.
+    - assets/branding/svg/symbol-color.svg
+    - assets/branding/svg/symbol-small-color.svg
 
   fonts:
     # UI. Static instances of the official variable font — see

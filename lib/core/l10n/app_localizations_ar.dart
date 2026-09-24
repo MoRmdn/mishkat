@@ -352,9 +352,6 @@ class LAr extends L {
   String get backHome => 'العودة للرئيسية';
 
   @override
-  String get shareCardLabel => 'ذِكْر';
-
-  @override
   String get shareTitle => 'مشاركة الذكر';
 
   @override
@@ -547,4 +544,16 @@ class LAr extends L {
 
   @override
   String get notifChannelName => 'تذكيرات الأذكار';
+
+  @override
+  String get brandName => 'مشكاة';
+
+  @override
+  String get brandWird => 'الورد';
+
+  @override
+  String get shareStyleAubergine => 'بنفسجي';
+
+  @override
+  String get shareStyleStone => 'حجري';
 }

@@ -8,148 +8,219 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/l10n/app_localizations.dart';
-import '../../core/theme/app_theme.dart';
+import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/brand_mark.dart';
+import '../../core/widgets/buttons.dart';
+import '../../core/widgets/mishkat_icon.dart';
+import '../../core/widgets/segmented_control.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../settings/settings_controller.dart';
 
-/// The exported artboard is square, at the size social apps expect.
-const double kShareImageSize = 1080;
+/// Exported images are 1080 wide: square when the thikr fits, 1080×1350
+/// (4:5) when it does not, and taller still for the very longest — the text
+/// is never shrunk or cut.
+const double kShareImageWidth = 1080;
 
-/// Rendered at half scale on screen, captured at 2× to reach 1080².
-const double _designSize = 540;
+/// The card is laid out at a third of its exported size, as on the board.
+const double _designWidth = 360;
+const double _pixelRatio = kShareImageWidth / _designWidth;
+const double _squareHeight = 360;
+const double _portraitHeight = 450;
 
-/// The shareable thikr card from the design board.
-///
-/// Deliberately self-contained rather than theme-dependent: an exported image
-/// leaves the app, so it should look the same whoever shares it.
+const double _padding = 30;
+const double _thikrSize = 21;
+const double _thikrHeight = 2;
+
+/// The two looks from board 3.5.
+enum ShareCardStyle { aubergine, stone }
+
+/// The card's colours for [style], always from the light identity: an
+/// exported image leaves the app, so it looks the same whoever shares it.
+class _CardColors {
+  factory _CardColors(ShareCardStyle style) {
+    const t = MishkatTokens.light;
+    return switch (style) {
+      ShareCardStyle.aubergine => _CardColors._(
+        bg: t.primary,
+        text: t.onPrimary,
+        muted: t.onPrimaryMuted,
+        hairline: Color.alphaBlend(
+          t.onPrimary.withValues(alpha: 0.25),
+          t.primary,
+        ),
+        arch: t.onPrimary,
+        lamp: t.cta,
+      ),
+      ShareCardStyle.stone => _CardColors._(
+        bg: t.bg,
+        text: t.ink,
+        muted: t.inkMuted,
+        hairline: t.line,
+        arch: t.primary,
+        lamp: t.glow,
+      ),
+    };
+  }
+
+  const _CardColors._({
+    required this.bg,
+    required this.text,
+    required this.muted,
+    required this.hairline,
+    required this.arch,
+    required this.lamp,
+  });
+
+  final Color bg, text, muted, hairline, arch, lamp;
+}
+
+TextStyle _thikrStyle(Color color) => TextStyle(
+  fontFamily: kThikrFont,
+  fontSize: _thikrSize,
+  height: _thikrHeight,
+  color: color,
+);
+
+/// The card's logical height for [text]: the square if the thikr fits,
+/// otherwise 4:5, otherwise exactly as tall as the text needs.
+double shareCardHeight(String text) {
+  final painter = TextPainter(
+    text: TextSpan(text: text, style: _thikrStyle(MishkatTokens.light.ink)),
+    textAlign: TextAlign.center,
+    textDirection: TextDirection.rtl,
+  )..layout(maxWidth: _designWidth - 2 * _padding);
+  // Header and source line, plus breathing room above and below the text.
+  const chrome = 2 * _padding + 22 + 17 + 2 * 24;
+  final needed = painter.height + chrome;
+  painter.dispose();
+  if (needed <= _squareHeight) return _squareHeight;
+  if (needed <= _portraitHeight) return _portraitHeight;
+  return needed.ceilToDouble();
+}
+
+/// The shareable thikr card from board 3.5.
 class ShareCard extends StatelessWidget {
   const ShareCard({
     super.key,
     required this.text,
     required this.reference,
-    required this.appName,
-    required this.label,
-    this.scale = 1,
+    required this.brandName,
+    required this.brandWird,
+    required this.language,
+    this.style = ShareCardStyle.aubergine,
   });
 
-  final String text, reference, appName, label;
+  final String text, reference, brandName, brandWird;
 
-  /// 1 draws at [_designSize]; the capture uses the same widget.
-  final double scale;
+  /// Direction of the wordmark row; the thikr itself is always Arabic.
+  final TextDirection language;
+  final ShareCardStyle style;
 
   @override
   Widget build(BuildContext context) {
-    // The share card always uses the light identity, so a shared image is
-    // recognisably from this app regardless of the sender's appearance.
-    const brand = MishkatTokens.light;
+    final c = _CardColors(style);
+    Widget hairline() => Container(width: 16, height: 1, color: c.hairline);
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        width: _designSize,
-        height: _designSize,
-        padding: const EdgeInsets.symmetric(horizontal: 56, vertical: 64),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomRight,
-            colors: [brand.primary, brand.primary],
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontFamily: kUiFont,
-                    fontSize: 14,
-                    letterSpacing: 2,
-                    color: brand.cta,
-                  ),
+    // Self-contained theme: the offscreen capture has no MaterialApp above.
+    return Theme(
+      data: buildMishkatTheme(Brightness.light),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Container(
+          width: _designWidth,
+          height: shareCardHeight(text),
+          color: c.bg,
+          padding: const EdgeInsets.all(_padding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Directionality(
+                textDirection: language,
+                child: Row(
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: brandName,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: c.text,
+                            ),
+                          ),
+                          const TextSpan(text: ' '),
+                          TextSpan(
+                            text: brandWird,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: c.muted,
+                            ),
+                          ),
+                        ],
+                      ),
+                      style: const TextStyle(fontFamily: kUiFont),
+                    ),
+                    const Spacer(),
+                    BrandMark(
+                      size: 22,
+                      showTile: false,
+                      smallCut: false,
+                      arch: c.arch,
+                      lamp: c.lamp,
+                    ),
+                  ],
                 ),
-                Container(
-                  width: 34,
-                  height: 34,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: brand.cta.withValues(alpha: 0.4)),
-                    borderRadius: BorderRadius.circular(11),
-                  ),
-                  child: const BrandMark(size: 20),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: kThikrFont,
-                    // Long athkar step down rather than clipping: no shared
-                    // image may ever cut the text.
-                    fontSize: _fontSizeFor(text),
-                    height: 2.1,
-                    color: const Color(0xFFEAF2EE),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: _thikrStyle(c.text),
                   ),
                 ),
               ),
-            ),
-            Container(height: 1, color: Colors.white.withValues(alpha: 0.14)),
-            const SizedBox(height: 18),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    reference,
-                    style: TextStyle(
-                      fontFamily: kUiFont,
-                      fontSize: 13,
-                      color: brand.cta,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  hairline(),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      reference,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: kUiFont,
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w300,
+                        color: c.muted,
+                      ),
                     ),
                   ),
-                ),
-                Text(
-                  appName,
-                  style: TextStyle(
-                    fontFamily: kUiFont,
-                    fontSize: 13,
-                    letterSpacing: 1,
-                    color: const Color(0xFFEAF2EE).withValues(alpha: 0.45),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 8),
+                  hairline(),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-  /// Steps down in bands so even the longest thikr fits the square.
-  static double _fontSizeFor(String text) {
-    if (text.length > 320) return 20;
-    if (text.length > 200) return 25;
-    if (text.length > 120) return 29;
-    return 34;
-  }
 }
 
-/// Renders [card] to a PNG at [kShareImageSize] square.
-Future<Uint8List> renderShareImage(Widget card) {
+/// Renders [card] to a PNG 1080 wide.
+Future<Uint8List> renderShareImage(ShareCard card) {
   return ScreenshotController().captureFromWidget(
     card,
-    pixelRatio: kShareImageSize / _designSize,
-    targetSize: const Size(_designSize, _designSize),
-    delay: const Duration(milliseconds: 40),
+    pixelRatio: _pixelRatio,
+    targetSize: Size(_designWidth, shareCardHeight(card.text)),
+    // Long enough for the mark's SVG, already cached by the preview.
+    delay: const Duration(milliseconds: 120),
   );
 }
 
@@ -167,67 +238,56 @@ class ShareSheet extends ConsumerStatefulWidget {
 
 class _ShareSheetState extends ConsumerState<ShareSheet> {
   bool _busy = false;
+  ShareCardStyle _style = ShareCardStyle.aubergine;
 
   @override
   Widget build(BuildContext context) {
-    final t = context.tokens;
     final l = L.of(context);
-    final lang = ref.watch(settingsProvider).language.name;
+    final settings = ref.watch(settingsProvider);
+    final lang = settings.language.name;
     final library = ref.watch(athkarLibraryProvider).value;
 
     final card = ShareCard(
       text: widget.thikr.text,
       reference: library?.referenceLine(widget.thikr, lang) ?? '',
-      appName: l.appName,
-      label: l.shareCardLabel,
+      brandName: l.brandName,
+      brandWird: l.brandWird,
+      language: settings.language.isRtl
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      style: _style,
     );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          l.shareTitle,
-          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
+        Text(l.shareTitle, style: MishkatType.title(context.tokens)),
+        const SizedBox(height: Space.md),
+        SegmentedControl<ShareCardStyle>(
+          value: _style,
+          onChanged: (s) => setState(() => _style = s),
+          options: [
+            SegmentedOption(ShareCardStyle.aubergine, l.shareStyleAubergine),
+            SegmentedOption(ShareCardStyle.stone, l.shareStyleStone),
+          ],
         ),
-        const SizedBox(height: 16),
-        // Shown at half the exported size.
+        const SizedBox(height: Space.md),
+        // The exported card, scaled to the sheet's width.
         ClipRRect(
-          borderRadius: BorderRadius.circular(22),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: SizedBox(
-              width: _designSize,
-              height: _designSize,
-              child: card,
-            ),
-          ),
+          borderRadius: BorderRadius.circular(Radii.lg),
+          child: FittedBox(fit: BoxFit.contain, child: card),
         ),
-        const SizedBox(height: 16),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: _busy ? null : () => _share(card),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              color: t.accent,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              l.share,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w600,
-                color: t.onAccent,
-              ),
-            ),
-          ),
+        const SizedBox(height: Space.md),
+        PrimaryButton(
+          label: l.share,
+          icon: MIcon.share,
+          onPressed: _busy ? null : () => _share(card),
         ),
       ],
     );
   }
 
-  Future<void> _share(Widget card) async {
+  Future<void> _share(ShareCard card) async {
     setState(() => _busy = true);
     try {
       final bytes = await renderShareImage(card);

@@ -349,9 +349,6 @@ class LEn extends L {
   String get backHome => 'Back to home';
 
   @override
-  String get shareCardLabel => 'ذِكْر';
-
-  @override
   String get shareTitle => 'Share this thikr';
 
   @override
@@ -546,4 +543,16 @@ class LEn extends L {
 
   @override
   String get notifChannelName => 'Athkar reminders';
+
+  @override
+  String get brandName => 'Mishkat';
+
+  @override
+  String get brandWird => 'Al-Wird';
+
+  @override
+  String get shareStyleAubergine => 'Aubergine';
+
+  @override
+  String get shareStyleStone => 'Stone';
 }

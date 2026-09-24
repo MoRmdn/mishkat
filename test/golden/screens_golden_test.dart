@@ -2,8 +2,10 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mishkat/app.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
+import 'package:mishkat/features/share/share_card.dart';
 
 import '../support/app_harness.dart';
 import 'font_loader.dart';
@@ -64,9 +66,7 @@ void main() {
     );
   });
 
-  testWidgets('reminders — exact alarms denied, dark English', (
-    tester,
-  ) async {
+  testWidgets('reminders — exact alarms denied, dark English', (tester) async {
     final denied = AppHarness(
       permissions: FakePermissionService(exactAlarms: false),
     );
@@ -152,5 +152,58 @@ void main() {
       find.byType(MishkatApp),
       matchesGoldenFile('images/settings_dark_ar.png'),
     );
+  });
+
+  group('share card', () {
+    // Board 3.5's own text, and the corpus's longest-style thikr for the
+    // portrait case.
+    const short =
+        'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا '
+        'عَبْدُكَ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي '
+        'فَاغْفِرْ لِي';
+
+    Future<void> pumpCard(
+      WidgetTester tester,
+      String text,
+      ShareCardStyle style,
+    ) async {
+      tester.view.physicalSize = const Size(1080, 1600);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        Center(
+          child: RepaintBoundary(
+            child: ShareCard(
+              text: text,
+              reference: 'رواه البخاري ٦٣٠٦',
+              brandName: 'مشكاة',
+              brandWird: 'الورد',
+              language: TextDirection.rtl,
+              style: style,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('aubergine, square', (tester) async {
+      await pumpCard(tester, short, ShareCardStyle.aubergine);
+      await expectLater(
+        find.byType(ShareCard),
+        matchesGoldenFile('images/share_aubergine_square.png'),
+      );
+    });
+
+    testWidgets('stone, the longest thikr in the corpus', (tester) async {
+      final longest = [
+        for (final items in AppHarness.library.byCategory.values) ...items,
+      ].reduce((a, b) => a.text.length >= b.text.length ? a : b);
+      await pumpCard(tester, longest.text, ShareCardStyle.stone);
+      await expectLater(
+        find.byType(ShareCard),
+        matchesGoldenFile('images/share_stone_longest.png'),
+      );
+    });
   });
 }

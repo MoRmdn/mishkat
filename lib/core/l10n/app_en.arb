@@ -118,7 +118,6 @@
   "doneStreak": "Your streak is now {days} days. Next reminder at {time}.",
   "shareAsImage": "Share as image",
   "backHome": "Back to home",
-  "shareCardLabel": "ذِكْر",
   "shareTitle": "Share this thikr",
   "saveImage": "Save image",
   "share": "Share",
@@ -185,5 +184,9 @@
   "notifTitleWake": "Time for the waking athkar",
   "notifActionStart": "Start",
   "notifActionSnooze": "Snooze 15 min",
-  "notifChannelName": "Athkar reminders"
+  "notifChannelName": "Athkar reminders",
+  "brandName": "Mishkat",
+  "brandWird": "Al-Wird",
+  "shareStyleAubergine": "Aubergine",
+  "shareStyleStone": "Stone"
 }

@@ -147,7 +147,6 @@
   },
   "shareAsImage": "مشاركة كصورة",
   "backHome": "العودة للرئيسية",
-  "shareCardLabel": "ذِكْر",
   "shareTitle": "مشاركة الذكر",
   "saveImage": "حفظ كصورة",
   "share": "مشاركة",
@@ -219,5 +218,9 @@
   "notifTitleWake": "وقت أذكار الاستيقاظ",
   "notifActionStart": "ابدأ",
   "notifActionSnooze": "تأجيل ١٥ د",
-  "notifChannelName": "تذكيرات الأذكار"
+  "notifChannelName": "تذكيرات الأذكار",
+  "brandName": "مشكاة",
+  "brandWird": "الورد",
+  "shareStyleAubergine": "بنفسجي",
+  "shareStyleStone": "حجري"
 }
