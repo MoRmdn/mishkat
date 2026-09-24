@@ -12,9 +12,16 @@ than into the reading UI.
   down. Beads track the current thikr and a segmented bar tracks the session.
   Reaching zero advances after a beat so the completion is visible. Text is set
   at a fixed size; a long thikr scrolls inside the page and never shrinks.
+- **Resume reading.** Reopening an unfinished routine restores its position
+  and remaining repetitions, even after restarting the app. Routines and
+  favourite selections save independently. Use the reader's “Start again”
+  control to reset a session deliberately.
 - **Timed reminders**, in two modes. Fixed clock times by default, or anchored
   to prayer times (Fajr −15 for waking, Fajr +30 for the morning, Asr +45 for
   the evening; bedtime stays a fixed hour).
+- **Snooze for 15 minutes** from a notification, including in the background.
+  Each routine keeps at most one snooze. Schedule refreshes preserve it;
+  switching that reminder off cancels it. Start opens the routine instead.
 - **One identity, "Dusk Grid"**, in light, dark or follow-the-system — the
   reader included. A home screen that shows the day's four routines and offers
   the one that is due now.

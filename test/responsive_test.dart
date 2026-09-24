@@ -73,7 +73,7 @@ void main() {
       );
       final column = find.text(_band(longest.category, english: v.$1 == 'en'));
       await tester.tap(column);
-      await tester.pumpAndSettle();
+      await AppHarness.settleWithDatabase(tester);
       expect(find.byType(ReaderScreen), findsOneWidget);
       final index = AppHarness.library[longest.category].indexOf(longest);
       for (var i = 0; i < index; i++) {

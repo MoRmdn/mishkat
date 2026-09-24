@@ -10,7 +10,11 @@ import '../settings/settings_controller.dart';
 import 'prayer_controller.dart';
 
 final notificationServiceProvider = Provider<NotificationService>(
-  (ref) => NotificationService(),
+  (ref) => NotificationService(
+    clock: ref.read(clockProvider),
+    onError: (error, stack) =>
+        ref.read(diagnosticsProvider).recordError(error, stack),
+  ),
 );
 
 final permissionServiceProvider = Provider<PermissionService>(

@@ -721,4 +721,18 @@ class LEn extends L {
 
   @override
   String get textLarger => 'Larger thikr text';
+
+  @override
+  String get readerStartAgain => 'Start again';
+
+  @override
+  String get readerRestartQuestion => 'Start this reading session again?';
+
+  @override
+  String get readerRestoreError =>
+      'Your saved reading could not be restored. You can close this message or start again.';
+
+  @override
+  String get readerSaveError =>
+      'Progress could not be saved. Keep the app open and try again.';
 }

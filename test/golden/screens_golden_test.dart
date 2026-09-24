@@ -141,7 +141,7 @@ void main() {
       final h = await withHistory(todayDone: ['wake']);
       await h.pump(tester, size: board, now: DateTime(2026, 9, 7, 9, 41));
       await tester.tap(find.text('ابدأ'));
-      await tester.pumpAndSettle();
+      await AppHarness.settleWithDatabase(tester);
       await next(tester, 'التالي', 2);
       await countOnce(tester);
       await tester.pumpAndSettle();
@@ -162,7 +162,7 @@ void main() {
       );
       final index = AppHarness.library[longest.category].indexOf(longest);
       await tester.tap(find.text(_bandLabel(longest.category)));
-      await tester.pumpAndSettle();
+      await AppHarness.settleWithDatabase(tester);
       await next(tester, 'التالي', index);
       expect(find.text('مرّر للمتابعة'), findsOneWidget);
       await shot('3_2_reader_long_dark_ar');
@@ -177,7 +177,7 @@ void main() {
         now: DateTime(2026, 9, 7, 9, 41),
       );
       await tester.tap(find.text('Begin'));
-      await tester.pumpAndSettle();
+      await AppHarness.settleWithDatabase(tester);
       await next(tester, 'Next', 2);
       await countOnce(tester);
       await tester.pumpAndSettle();
@@ -188,7 +188,7 @@ void main() {
       final h = await withHistory(todayDone: ['wake']);
       await h.pump(tester, size: board, now: DateTime(2026, 9, 7, 9, 41));
       await tester.tap(find.text('ابدأ'));
-      await tester.pumpAndSettle();
+      await AppHarness.settleWithDatabase(tester);
       for (final thikr in AppHarness.library[ThikrCategory.morning]) {
         for (var i = 0; i < thikr.count; i++) {
           await countOnce(tester);

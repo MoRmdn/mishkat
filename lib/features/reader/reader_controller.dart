@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,11 +21,13 @@ class ReaderSession {
     required this.index,
     this.finished = false,
     this.itemIds,
+    this.frozenItems,
   });
 
   final ThikrCategory category;
   final int index;
   final bool finished;
+  final List<Thikr>? frozenItems;
 
   /// Set when the session reads a hand-picked subset — a saved thikr opened
   /// from Favourites — rather than the whole routine. Such a session is not
@@ -34,34 +37,44 @@ class ReaderSession {
   bool get isWholeRoutine => itemIds == null;
 
   /// The athkar this session reads, in order.
-  List<Thikr> itemsFrom(AthkarLibrary library) => itemIds == null
-      ? library[category]
-      : [for (final id in itemIds!) ?library.byId(id)];
+  List<Thikr> itemsFrom(AthkarLibrary library) =>
+      frozenItems ??
+      (itemIds == null
+          ? library[category]
+          : [for (final id in itemIds!) ?library.byId(id)]);
 
   ReaderSession copyWith({int? index, bool? finished}) => ReaderSession(
     category: category,
     index: index ?? this.index,
     finished: finished ?? this.finished,
     itemIds: itemIds,
+    frozenItems: frozenItems,
   );
 }
 
 @immutable
 class AthkarState {
-  const AthkarState({this.remaining = const {}, this.session});
+  const AthkarState({
+    this.remaining = const {},
+    this.session,
+    this.saveFailed = false,
+  });
 
   /// Remaining repetitions per thikr id. Absent means "untouched".
   final Map<String, int> remaining;
 
   final ReaderSession? session;
+  final bool saveFailed;
 
   AthkarState copyWith({
     Map<String, int>? remaining,
     ReaderSession? session,
     bool clearSession = false,
+    bool? saveFailed,
   }) {
     return AthkarState(
       remaining: remaining ?? this.remaining,
+      saveFailed: saveFailed ?? this.saveFailed,
       session: clearSession ? null : (session ?? this.session),
     );
   }
@@ -71,6 +84,67 @@ class AthkarState {
 
 class ReaderController extends Notifier<AthkarState> {
   Timer? _advanceTimer;
+  Future<void> _writes = Future<void>.value();
+  String? _sessionKey;
+  bool _advancePending = false;
+  int _openRevision = 0;
+
+  /// Lets lifecycle handlers/tests wait until all queued checkpoints commit.
+  Future<void> flush() => _writes;
+
+  Future<void> retrySave() {
+    if (state.session?.finished == true) {
+      _finish();
+    } else {
+      _save();
+    }
+    return flush();
+  }
+
+  void _enqueue(Future<void> Function() write) {
+    final diagnostics = ref.read(diagnosticsProvider);
+    _writes = _writes
+        .then((_) => write())
+        .then((_) {
+          if (ref.mounted && state.saveFailed) {
+            state = state.copyWith(saveFailed: false);
+          }
+        })
+        .catchError((Object error, StackTrace stack) {
+          diagnostics.recordError(error, stack);
+          if (ref.mounted) state = state.copyWith(saveFailed: true);
+        });
+  }
+
+  void _save() {
+    final session = state.session;
+    final key = _sessionKey;
+    if (session == null || session.finished || key == null) return;
+    final db = ref.read(appDatabaseProvider);
+    final snapshot = jsonEncode({
+      'version': 1,
+      'category': session.category.key,
+      'subset': !session.isWholeRoutine,
+      'index': session.index,
+      'advancePending': _advancePending,
+      'remaining': {
+        for (final t in session.frozenItems!) t.id: state.remainingFor(t),
+      },
+      'items': [
+        for (final t in session.frozenItems!)
+          {
+            'id': t.id,
+            'text': t.text,
+            'count': t.count,
+            'source': t.sourceId,
+            'reference': t.reference,
+            'meaningEn': t.meaningEn,
+            if (t.hasVirtue) 'virtue': {'ar': t.virtueAr, 'en': t.virtueEn},
+          },
+      ],
+    });
+    _enqueue(() => db.saveReaderCheckpoint(key, snapshot));
+  }
 
   @override
   AthkarState build() {
@@ -78,23 +152,79 @@ class ReaderController extends Notifier<AthkarState> {
     return const AthkarState();
   }
 
-  /// Opens [category] as a fresh session with every count restored.
-  ///
-  /// Pass [subset] to read only those athkar, as Favourites does.
-  void open(ThikrCategory category, List<Thikr> items, {bool subset = false}) {
+  /// Resumes an unfinished session, or starts a fresh one after completion.
+  /// Frozen items keep content updates from changing an in-progress routine.
+  Future<bool> open(
+    ThikrCategory category,
+    List<Thikr> items, {
+    bool subset = false,
+    bool restart = false,
+  }) async {
+    if (items.isEmpty) return false;
+    final revision = ++_openRevision;
     _advanceTimer?.cancel();
-    final counts = Map<String, int>.from(state.remaining);
-    for (final t in items) {
-      counts[t.id] = t.count;
+    _save();
+    await flush();
+    if (!ref.mounted || revision != _openRevision) return false;
+    final key = subset
+        ? 'subset:${category.key}:${jsonEncode(items.map((t) => t.id).toList())}'
+        : 'routine:${category.key}';
+    final raw = restart
+        ? null
+        : await ref.read(appDatabaseProvider).readerCheckpoint(key);
+    if (!ref.mounted || revision != _openRevision) return false;
+    var frozen = List<Thikr>.unmodifiable(items);
+    var index = 0;
+    var counts = {for (final t in frozen) t.id: t.count};
+    var advancePending = false;
+    if (raw != null) {
+      // Treat an unreadable checkpoint as an error, not permission to silently
+      // overwrite it. The caller can explicitly choose to start again.
+      final saved = jsonDecode(raw) as Map<String, dynamic>;
+      if (saved['version'] != 1 ||
+          saved['category'] != category.key ||
+          saved['subset'] != subset) {
+        throw const FormatException('Unsupported reading checkpoint');
+      }
+      frozen = List<Thikr>.unmodifiable([
+        for (final item in saved['items'] as List)
+          Thikr.fromJson(category, item as Map<String, dynamic>),
+      ]);
+      index = saved['index'] as int;
+      counts = Map<String, int>.from(saved['remaining'] as Map);
+      advancePending = saved['advancePending'] as bool;
+      if (frozen.isEmpty ||
+          index < 0 ||
+          index >= frozen.length ||
+          frozen.map((t) => t.id).toSet().length != frozen.length ||
+          frozen.any(
+            (t) =>
+                t.count <= 0 ||
+                t.text.trim().isEmpty ||
+                counts[t.id] == null ||
+                counts[t.id]! < 0 ||
+                counts[t.id]! > t.count,
+          ) ||
+          (advancePending && counts[frozen[index].id] != 0)) {
+        throw const FormatException('Invalid reading checkpoint');
+      }
     }
-    state = state.copyWith(
+    _sessionKey = key;
+    _advancePending = advancePending;
+    state = AthkarState(
       remaining: counts,
       session: ReaderSession(
         category: category,
-        index: 0,
-        itemIds: subset ? [for (final t in items) t.id] : null,
+        index: index,
+        itemIds: subset ? [for (final t in frozen) t.id] : null,
+        frozenItems: frozen,
       ),
     );
+    _save();
+    if (_advancePending) {
+      _advanceTimer = Timer(kAutoAdvanceDelay, () => advance(frozen));
+    }
+    return true;
   }
 
   /// Counts one repetition of the current thikr.
@@ -116,6 +246,9 @@ class ReaderController extends Notifier<AthkarState> {
 
     state = state.copyWith(remaining: {...state.remaining, current.id: left});
 
+    _advancePending = left == 0;
+    _save();
+
     if (left == 0) {
       _advanceTimer?.cancel();
       _advanceTimer = Timer(advanceDelay, () => advance(items));
@@ -124,11 +257,13 @@ class ReaderController extends Notifier<AthkarState> {
 
   void advance(List<Thikr> items) {
     final s = state.session;
-    if (s == null || s.finished) return;
+    if (s == null || s.finished || items.isEmpty) return;
     _advanceTimer?.cancel();
+    _advancePending = false;
 
     if (s.index + 1 < items.length) {
       state = state.copyWith(session: s.copyWith(index: s.index + 1));
+      _save();
     } else {
       _finish();
     }
@@ -138,7 +273,9 @@ class ReaderController extends Notifier<AthkarState> {
     final s = state.session;
     if (s == null || s.index == 0) return;
     _advanceTimer?.cancel();
+    _advancePending = false;
     state = state.copyWith(session: s.copyWith(index: s.index - 1));
+    _save();
   }
 
   /// Restores the current thikr's count to full.
@@ -147,9 +284,11 @@ class ReaderController extends Notifier<AthkarState> {
     if (s == null || items.isEmpty) return;
     _advanceTimer?.cancel();
     final current = items[s.index];
+    _advancePending = false;
     state = state.copyWith(
       remaining: {...state.remaining, current.id: current.count},
     );
+    _save();
   }
 
   void _finish() {
@@ -157,18 +296,25 @@ class ReaderController extends Notifier<AthkarState> {
     if (s == null) return;
     state = state.copyWith(session: s.copyWith(finished: true));
 
-    // The tasbih is an open-ended counter, so it never completes a session.
-    if (s.category.isCountedSession && s.isWholeRoutine) {
-      ref
-          .read(appDatabaseProvider)
-          .recordCompletion(s.category.key, ref.read(clockProvider)())
-          .then((_) => invalidateProgress(ref));
-      ref.read(diagnosticsProvider).sessionCompleted(s.category.key);
-    }
+    final key = _sessionKey!;
+    final db = ref.read(appDatabaseProvider);
+    final now = ref.read(clockProvider)();
+    final category = s.category.isCountedSession && s.isWholeRoutine
+        ? s.category.key
+        : null;
+    final diagnostics = ref.read(diagnosticsProvider);
+    _enqueue(() async {
+      await db.finishReading(key, category, now);
+      if (ref.mounted) invalidateProgress(ref);
+      if (category != null) diagnostics.sessionCompleted(category);
+    });
   }
 
   void close() {
+    ++_openRevision;
     _advanceTimer?.cancel();
+    _save();
+    _sessionKey = null;
     state = state.copyWith(clearSession: true);
   }
 

@@ -39,7 +39,7 @@ void main() {
       await harness.pump(tester);
 
       await tester.tap(find.text('مساء'));
-      await tester.pumpAndSettle();
+      await AppHarness.settleWithDatabase(tester);
       expect(find.byType(ReaderScreen), findsOneWidget);
 
       await tester.tap(find.bySemanticsLabel('حفظ في المفضلة'));

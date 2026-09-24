@@ -1,147 +1,266 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../core/clock.dart';
+import '../core/l10n/app_localizations.dart';
 import '../core/theme/brand_colors.dart';
+import '../data/local/settings_store.dart';
 import '../data/models/reminder_settings.dart';
+import '../data/repositories/athkar_repository.dart';
+import 'diagnostics.dart';
+import 'reminder_content.dart';
 import 'reminder_scheduler.dart';
 
-/// Android channel for the athkar reminders. Its id must never change: Android
-/// binds user-visible sound and importance settings to it, and a new id silently
-/// resets whatever the user chose.
-const String kReminderChannelId = 'athkar_reminders';
+export 'reminder_content.dart' show ReminderContent;
 
+/// Keep this ID stable: Android binds user sound/importance settings to it.
+const String kReminderChannelId = 'athkar_reminders';
 const String kStartActionId = 'start';
 const String kSnoozeActionId = 'snooze';
 const Duration kSnoozeDuration = Duration(minutes: 15);
 
-/// Text for one scheduled reminder, resolved at schedule time.
-///
-/// The notification carries the first thikr and the session length so it has
-/// value even if the user never opens the app.
-@immutable
-class ReminderContent {
-  const ReminderContent({
-    required this.title,
-    required this.body,
-    required this.channelName,
-    required this.startLabel,
-    required this.snoozeLabel,
-  });
-
-  final String title, body, channelName, startLabel, snoozeLabel;
-}
+/// Four IDs outside the routine planner's range. Re-snoozing replaces the
+/// same slot's one-off and uses at most four of iOS's reserved pending slots.
+const int kSnoozeIdBase = 10000;
+int snoozeNotificationId(ReminderSlotId slot) => kSnoozeIdBase + slot.index;
 
 typedef ReminderContentBuilder = ReminderContent Function(ReminderSlotId slot);
-
-/// Called when the user taps a reminder. Carries the slot to open.
 typedef ReminderTapHandler = void Function(ReminderSlotId slot);
+typedef SnoozeContentLoader =
+    Future<ReminderContent?> Function(ReminderSlotId slot);
 
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse response) {
-  // Deliberately empty. A background tap only needs to wake the app; the
-  // foreground handler routes it once the UI is up. Snoozing from the
-  // background is handled by the OS action, not by re-entering Dart.
+/// Reads fresh persisted state in the action isolate, without needing the UI.
+/// Null means the user has since disabled this slot.
+Future<ReminderContent?> _loadSnoozeContent(ReminderSlotId slot) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.reload();
+  final store = SettingsStore(prefs);
+  if (!store.readReminders().slot(slot).enabled) return null;
+  final language = store.read().language.name;
+  return buildReminderContent(
+    l: lookupL(Locale(language)),
+    library: await AthkarRepository().load(),
+    slot: slot,
+    languageCode: language,
+  );
 }
 
-/// Applies a [ReminderSchedule] to the operating system.
-///
-/// Everything about *what* to schedule lives in [buildSchedule]; this class
-/// only talks to the plugin, so the interesting logic stays testable.
+@pragma('vm:entry-point')
+Future<void> notificationTapBackground(NotificationResponse response) async {
+  if (response.actionId != kSnoozeActionId) return;
+  WidgetsFlutterBinding.ensureInitialized();
+  final container = ProviderContainer();
+  try {
+    await NotificationService(
+      clock: container.read(clockProvider),
+    ).handleResponse(response);
+  } catch (error, stack) {
+    const NoopDiagnostics().recordError(error, stack);
+  } finally {
+    container.dispose();
+  }
+}
+
+/// Applies schedules and actions to the OS. All mutations from this instance
+/// are serialized so an older refresh cannot finish after a newer refresh.
 class NotificationService {
-  NotificationService({FlutterLocalNotificationsPlugin? plugin})
-    : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
+  NotificationService({
+    required this._clock,
+    FlutterLocalNotificationsPlugin? plugin,
+    SnoozeContentLoader? snoozeContent,
+    void Function(Object, StackTrace)? onError,
+  }) : _plugin = plugin ?? FlutterLocalNotificationsPlugin(),
+       _snoozeContent = snoozeContent ?? _loadSnoozeContent,
+       _onError =
+           onError ??
+           ((error, stack) =>
+               const NoopDiagnostics().recordError(error, stack));
 
+  final Clock _clock;
   final FlutterLocalNotificationsPlugin _plugin;
+  final SnoozeContentLoader _snoozeContent;
+  final void Function(Object, StackTrace) _onError;
   ReminderTapHandler? _onTap;
-  bool _initialized = false;
+  Future<void>? _initializing;
+  Future<void> _mutations = Future<void>.value();
 
-  /// Set once the UI is ready to route a tap.
   set onTap(ReminderTapHandler handler) => _onTap = handler;
 
-  Future<void> init() async {
-    if (_initialized) return;
+  Future<void> _serialize(Future<void> Function() operation) {
+    final next = _mutations.then((_) => operation());
+    // A failed mutation reaches its caller but must not poison later work.
+    _mutations = next.catchError((Object _, StackTrace _) {});
+    return next;
+  }
 
+  Future<void> init() => _initializing ??= _initialize().catchError((
+    Object error,
+    StackTrace stack,
+  ) {
+    _initializing = null;
+    Error.throwWithStackTrace(error, stack);
+  });
+
+  Future<void> _initialize() async {
     tzdata.initializeTimeZones();
     await syncTimeZone();
-
     await _plugin.initialize(
-      settings: const InitializationSettings(
-        // A one-colour niche with the lamp knocked out, not the launcher icon:
-        // Android tints notification icons flat and masks anything that is
-        // not a silhouette into a featureless blob.
-        android: AndroidInitializationSettings('@drawable/ic_stat_mishkat'),
-        // Permissions are requested explicitly during onboarding, where the
-        // rationale is shown first, not silently at startup.
+      settings: InitializationSettings(
+        android: const AndroidInitializationSettings(
+          '@drawable/ic_stat_mishkat',
+        ),
         iOS: DarwinInitializationSettings(
           requestAlertPermission: false,
           requestBadgePermission: false,
           requestSoundPermission: false,
+          notificationCategories: [
+            for (final language in ['ar', 'en'])
+              DarwinNotificationCategory(
+                'athkar_$language',
+                actions: [
+                  DarwinNotificationAction.plain(
+                    kStartActionId,
+                    lookupL(Locale(language)).notifActionStart,
+                    options: {DarwinNotificationActionOption.foreground},
+                  ),
+                  DarwinNotificationAction.plain(
+                    kSnoozeActionId,
+                    lookupL(Locale(language)).notifActionSnooze,
+                  ),
+                ],
+              ),
+          ],
         ),
       ),
-      onDidReceiveNotificationResponse: _handleResponse,
+      onDidReceiveNotificationResponse: (response) {
+        unawaited(handleResponse(response).catchError(_onError));
+      },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
-
-    _initialized = true;
   }
 
-  /// Points the `timezone` package at the device's current zone.
-  ///
-  /// Called again on resume: a user who flies across zones should get their
-  /// reminders on local time, not the time they left.
   Future<void> syncTimeZone() async {
     try {
       final info = await FlutterTimezone.getLocalTimezone();
       tz.setLocalLocation(tz.getLocation(info.identifier));
     } catch (_) {
-      // Falls back to whatever `timezone` defaults to rather than failing to
-      // schedule at all.
+      // UTC remains a valid fallback for a relative 15-minute snooze.
     }
   }
 
   String get currentTimeZone => tz.local.name;
 
-  void _handleResponse(NotificationResponse response) {
-    final payload = response.payload;
-    if (payload == null) return;
-    _onTap?.call(ReminderSlotId.fromKey(payload));
+  static ReminderSlotId? _slot(String? payload) =>
+      ReminderSlotId.values.where((s) => s.key == payload).firstOrNull;
+
+  static bool _opensReader(NotificationResponse response) =>
+      response.notificationResponseType ==
+          NotificationResponseType.selectedNotification ||
+      response.actionId == kStartActionId;
+
+  Future<void> handleResponse(NotificationResponse response) async {
+    final slot = _slot(response.payload);
+    if (slot == null) return;
+    if (response.actionId == kSnoozeActionId) {
+      // Capture the action time before any asynchronous initialization/I/O.
+      final at = _clock().add(kSnoozeDuration);
+      await _serialize(() async {
+        await init();
+        final text = await _snoozeContent(slot);
+        if (text == null) return;
+        final android = _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+        final exact = await android?.canScheduleExactNotifications() ?? false;
+        await _schedule(
+          id: snoozeNotificationId(slot),
+          slot: slot,
+          at: at,
+          text: text,
+          exactAllowed: exact,
+        );
+      });
+      return;
+    }
+    if (_opensReader(response)) _onTap?.call(slot);
   }
 
-  /// Replaces every scheduled reminder with [schedule].
-  ///
-  /// Cancels first so a slot turned off, or a window that shrank, leaves
-  /// nothing stale behind.
+  /// Reconcile routine IDs without deleting snoozes for enabled slots.
+  /// Disabled slots lose their pending snoozes as well as routine reminders.
   Future<void> apply(
     ReminderSchedule schedule,
     ReminderContentBuilder content, {
     required bool exactAllowed,
-  }) async {
+  }) => _serialize(() async {
     await init();
-    await _plugin.cancelAll();
-
+    final pending = await _plugin.pendingNotificationRequests();
+    final desiredIds = schedule.entries.map((e) => e.id).toSet();
+    final enabledSlots = schedule.entries.map((e) => e.slot).toSet();
+    for (final slot in ReminderSlotId.values) {
+      if (!enabledSlots.contains(slot)) {
+        await _plugin.cancel(id: snoozeNotificationId(slot));
+      }
+    }
+    for (final old in pending) {
+      // Only remove IDs owned by the routine planner. Never cancel a snooze
+      // from this snapshot: a background action may have just replaced it.
+      final isRoutine =
+          (old.id >= 0 && old.id < ReminderSlotId.values.length) ||
+          (old.id >= 1000 &&
+              old.id < 1000 + ReminderSlotId.values.length * 100);
+      if (isRoutine && !desiredIds.contains(old.id)) {
+        await _plugin.cancel(id: old.id);
+      }
+    }
     for (final entry in schedule.entries) {
-      final text = content(entry.slot);
-      await _plugin.zonedSchedule(
+      await _schedule(
         id: entry.id,
-        title: text.title,
-        body: text.body,
-        payload: entry.slot.key,
-        scheduledDate: tz.TZDateTime.from(entry.at, tz.local),
-        notificationDetails: _details(text),
-        androidScheduleMode: exactAllowed
-            ? AndroidScheduleMode.exactAllowWhileIdle
-            // Without the exact-alarm permission the OS may delay delivery by
-            // some minutes. The reminders tab says so rather than pretending.
-            : AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: entry.repeatsDaily
-            ? DateTimeComponents.time
-            : null,
+        slot: entry.slot,
+        at: entry.at,
+        text: content(entry.slot),
+        exactAllowed: exactAllowed,
+        repeatsDaily: entry.repeatsDaily,
       );
+    }
+  });
+
+  Future<void> _schedule({
+    required int id,
+    required ReminderSlotId slot,
+    required DateTime at,
+    required ReminderContent text,
+    required bool exactAllowed,
+    bool repeatsDaily = false,
+  }) async {
+    Future<void> schedule(AndroidScheduleMode mode) => _plugin.zonedSchedule(
+      id: id,
+      title: text.title,
+      body: text.body,
+      payload: slot.key,
+      scheduledDate: tz.TZDateTime.from(at, tz.local),
+      notificationDetails: _details(text),
+      androidScheduleMode: mode,
+      matchDateTimeComponents: repeatsDaily ? DateTimeComponents.time : null,
+    );
+    try {
+      await schedule(
+        exactAllowed
+            ? AndroidScheduleMode.exactAllowWhileIdle
+            : AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+    } on PlatformException catch (error) {
+      if (!exactAllowed || error.code != 'exact_alarms_not_permitted') rethrow;
+      // Permission can be revoked between the check and scheduling.
+      await schedule(AndroidScheduleMode.inexactAllowWhileIdle);
     }
   }
 
@@ -154,7 +273,7 @@ class NotificationService {
       category: AndroidNotificationCategory.reminder,
       color: BrandColors.notificationAccent,
       styleInformation: BigTextStyleInformation(text.body),
-      actions: <AndroidNotificationAction>[
+      actions: [
         AndroidNotificationAction(
           kStartActionId,
           text.startLabel,
@@ -163,27 +282,29 @@ class NotificationService {
         AndroidNotificationAction(kSnoozeActionId, text.snoozeLabel),
       ],
     ),
-    iOS: const DarwinNotificationDetails(
+    iOS: DarwinNotificationDetails(
+      categoryIdentifier: 'athkar_${text.languageCode}',
       presentAlert: true,
       presentSound: true,
       interruptionLevel: InterruptionLevel.timeSensitive,
     ),
   );
 
-  /// What the OS actually holds. The UI prints this rather than what the app
-  /// believes it scheduled.
   Future<int> pendingCount() async =>
       (await _plugin.pendingNotificationRequests()).length;
 
-  Future<void> cancelAll() => _plugin.cancelAll();
+  Future<void> cancelAll() => _serialize(() => _plugin.cancelAll());
 
-  /// The notification that launched the app, if any.
   Future<ReminderSlotId?> launchSlot() async {
     final details = await _plugin.getNotificationAppLaunchDetails();
-    final payload = details?.notificationResponse?.payload;
-    if (details?.didNotificationLaunchApp != true || payload == null) {
+    final response = details?.notificationResponse;
+    if (details?.didNotificationLaunchApp != true || response == null) {
       return null;
     }
-    return ReminderSlotId.fromKey(payload);
+    // Snooze never routes to reading, including cold-launch responses.
+    if (response.actionId == kSnoozeActionId || !_opensReader(response)) {
+      return null;
+    }
+    return _slot(response.payload);
   }
 }

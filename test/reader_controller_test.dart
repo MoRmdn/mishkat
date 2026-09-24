@@ -26,7 +26,7 @@ Thikr _thikr(
 Future<void> pastAutoAdvance() =>
     Future<void>.delayed(kAutoAdvanceDelay + const Duration(milliseconds: 60));
 
-void main() {
+void main() async {
   late ProviderContainer container;
   late AppDatabase db;
   final now = DateTime(2026, 9, 7, 6, 0);
@@ -42,7 +42,7 @@ void main() {
   Future<Set<String>> favoriteIds() async =>
       (await db.allFavorites()).map((f) => f.thikrId).toSet();
 
-  setUp(() {
+  setUp(() async {
     db = AppDatabase.memory();
     container = ProviderContainer(
       overrides: [
@@ -52,14 +52,15 @@ void main() {
     );
   });
   tearDown(() async {
+    await controller().flush();
     container.dispose();
     await db.close();
   });
 
   group('opening a session', () {
-    test('starts at the first thikr with every count restored', () {
+    test('starts at the first thikr with every count restored', () async {
       final items = [_thikr('a', 3), _thikr('b', 1)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
 
       expect(state().session!.category, ThikrCategory.morning);
       expect(state().session!.index, 0);
@@ -68,22 +69,22 @@ void main() {
       expect(state().remainingFor(items[1]), 1);
     });
 
-    test('reopening restores counts spent in a previous run', () {
+    test('reopening resumes counts spent in a previous run', () async {
       final items = [_thikr('a', 2)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().countOne(items);
       expect(state().remainingFor(items[0]), 1);
 
-      controller().open(ThikrCategory.morning, items);
-      expect(state().remainingFor(items[0]), 2);
+      await controller().open(ThikrCategory.morning, items);
+      expect(state().remainingFor(items[0]), 1);
       expect(state().session!.index, 0);
     });
   });
 
   group('counting', () {
-    test('each tap removes one repetition', () {
+    test('each tap removes one repetition', () async {
       final items = [_thikr('a', 3)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
 
       controller().countOne(items);
       expect(state().remainingFor(items[0]), 2);
@@ -93,7 +94,7 @@ void main() {
 
     test('the count never goes below zero', () async {
       final items = [_thikr('a', 1), _thikr('b', 1)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
 
       controller().countOne(items);
       controller().countOne(items);
@@ -102,7 +103,7 @@ void main() {
 
     test('reaching zero advances after the delay, not immediately', () async {
       final items = [_thikr('a', 1), _thikr('b', 5)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
 
       controller().countOne(items);
       // Still showing the completed thikr.
@@ -114,7 +115,7 @@ void main() {
 
     test('a pending auto-advance is cancelled by a manual reset', () async {
       final items = [_thikr('a', 1), _thikr('b', 5)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
 
       controller().countOne(items);
       controller().resetCurrent(items);
@@ -130,7 +131,7 @@ void main() {
 
     test('counting does nothing once the session is finished', () async {
       final items = [_thikr('a', 1)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().countOne(items);
       await pastAutoAdvance();
 
@@ -143,7 +144,7 @@ void main() {
   group('navigation', () {
     test('advancing past the last thikr finishes the session', () async {
       final items = [_thikr('a', 1)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
 
       controller().advance(items);
       expect(state().session!.finished, isTrue);
@@ -151,9 +152,9 @@ void main() {
       expect(await completedCategories(), contains('morning'));
     });
 
-    test('previous moves back but stops at the first', () {
+    test('previous moves back but stops at the first', () async {
       final items = [_thikr('a', 1), _thikr('b', 1)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().advance(items);
       expect(state().session!.index, 1);
 
@@ -163,9 +164,9 @@ void main() {
       expect(state().session!.index, 0);
     });
 
-    test('reset restores only the current thikr', () {
+    test('reset restores only the current thikr', () async {
       final items = [_thikr('a', 3), _thikr('b', 3)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().countOne(items);
       controller().advance(items);
       controller().countOne(items);
@@ -183,7 +184,7 @@ void main() {
   group('completion', () {
     test('the tasbih never marks a completed session', () async {
       final items = [_thikr('t', 1, category: ThikrCategory.tasbih)];
-      controller().open(ThikrCategory.tasbih, items);
+      await controller().open(ThikrCategory.tasbih, items);
       controller().advance(items);
 
       expect(state().session!.finished, isTrue);
@@ -191,18 +192,18 @@ void main() {
       expect(await completedCategories(), isEmpty);
     });
 
-    test('completedCount reports fully counted athkar', () {
+    test('completedCount reports fully counted athkar', () async {
       final items = [_thikr('a', 1), _thikr('b', 2)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       expect(controller().completedCount(items), 0);
 
       controller().countOne(items);
       expect(controller().completedCount(items), 1);
     });
 
-    test('closing clears the session but keeps progress', () {
+    test('closing clears the session but keeps progress', () async {
       final items = [_thikr('a', 3)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().countOne(items);
       controller().close();
 
@@ -225,11 +226,11 @@ void main() {
 
     test('a completed category is recorded once per day', () async {
       final items = [_thikr('a', 1)];
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().advance(items);
       await pumpEventQueue();
 
-      controller().open(ThikrCategory.morning, items);
+      await controller().open(ThikrCategory.morning, items);
       controller().advance(items);
       await pumpEventQueue();
 
@@ -237,9 +238,9 @@ void main() {
     });
   });
 
-  test('an empty category cannot start a broken session', () {
-    controller().open(ThikrCategory.misc, const []);
+  test('an empty category cannot start a broken session', () async {
+    await controller().open(ThikrCategory.misc, const []);
     controller().countOne(const []);
-    expect(state().session!.index, 0);
+    expect(state().session, isNull);
   });
 }

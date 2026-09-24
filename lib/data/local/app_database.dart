@@ -41,7 +41,16 @@ String dayKey(DateTime date) =>
     '${date.month.toString().padLeft(2, '0')}-'
     '${date.day.toString().padLeft(2, '0')}';
 
-@DriftDatabase(tables: [Favorites, Completions])
+/// One durable snapshot per routine or favourite selection.
+class ReaderCheckpoints extends Table {
+  TextColumn get sessionKey => text()();
+  TextColumn get snapshot => text()();
+
+  @override
+  Set<Column> get primaryKey => {sessionKey};
+}
+
+@DriftDatabase(tables: [Favorites, Completions, ReaderCheckpoints])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _open());
 
@@ -49,7 +58,35 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.memory() : super(NativeDatabase.memory());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) await m.createTable(readerCheckpoints);
+    },
+  );
+
+  Future<String?> readerCheckpoint(String key) async => (await (select(
+    readerCheckpoints,
+  )..where((r) => r.sessionKey.equals(key))).getSingleOrNull())?.snapshot;
+
+  Future<void> saveReaderCheckpoint(String key, String snapshot) =>
+      into(readerCheckpoints).insertOnConflictUpdate(
+        ReaderCheckpointsCompanion.insert(sessionKey: key, snapshot: snapshot),
+      );
+
+  Future<void> deleteReaderCheckpoint(String key) =>
+      (delete(readerCheckpoints)..where((r) => r.sessionKey.equals(key))).go();
+
+  /// Completion and checkpoint removal either both commit or both survive
+  /// for retry after a process interruption.
+  Future<void> finishReading(String key, String? category, DateTime now) =>
+      transaction(() async {
+        if (category != null) await recordCompletion(category, now);
+        await deleteReaderCheckpoint(key);
+      });
 
   static QueryExecutor _open() {
     return LazyDatabase(() async {

@@ -736,4 +736,18 @@ class LAr extends L {
 
   @override
   String get textLarger => 'تكبير نص الذكر';
+
+  @override
+  String get readerStartAgain => 'البدء من جديد';
+
+  @override
+  String get readerRestartQuestion => 'هل تريد بدء هذه الجلسة من جديد؟';
+
+  @override
+  String get readerRestoreError =>
+      'تعذّر استعادة القراءة المحفوظة. يمكنك الإغلاق أو البدء من جديد.';
+
+  @override
+  String get readerSaveError =>
+      'تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا.';
 }

@@ -189,5 +189,9 @@
   "minuteDown": "Decrease minutes",
   "timesCount": "{count, plural, =1{once} =2{twice} other{{digits} times}}",
   "textSmaller": "Smaller thikr text",
-  "textLarger": "Larger thikr text"
+  "textLarger": "Larger thikr text",
+  "readerStartAgain": "Start again",
+  "readerRestartQuestion": "Start this reading session again?",
+  "readerRestoreError": "Your saved reading could not be restored. You can close this message or start again.",
+  "readerSaveError": "Progress could not be saved. Keep the app open and try again."
 }

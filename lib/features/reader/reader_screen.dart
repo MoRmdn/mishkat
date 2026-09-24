@@ -15,6 +15,7 @@ import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
+import '../../services/diagnostics.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
 import '../share/share_card.dart';
@@ -30,12 +31,53 @@ Future<void> openReader(
   ThikrCategory category,
   List<Thikr> items, {
   bool subset = false,
-}) {
-  if (items.isEmpty) return Future.value();
-  ref
-      .read(readerControllerProvider.notifier)
-      .open(category, items, subset: subset);
-  return Navigator.of(context).push(
+  bool restart = false,
+}) async {
+  if (items.isEmpty) return;
+  final controller = ref.read(readerControllerProvider.notifier);
+  try {
+    if (!await controller.open(
+      category,
+      items,
+      subset: subset,
+      restart: restart,
+    )) {
+      return;
+    }
+  } catch (error, stack) {
+    if (!context.mounted) return;
+    ref.read(diagnosticsProvider).recordError(error, stack);
+    final l = L.of(context);
+    final startAgain = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.readerRestoreError),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l.close),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l.readerStartAgain),
+          ),
+        ],
+      ),
+    );
+    if (startAgain == true && context.mounted) {
+      return openReader(
+        context,
+        ref,
+        category,
+        items,
+        subset: subset,
+        restart: true,
+      );
+    }
+    return;
+  }
+  if (!context.mounted) return;
+  return Navigator.of(context).push<void>(
     MaterialPageRoute(
       fullscreenDialog: true,
       builder: (_) => ReaderScreen(category: category),
@@ -99,42 +141,70 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     }
     final items = session.itemsFrom(library);
 
-    return Scaffold(
-      backgroundColor: t.bg,
-      body: SafeArea(
-        child: session.finished
-            ? _DoneView(
-                category: session.category,
-                items: items,
-                onHome: _close,
-              )
-            : GestureDetector(
-                // The whole page is the counter.
-                behavior: HitTestBehavior.opaque,
-                onTap: () => _count(items),
-                child: Column(
-                  children: [
-                    _ReaderHeader(
-                      items: items,
-                      index: session.index,
-                      category: session.category,
-                      onClose: _close,
-                    ),
-                    _Progress(items: items, index: session.index),
-                    Expanded(
-                      child: _Page(
-                        thikr: items[session.index],
-                        library: library,
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) ref.read(readerControllerProvider.notifier).close();
+      },
+      child: Scaffold(
+        backgroundColor: t.bg,
+        bottomNavigationBar: ref.watch(readerControllerProvider).saveFailed
+            ? SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        L.of(context).readerSaveError,
+                        style: MishkatType.caption(t),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    _Counter(
-                      items: items,
-                      index: session.index,
-                      pressed: _pressed,
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: ref
+                            .read(readerControllerProvider.notifier)
+                            .retrySave,
+                        child: Text(L.of(context).retry),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              )
+            : null,
+        body: SafeArea(
+          child: session.finished
+              ? _DoneView(
+                  category: session.category,
+                  items: items,
+                  onHome: _close,
+                )
+              : GestureDetector(
+                  // The whole page is the counter.
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => _count(items),
+                  child: Column(
+                    children: [
+                      _ReaderHeader(
+                        items: items,
+                        index: session.index,
+                        category: session.category,
+                        onClose: _close,
+                      ),
+                      _Progress(items: items, index: session.index),
+                      Expanded(
+                        child: _Page(
+                          thikr: items[session.index],
+                          library: library,
+                        ),
+                      ),
+                      _Counter(
+                        items: items,
+                        index: session.index,
+                        pressed: _pressed,
+                      ),
+                    ],
+                  ),
+                ),
+        ),
       ),
     );
   }
@@ -189,6 +259,43 @@ class _ReaderHeader extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          IconCircleButton(
+            icon: MIcon.reset,
+            iconSize: 18,
+            semanticLabel: l.readerStartAgain,
+            onPressed: () async {
+              final restart = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(l.readerRestartQuestion),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text(l.close),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text(l.readerStartAgain),
+                    ),
+                  ],
+                ),
+              );
+              if (restart != true || !context.mounted) return;
+              final controller = ref.read(readerControllerProvider.notifier);
+              final session = ref.read(readerControllerProvider).session!;
+              final library = ref.read(athkarLibraryProvider).value!;
+              try {
+                await controller.open(
+                  category,
+                  session.isWholeRoutine ? library[category] : items,
+                  subset: !session.isWholeRoutine,
+                  restart: true,
+                );
+              } catch (error, stack) {
+                ref.read(diagnosticsProvider).recordError(error, stack);
+              }
+            },
           ),
           IconCircleButton(
             icon: MIcon.share,

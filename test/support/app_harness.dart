@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/app.dart';
@@ -21,6 +22,9 @@ import 'package:wakelock_plus_platform_interface/wakelock_plus_platform_interfac
 
 /// Records what would have been scheduled, without touching the OS.
 class FakeNotificationService implements NotificationService {
+  @override
+  Future<void> handleResponse(NotificationResponse response) async {}
+
   final List<ReminderSchedule> applied = [];
   bool cancelled = false;
   ReminderSlotId? launchedFrom;

@@ -16,7 +16,7 @@ void main() {
   /// Opens the evening routine from its day-band column.
   Future<void> openEvening(WidgetTester tester) async {
     await tester.tap(find.text('مساء'));
-    await tester.pumpAndSettle();
+    await AppHarness.settleWithDatabase(tester);
   }
 
   testWidgets('opening a routine starts a reading session', (tester) async {
@@ -56,7 +56,7 @@ void main() {
   testWidgets('English shows the meaning under the Arabic', (tester) async {
     await harness.pump(tester, language: 'en');
     await tester.tap(find.text('Evening'));
-    await tester.pumpAndSettle();
+    await AppHarness.settleWithDatabase(tester);
 
     expect(find.text('1 of 4'), findsOneWidget);
     expect(

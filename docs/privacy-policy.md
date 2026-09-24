@@ -1,6 +1,6 @@
 # Privacy Policy — مشكاة / Mishkat
 
-_Last updated: 7 September 2026_
+_Last updated: 24 September 2026_
 
 Mishkat is an athkar app with timed reminders. It is designed to work entirely
 on your device.
@@ -12,6 +12,13 @@ on your device.
   reminder settings are stored only on your device and are deleted when you
   uninstall the app.
 - **No advertising, and no data sold or shared with third parties.**
+
+## Saved reading
+
+Unfinished reading sessions are also saved on your device: the selected texts,
+their repetition counts, and your current position. This allows interrupted
+reading to resume without an account or network connection. Completing a
+session removes its saved checkpoint; starting again replaces it.
 
 ## Location
 
@@ -53,7 +60,7 @@ devices?** Some manufacturers stop background apps aggressively and silently
 cancel scheduled alarms, and comparing reminders scheduled against reminders
 opened is the only way to detect it.
 
-The app does **not** record which athkar you read, when you pray, your
+Diagnostics do **not** include individual athkar you read, when you pray, your
 location, or any identifier that could single you out.
 
 ## Children

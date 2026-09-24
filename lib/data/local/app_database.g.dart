@@ -528,16 +528,243 @@ class CompletionsCompanion extends UpdateCompanion<Completion> {
   }
 }
 
+class $ReaderCheckpointsTable extends ReaderCheckpoints
+    with TableInfo<$ReaderCheckpointsTable, ReaderCheckpoint> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReaderCheckpointsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _sessionKeyMeta = const VerificationMeta(
+    'sessionKey',
+  );
+  @override
+  late final GeneratedColumn<String> sessionKey = GeneratedColumn<String>(
+    'session_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotMeta = const VerificationMeta(
+    'snapshot',
+  );
+  @override
+  late final GeneratedColumn<String> snapshot = GeneratedColumn<String>(
+    'snapshot',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [sessionKey, snapshot];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reader_checkpoints';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReaderCheckpoint> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('session_key')) {
+      context.handle(
+        _sessionKeyMeta,
+        sessionKey.isAcceptableOrUnknown(data['session_key']!, _sessionKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionKeyMeta);
+    }
+    if (data.containsKey('snapshot')) {
+      context.handle(
+        _snapshotMeta,
+        snapshot.isAcceptableOrUnknown(data['snapshot']!, _snapshotMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {sessionKey};
+  @override
+  ReaderCheckpoint map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReaderCheckpoint(
+      sessionKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_key'],
+      )!,
+      snapshot: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}snapshot'],
+      )!,
+    );
+  }
+
+  @override
+  $ReaderCheckpointsTable createAlias(String alias) {
+    return $ReaderCheckpointsTable(attachedDatabase, alias);
+  }
+}
+
+class ReaderCheckpoint extends DataClass
+    implements Insertable<ReaderCheckpoint> {
+  final String sessionKey;
+  final String snapshot;
+  const ReaderCheckpoint({required this.sessionKey, required this.snapshot});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['session_key'] = Variable<String>(sessionKey);
+    map['snapshot'] = Variable<String>(snapshot);
+    return map;
+  }
+
+  ReaderCheckpointsCompanion toCompanion(bool nullToAbsent) {
+    return ReaderCheckpointsCompanion(
+      sessionKey: Value(sessionKey),
+      snapshot: Value(snapshot),
+    );
+  }
+
+  factory ReaderCheckpoint.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReaderCheckpoint(
+      sessionKey: serializer.fromJson<String>(json['sessionKey']),
+      snapshot: serializer.fromJson<String>(json['snapshot']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'sessionKey': serializer.toJson<String>(sessionKey),
+      'snapshot': serializer.toJson<String>(snapshot),
+    };
+  }
+
+  ReaderCheckpoint copyWith({String? sessionKey, String? snapshot}) =>
+      ReaderCheckpoint(
+        sessionKey: sessionKey ?? this.sessionKey,
+        snapshot: snapshot ?? this.snapshot,
+      );
+  ReaderCheckpoint copyWithCompanion(ReaderCheckpointsCompanion data) {
+    return ReaderCheckpoint(
+      sessionKey: data.sessionKey.present
+          ? data.sessionKey.value
+          : this.sessionKey,
+      snapshot: data.snapshot.present ? data.snapshot.value : this.snapshot,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReaderCheckpoint(')
+          ..write('sessionKey: $sessionKey, ')
+          ..write('snapshot: $snapshot')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(sessionKey, snapshot);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReaderCheckpoint &&
+          other.sessionKey == this.sessionKey &&
+          other.snapshot == this.snapshot);
+}
+
+class ReaderCheckpointsCompanion extends UpdateCompanion<ReaderCheckpoint> {
+  final Value<String> sessionKey;
+  final Value<String> snapshot;
+  final Value<int> rowid;
+  const ReaderCheckpointsCompanion({
+    this.sessionKey = const Value.absent(),
+    this.snapshot = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ReaderCheckpointsCompanion.insert({
+    required String sessionKey,
+    required String snapshot,
+    this.rowid = const Value.absent(),
+  }) : sessionKey = Value(sessionKey),
+       snapshot = Value(snapshot);
+  static Insertable<ReaderCheckpoint> custom({
+    Expression<String>? sessionKey,
+    Expression<String>? snapshot,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (sessionKey != null) 'session_key': sessionKey,
+      if (snapshot != null) 'snapshot': snapshot,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ReaderCheckpointsCompanion copyWith({
+    Value<String>? sessionKey,
+    Value<String>? snapshot,
+    Value<int>? rowid,
+  }) {
+    return ReaderCheckpointsCompanion(
+      sessionKey: sessionKey ?? this.sessionKey,
+      snapshot: snapshot ?? this.snapshot,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (sessionKey.present) {
+      map['session_key'] = Variable<String>(sessionKey.value);
+    }
+    if (snapshot.present) {
+      map['snapshot'] = Variable<String>(snapshot.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReaderCheckpointsCompanion(')
+          ..write('sessionKey: $sessionKey, ')
+          ..write('snapshot: $snapshot, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $FavoritesTable favorites = $FavoritesTable(this);
   late final $CompletionsTable completions = $CompletionsTable(this);
+  late final $ReaderCheckpointsTable readerCheckpoints =
+      $ReaderCheckpointsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [favorites, completions];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    favorites,
+    completions,
+    readerCheckpoints,
+  ];
 }
 
 typedef $$FavoritesTableCreateCompanionBuilder =
@@ -872,6 +1099,173 @@ typedef $$CompletionsTableProcessedTableManager =
       Completion,
       PrefetchHooks Function()
     >;
+typedef $$ReaderCheckpointsTableCreateCompanionBuilder =
+    ReaderCheckpointsCompanion Function({
+      required String sessionKey,
+      required String snapshot,
+      Value<int> rowid,
+    });
+typedef $$ReaderCheckpointsTableUpdateCompanionBuilder =
+    ReaderCheckpointsCompanion Function({
+      Value<String> sessionKey,
+      Value<String> snapshot,
+      Value<int> rowid,
+    });
+
+class $$ReaderCheckpointsTableFilterComposer
+    extends Composer<_$AppDatabase, $ReaderCheckpointsTable> {
+  $$ReaderCheckpointsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get sessionKey => $composableBuilder(
+    column: $table.sessionKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get snapshot => $composableBuilder(
+    column: $table.snapshot,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ReaderCheckpointsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReaderCheckpointsTable> {
+  $$ReaderCheckpointsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get sessionKey => $composableBuilder(
+    column: $table.sessionKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get snapshot => $composableBuilder(
+    column: $table.snapshot,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ReaderCheckpointsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReaderCheckpointsTable> {
+  $$ReaderCheckpointsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get sessionKey => $composableBuilder(
+    column: $table.sessionKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get snapshot =>
+      $composableBuilder(column: $table.snapshot, builder: (column) => column);
+}
+
+class $$ReaderCheckpointsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ReaderCheckpointsTable,
+          ReaderCheckpoint,
+          $$ReaderCheckpointsTableFilterComposer,
+          $$ReaderCheckpointsTableOrderingComposer,
+          $$ReaderCheckpointsTableAnnotationComposer,
+          $$ReaderCheckpointsTableCreateCompanionBuilder,
+          $$ReaderCheckpointsTableUpdateCompanionBuilder,
+          (
+            ReaderCheckpoint,
+            BaseReferences<
+              _$AppDatabase,
+              $ReaderCheckpointsTable,
+              ReaderCheckpoint
+            >,
+          ),
+          ReaderCheckpoint,
+          PrefetchHooks Function()
+        > {
+  $$ReaderCheckpointsTableTableManager(
+    _$AppDatabase db,
+    $ReaderCheckpointsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ReaderCheckpointsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ReaderCheckpointsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ReaderCheckpointsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> sessionKey = const Value.absent(),
+                Value<String> snapshot = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ReaderCheckpointsCompanion(
+                sessionKey: sessionKey,
+                snapshot: snapshot,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String sessionKey,
+                required String snapshot,
+                Value<int> rowid = const Value.absent(),
+              }) => ReaderCheckpointsCompanion.insert(
+                sessionKey: sessionKey,
+                snapshot: snapshot,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ReaderCheckpointsTable, ReaderCheckpoint>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ReaderCheckpointsTable,
+                    ReaderCheckpoint
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ReaderCheckpointsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ReaderCheckpointsTable,
+      ReaderCheckpoint,
+      $$ReaderCheckpointsTableFilterComposer,
+      $$ReaderCheckpointsTableOrderingComposer,
+      $$ReaderCheckpointsTableAnnotationComposer,
+      $$ReaderCheckpointsTableCreateCompanionBuilder,
+      $$ReaderCheckpointsTableUpdateCompanionBuilder,
+      (
+        ReaderCheckpoint,
+        BaseReferences<
+          _$AppDatabase,
+          $ReaderCheckpointsTable,
+          ReaderCheckpoint
+        >,
+      ),
+      ReaderCheckpoint,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -880,4 +1274,6 @@ class $AppDatabaseManager {
       $$FavoritesTableTableManager(_db, _db.favorites);
   $$CompletionsTableTableManager get completions =>
       $$CompletionsTableTableManager(_db, _db.completions);
+  $$ReaderCheckpointsTableTableManager get readerCheckpoints =>
+      $$ReaderCheckpointsTableTableManager(_db, _db.readerCheckpoints);
 }

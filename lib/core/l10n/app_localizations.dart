@@ -1236,6 +1236,30 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'تكبير نص الذكر'**
   String get textLarger;
+
+  /// No description provided for @readerStartAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'البدء من جديد'**
+  String get readerStartAgain;
+
+  /// No description provided for @readerRestartQuestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد بدء هذه الجلسة من جديد؟'**
+  String get readerRestartQuestion;
+
+  /// No description provided for @readerRestoreError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر استعادة القراءة المحفوظة. يمكنك الإغلاق أو البدء من جديد.'**
+  String get readerRestoreError;
+
+  /// No description provided for @readerSaveError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا.'**
+  String get readerSaveError;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {
