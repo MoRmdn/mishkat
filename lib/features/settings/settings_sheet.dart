@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/external_links.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/share_link.dart';
 import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/buttons.dart';
@@ -147,12 +149,68 @@ class SettingsSheet extends ConsumerWidget {
             ),
           ),
         ),
+        SheetSectionLabel(l.about),
+        for (final page in LegalPage.values) ...[
+          _LinkRow(
+            label: switch (page) {
+              LegalPage.privacy => l.privacyPolicy,
+              LegalPage.terms => l.termsOfUse,
+            },
+            onTap: () => ref.read(externalLinkLauncherProvider)(
+              legalPage(page, s.language.name),
+            ),
+          ),
+          if (page != LegalPage.values.last) const SizedBox(height: 8),
+        ],
         const SizedBox(height: 16),
         PrimaryButton(
           label: l.done,
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
+    );
+  }
+}
+
+/// A page on the web site: the privacy policy or the terms.
+class _LinkRow extends StatelessWidget {
+  const _LinkRow({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return Semantics(
+      link: true,
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: t.bg,
+            borderRadius: BorderRadius.circular(Radii.lg),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: MishkatType.label(t).copyWith(fontSize: 14),
+                ),
+              ),
+              const SizedBox(width: 12),
+              MishkatIcon(MIcon.external, color: t.inkMuted, size: 18),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

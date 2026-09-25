@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["64WR7QH47B.com.mormdn.mishkat"],
+        "components": [{ "/": "/t/*", "comment": "A shared thikr: /t/<thikr id>" }]
+      }
+    ]
+  }
+}

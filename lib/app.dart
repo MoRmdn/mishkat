@@ -7,6 +7,7 @@ import 'core/theme/mishkat_tokens.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/reminders/reminder_sync_scope.dart';
 import 'features/settings/settings_controller.dart';
+import 'features/share/share_link_scope.dart';
 import 'features/shell/app_shell.dart';
 
 class MishkatApp extends ConsumerWidget {
@@ -33,7 +34,7 @@ class MishkatApp extends ConsumerWidget {
       // Onboarding runs the permission ladder before the shell appears.
       // Skipping it lands on a working home with reminders off.
       home: settings.onboardingComplete
-          ? const ReminderSyncScope(child: AppShell())
+          ? const ReminderSyncScope(child: ShareLinkScope(child: AppShell()))
           : const OnboardingScreen(),
     );
   }

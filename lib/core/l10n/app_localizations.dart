@@ -100,7 +100,7 @@ abstract class L {
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:
-  /// **'مشكاة الورد'**
+  /// **'مِشْكَاةُ الوِرْدِ'**
   String get appName;
 
   /// No description provided for @navHome.
@@ -382,7 +382,7 @@ abstract class L {
   /// No description provided for @oemStep1.
   ///
   /// In ar, this message translates to:
-  /// **'الإعدادات ← التطبيقات ← مشكاة'**
+  /// **'الإعدادات ← التطبيقات ← مِشْكَاة'**
   String get oemStep1;
 
   /// No description provided for @oemStep2.
@@ -787,17 +787,41 @@ abstract class L {
   /// **'تذكيرات الأذكار'**
   String get notifChannelName;
 
+  /// No description provided for @brandShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مِشْكَاة'**
+  String get brandShort;
+
   /// No description provided for @brandName.
   ///
   /// In ar, this message translates to:
-  /// **'مشكاة'**
+  /// **'مِشْكَاةُ'**
   String get brandName;
 
   /// No description provided for @brandWird.
   ///
   /// In ar, this message translates to:
-  /// **'الورد'**
+  /// **'الوِرْدِ'**
   String get brandWird;
+
+  /// No description provided for @about.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن التطبيق'**
+  String get about;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط والأحكام'**
+  String get termsOfUse;
 
   /// No description provided for @shareStyleAubergine.
   ///

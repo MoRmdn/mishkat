@@ -329,8 +329,8 @@ void main() {
             child: ShareCard(
               text: text,
               reference: 'رواه البخاري ٦٣٠٦',
-              brandName: 'مشكاة',
-              brandWird: 'الورد',
+              brandName: 'مِشْكَاةُ',
+              brandWird: 'الوِرْدِ',
               language: TextDirection.rtl,
               style: style,
             ),

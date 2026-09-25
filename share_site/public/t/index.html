@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مِشْكَاةُ الوِرْدِ — Mishkat Al-Wird</title>
+<meta name="description" content="أذكار الصباح والمساء والنوم والاستيقاظ، بتذكير يصل في وقته. Morning, evening and sleep athkar, with reminders that arrive.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="مِشْكَاةُ الوِرْدِ — Mishkat Al-Wird">
+<meta property="og:title" content="ذِكر من مِشْكَاةُ الوِرْدِ — افتحه في التطبيق">
+<meta property="og:description" content="A thikr shared from Mishkat Al-Wird. Open it in the app.">
+<meta property="og:image" content="https://mishkatalwird.com/icon.png">
+<meta name="theme-color" content="#4A2A4D">
+<link rel="icon" href="/icon.png">
+<link rel="preload" href="/fonts/Alexandria-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<div class="landing">
+<main>
+  <img src="/icon.png" alt="">
+  <h1>مِشْكَاةُ الوِرْدِ<span class="en">Mishkat Al-Wird</span></h1>
+  <p>ذِكر شاركه معك أحدهم. ثبّت التطبيق لتقرأه وتصلك التذكيرات في وقتها.
+     <span class="en">Someone shared a thikr with you. Install the app to read it.</span></p>
+  <a class="store" id="ios" href="https://apps.apple.com/app/idAPP_STORE_ID">App Store</a>
+  <a class="store" id="android" href="https://play.google.com/store/apps/details?id=com.mormdn.mishkat">Google Play</a>
+</main>
+</div>
+<footer class="site">
+  <a href="/privacy">سياسة الخصوصية</a>·<a href="/terms">الشروط والأحكام</a>·<a href="/en/privacy">Privacy</a>·<a href="/en/terms">Terms</a>
+</footer>
+<script>
+  // Reached only when the app is not installed (or the in-app browser kept the
+  // link): with the app installed, the OS opens it before this page loads.
+  // Straight to the right store; the buttons stay for desktop, and for in-app
+  // browsers that block the jump.
+  (function () {
+    var ua = navigator.userAgent;
+    var ios = /iPhone|iPad|iPod/.test(ua) ||
+      (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    var target = ios ? 'ios' : /Android/.test(ua) ? 'android' : null;
+    if (target) location.replace(document.getElementById(target).href);
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+/* Alexandria, the app's UI face, served from this site (fonts/, OFL):
+   the system fallback stacks harakat badly and a Google Fonts request would
+   send every visitor's IP to a third party. */
+@font-face {
+  font-family: "Alexandria"; font-weight: 400; font-display: swap;
+  src: url("/fonts/Alexandria-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Alexandria"; font-weight: 500; font-display: swap;
+  src: url("/fonts/Alexandria-Medium.ttf") format("truetype");
+}
+
+/* Brand values from MishkatTokens (lib/core/theme/mishkat_tokens.dart). */
+:root {
+  --bg: #EFEBE7; --surface: #F9F7F4; --ink: #2A1B2C; --muted: #6E5F6B;
+  --accent: #8E4E5A; --btn: #4A2A4D; --on-btn: #FFFFFF; --line: #DDD5CE;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1B1320; --surface: #261B2C; --ink: #F1E9EE; --muted: #BBA9B6;
+    --accent: #E5B3B9; --btn: #E5B3B9; --on-btn: #1B1320; --line: #3A2C40;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: "Alexandria", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  font-weight: 400;
+  /* Room above and below each line for the harakat. */
+  line-height: 1.9;
+}
+a { color: var(--accent); }
+
+/* The store redirect (t/index.html). */
+.landing { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+.landing main { width: 100%; max-width: 360px; text-align: center; }
+.landing img { width: 96px; height: 96px; border-radius: 22px; }
+.landing h1 { font-weight: 500; font-size: 24px; line-height: 1.8; margin: 16px 0 4px; }
+.landing h1 span { font-size: 16px; color: var(--muted); margin-top: 0; }
+.landing p { color: var(--muted); margin: 0 0 24px; }
+/* Its own line, isolated: inline LTR text inside an RTL paragraph gets its
+   final full stop moved to the wrong end. */
+.en { display: block; direction: ltr; unicode-bidi: isolate; margin-top: 4px; }
+a.store {
+  display: block; padding: 14px 16px; margin-bottom: 12px; border-radius: 14px;
+  background: var(--btn); color: var(--on-btn); text-decoration: none; font-weight: 500;
+}
+
+/* The policy pages. */
+.doc { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+.doc header {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px;
+}
+.doc header img { width: 40px; height: 40px; border-radius: 10px; }
+.doc header .brand { font-weight: 500; font-size: 18px; color: var(--ink); text-decoration: none; }
+.doc header .lang { margin-inline-start: auto; }
+.doc h1 { font-weight: 500; font-size: 26px; margin: 0 0 4px; }
+.doc .updated { color: var(--muted); margin: 0 0 24px; font-size: 14px; }
+.doc h2 { font-weight: 500; font-size: 19px; margin: 32px 0 8px; }
+.doc ul { padding-inline-start: 22px; }
+.doc li { margin-bottom: 6px; }
+
+footer.site {
+  color: var(--muted); font-size: 14px; text-align: center; padding: 16px;
+}
+footer.site a { margin: 0 8px; }

@@ -34,6 +34,8 @@ dependencies:
   share_plus: ^13.3.0
   path: ^1.9.1
   firebase_core: ^4.14.0
+  app_links: ^7.2.1
+  url_launcher: ^6.3.2
 
 # permission_handler_android 13.x declares in its AAR metadata that consumers
 # must compile against Android API 37. That platform is not published yet, and

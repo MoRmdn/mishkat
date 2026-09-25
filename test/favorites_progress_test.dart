@@ -230,7 +230,7 @@ void main() {
       expect(find.textContaining('رواه البخاري'), findsWidgets);
       // Branded with the wordmark from board 3.5.
       expect(
-        find.textContaining('مشكاة الورد', findRichText: true),
+        find.textContaining('مِشْكَاةُ الوِرْدِ', findRichText: true),
         findsOneWidget,
       );
     });

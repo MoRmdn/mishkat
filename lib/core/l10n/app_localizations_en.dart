@@ -376,10 +376,22 @@ class LEn extends L {
   String get notifChannelName => 'Athkar reminders';
 
   @override
+  String get brandShort => 'Mishkat';
+
+  @override
   String get brandName => 'Mishkat';
 
   @override
   String get brandWird => 'Al-Wird';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get termsOfUse => 'Terms of use';
 
   @override
   String get shareStyleAubergine => 'Aubergine';

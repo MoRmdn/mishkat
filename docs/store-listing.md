@@ -4,10 +4,10 @@ Draft copy for the App Store and Google Play. Arabic is the primary language.
 
 ## Name
 
-- Arabic: **مشكاة الورد**
+- Arabic: **مِشْكَاةُ الوِرْدِ**
 - English: **Mishkat Al-Wird**
 
-The home-screen label stays short: **مشكاة** / **Mishkat**.
+The home-screen label stays short: **مِشْكَاة** / **Mishkat**.
 
 Tagline: نور الذكر اليومي · The Light of Daily Remembrance
 
@@ -37,7 +37,7 @@ the evening.
 
 ## Description (Arabic)
 
-مشكاة الورد تطبيق أذكار همّه الأول أن يصل التذكير في وقته.
+مِشْكَاةُ الوِرْدِ تطبيق أذكار همّه الأول أن يصل التذكير في وقته.
 
 التذكيرات تُجدول على جهازك مباشرة، فتعمل دون إنترنت ودون حساب. اختر أوقاتاً
 ثابتة، أو اربطها بمواقيت الصلاة — قبل الفجر لأذكار الاستيقاظ، وبعده لأذكار
@@ -77,5 +77,10 @@ case declare app interactions and crash logs, not linked to identity.
 - [ ] Configure a release signing key; the release build currently signs with
       the debug key (`android/app/build.gradle.kts`).
 - [ ] Set up Firebase if diagnostics are wanted — see `docs/firebase.md`.
-- [ ] Add `ar.lproj/InfoPlist.strings` in Xcode for the Arabic home-screen name.
+- [ ] Deploy `share_site/` (`firebase deploy --only hosting`), then enter the
+      policy URLs: App Store Connect → App Privacy, and Play Console → App
+      content → Privacy policy.
+      - Privacy: https://mishkatalwird.com/privacy (English: `/en/privacy`)
+      - Terms: https://mishkatalwird.com/terms (English: `/en/terms`)
+- [ ] Have the terms (`docs/terms.md`) read by someone qualified before release.
 - [ ] Verify reminder delivery on physical hardware — see the README.

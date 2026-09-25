@@ -1,4 +1,4 @@
-# Mishkat (مشكاة) — Athkar app
+# Mishkat Al-Wird (مِشْكَاةُ الوِرْدِ) — Athkar app
 
 Arabic/English athkar app whose headline feature is **reminders that actually
 arrive**: أذكار الصباح، المساء، النوم، الاستيقاظ.
@@ -25,7 +25,8 @@ superseded. `ios-frame.jsx` / `android-frame.jsx` are canvas device bezels,
 
 **Reminders are local notifications, never FCM.** FCM needs internet, gives no
 delivery-time guarantee, and cannot fire at a device-local wall-clock time.
-Firebase is Crashlytics + Analytics only. The app works fully offline: no Auth,
+Firebase is Crashlytics + Analytics, plus Hosting for the share-link site
+(static files, no SDK). The app works fully offline: no Auth,
 no Firestore, no login screen.
 
 **Two scheduling strategies, and they are not interchangeable:**
@@ -54,6 +55,20 @@ reminder, so this half must be unit-testable without a device.
 settings fires before dependents recompute, so reading the schedule inside it
 returns the previous value and the app schedules the configuration the user
 just replaced.
+
+**Share links are Universal Links / App Links on `mishkatalwird.com`.**
+A shared thikr carries `https://mishkatalwird.com/t/<id>` as text beside the
+image (`lib/core/share_link.dart`). With the app installed the OS opens it and
+`ShareLinkScope` pushes that one thikr; without it, `share_site/` (Firebase
+Hosting) sends the phone to its store. Firebase Dynamic Links is shut down; do
+not reach for it. **A thikr id, once shared, is public — never rename one in
+`athkar.json`.** The host is written in the entitlements, the manifest, the
+constant and the site; `test/share_link_test.dart` checks they agree.
+Deploy steps and the fingerprints still owed are in `share_site/README.md`.
+The same site serves the privacy policy and terms (`/privacy`, `/terms`,
+`/en/…`), opened from Settings through `externalLinkLauncherProvider`. They
+mirror `docs/privacy-policy.md` and `docs/terms.md`; change the page and the
+doc together.
 
 **Location is optional, never required.** `adhan` is a solar calculation, so
 prayer times are computed offline; only the position lookup touches the
@@ -135,6 +150,7 @@ catches an error here.
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | ✅ done |
 | M7 | `feat/firebase` | Icons, splash, diagnostics seam, store prep | ✅ done (Firebase config pending — see `docs/firebase.md`) |
 | 2a | `feat/redesign-2a` | Dusk Grid redesign: tokens, fonts, icons, brand, every screen | ✅ done |
+| SL | `feat/share-links` | Share links: app_links, entitlements, App Links, store-redirect site | 🚧 app side done; store IDs + deploy pending |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.

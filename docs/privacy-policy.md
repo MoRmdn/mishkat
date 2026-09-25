@@ -1,8 +1,11 @@
-# Privacy Policy — مشكاة / Mishkat
+# Privacy Policy — مِشْكَاةُ الوِرْدِ / Mishkat Al-Wird
 
-_Last updated: 24 September 2026_
+_Last updated: 25 September 2026_
 
-Mishkat is an athkar app with timed reminders. It is designed to work entirely
+Published at https://mishkatalwird.com/en/privacy (Arabic: `/privacy`) from
+`share_site/public/`. Change both together.
+
+Mishkat Al-Wird is an athkar app with timed reminders. It is designed to work entirely
 on your device.
 
 ## What the app does not do
@@ -43,6 +46,18 @@ schedule exact alarms, and to be exempt from battery optimisation. Each is
 optional; refusing any of them degrades reminder timing but does not disable
 the app.
 
+## Shared links
+
+When you share a thikr, the app adds a link such as
+`https://mishkatalwird.com/t/mo1`, naming only which thikr it is. If the
+recipient has the app, their phone opens the thikr in it directly; if not, the
+website sends them to the App Store or Google Play.
+
+The website is static. It sets no cookies and runs no analytics or tracking. It
+is hosted on Firebase Hosting (Google), which, like any web host, keeps standard
+request logs (IP address, browser type, the page requested) to operate and
+secure the service. We do not use those logs to identify anyone.
+
 ## Diagnostics
 
 If crash reporting and analytics are enabled in a published build, the app
@@ -67,6 +82,10 @@ location, or any identifier that could single you out.
 
 The app collects no personal data and is suitable for all ages.
 
+## Changes
+
+If this policy changes, the new version is published with a new date.
+
 ## Contact
 
-Questions about this policy can be raised on the project's issue tracker.
+Questions about this policy: morm9n@gmail.com

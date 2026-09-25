@@ -8,6 +8,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/l10n/app_localizations.dart';
+import '../../core/share_link.dart';
 import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/brand_mark.dart';
@@ -293,7 +294,14 @@ class _ShareSheetState extends ConsumerState<ShareSheet> {
       final file = File('${dir.path}/thikr.png');
       await file.writeAsBytes(bytes);
 
-      await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
+      // The link rides along as text: a URL drawn inside the image can't be
+      // tapped. Some targets drop the text when an image is attached.
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: thikrLink(widget.thikr).toString(),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _busy = false);
     }

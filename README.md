@@ -1,4 +1,4 @@
-# مشكاة الورد · Mishkat Al-Wird
+# مِشْكَاةُ الوِرْدِ · Mishkat Al-Wird
 
 An Arabic/English athkar app for iOS and Android, built in Flutter.
 

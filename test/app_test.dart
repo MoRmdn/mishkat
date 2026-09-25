@@ -15,7 +15,7 @@ void main() {
     await harness.pump(tester);
 
     expect(shellDirection(tester), TextDirection.rtl);
-    expect(find.text('مشكاة'), findsOneWidget);
+    expect(find.text('مِشْكَاة'), findsOneWidget);
     expect(find.text('الرئيسية'), findsOneWidget);
   });
 

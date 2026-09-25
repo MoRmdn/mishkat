@@ -119,9 +119,9 @@ class _Header extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 8,
       children: [
-        BrandMark(size: 26, semanticLabel: l.brandName),
+        BrandMark(size: 26, semanticLabel: l.brandShort),
         Text(
-          l.brandName,
+          l.brandShort,
           style: MishkatType.headline(t).copyWith(fontSize: 18),
         ),
         Expanded(
@@ -130,13 +130,17 @@ class _Header extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 6,
             children: [
-              Text(
-                streak == 0
-                    ? l.streakStart
-                    : l.streakDays(streak, localizeDigits(streak, lang)),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: MishkatType.caption(t),
+              // Flexible, so a long streak label ellipsizes instead of
+              // pushing the settings button off the row.
+              Flexible(
+                child: Text(
+                  streak == 0
+                      ? l.streakStart
+                      : l.streakDays(streak, localizeDigits(streak, lang)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: MishkatType.caption(t),
+                ),
               ),
               const SizedBox(width: 6),
               IconCircleButton(

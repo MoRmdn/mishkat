@@ -9,7 +9,7 @@ class LAr extends L {
   LAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'مشكاة الورد';
+  String get appName => 'مِشْكَاةُ الوِرْدِ';
 
   @override
   String get navHome => 'الرئيسية';
@@ -157,7 +157,7 @@ class LAr extends L {
   }
 
   @override
-  String get oemStep1 => 'الإعدادات ← التطبيقات ← مشكاة';
+  String get oemStep1 => 'الإعدادات ← التطبيقات ← مِشْكَاة';
 
   @override
   String get oemStep2 => 'فعّل «التشغيل التلقائي»';
@@ -375,10 +375,22 @@ class LAr extends L {
   String get notifChannelName => 'تذكيرات الأذكار';
 
   @override
-  String get brandName => 'مشكاة';
+  String get brandShort => 'مِشْكَاة';
 
   @override
-  String get brandWird => 'الورد';
+  String get brandName => 'مِشْكَاةُ';
+
+  @override
+  String get brandWird => 'الوِرْدِ';
+
+  @override
+  String get about => 'عن التطبيق';
+
+  @override
+  String get privacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get termsOfUse => 'الشروط والأحكام';
 
   @override
   String get shareStyleAubergine => 'بنفسجي';

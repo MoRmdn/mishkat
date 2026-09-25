@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.mormdn.mishkat",
+      "sha256_cert_fingerprints": [
+        "85:90:D2:E6:14:29:F2:9E:AC:A5:78:82:B7:E8:D6:59:90:D4:07:57:7B:D9:78:C0:3B:FA:91:A2:B6:36:C4:EC"
+      ]
+    }
+  }
+]

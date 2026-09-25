@@ -1,1 +1,65 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"mishkat-al-wird","appId":"1:9295918147:android:04f4d05731da1b18b750f6","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"mishkat-al-wird","appId":"1:9295918147:ios:a27587cb23747ff8b750f6","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"mishkat-al-wird","configurations":{"android":"1:9295918147:android:04f4d05731da1b18b750f6","ios":"1:9295918147:ios:a27587cb23747ff8b750f6"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mishkat-al-wird",
+          "appId": "1:9295918147:android:04f4d05731da1b18b750f6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "mishkat-al-wird",
+          "appId": "1:9295918147:ios:a27587cb23747ff8b750f6",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mishkat-al-wird",
+          "configurations": {
+            "android": "1:9295918147:android:04f4d05731da1b18b750f6",
+            "ios": "1:9295918147:ios:a27587cb23747ff8b750f6"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "share_site/public",
+    "ignore": [
+      "firebase.json",
+      "**/node_modules/**"
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/t/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/.well-known/apple-app-site-association",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
+      },
+      {
+        "source": "/.well-known/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=3600"
+          }
+        ]
+      }
+    ]
+  }
+}

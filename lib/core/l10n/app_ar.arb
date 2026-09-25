@@ -1,6 +1,6 @@
 {
   "@@locale": "ar",
-  "appName": "مشكاة الورد",
+  "appName": "مِشْكَاةُ الوِرْدِ",
   "navHome": "الرئيسية",
   "navReminders": "التذكيرات",
   "navFavorites": "المفضلة",
@@ -68,7 +68,7 @@
       }
     }
   },
-  "oemStep1": "الإعدادات ← التطبيقات ← مشكاة",
+  "oemStep1": "الإعدادات ← التطبيقات ← مِشْكَاة",
   "oemStep2": "فعّل «التشغيل التلقائي»",
   "oemStep3": "موفّر البطارية ← «لا قيود»",
   "oemGenericHint": "خطوات عامة — قد تختلف التسميات قليلاً بين الأجهزة",
@@ -163,8 +163,12 @@
   "notifActionStart": "ابدأ",
   "notifActionSnooze": "تأجيل ١٥ د",
   "notifChannelName": "تذكيرات الأذكار",
-  "brandName": "مشكاة",
-  "brandWird": "الورد",
+  "brandShort": "مِشْكَاة",
+  "brandName": "مِشْكَاةُ",
+  "brandWird": "الوِرْدِ",
+  "about": "عن التطبيق",
+  "privacyPolicy": "سياسة الخصوصية",
+  "termsOfUse": "الشروط والأحكام",
   "shareStyleAubergine": "بنفسجي",
   "shareStyleStone": "حجري",
   "nowLabel": "الآن",

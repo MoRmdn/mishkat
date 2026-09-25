@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/app.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/core/clock.dart';
+import 'package:mishkat/core/external_links.dart';
 import 'package:mishkat/data/models/reminder_settings.dart';
 import 'package:mishkat/data/models/thikr.dart';
 import 'package:mishkat/data/local/app_database.dart';
@@ -12,6 +15,7 @@ import 'package:mishkat/data/repositories/athkar_repository.dart';
 import 'package:mishkat/data/repositories/progress_providers.dart';
 import 'package:mishkat/features/reminders/reminder_controller.dart';
 import 'package:mishkat/features/settings/settings_controller.dart';
+import 'package:mishkat/features/share/share_link_scope.dart';
 import 'package:mishkat/services/notification_service.dart';
 import 'package:mishkat/services/permission_service.dart';
 import 'package:mishkat/services/reminder_scheduler.dart';
@@ -131,6 +135,19 @@ class AppHarness {
 
   bool get screenAwake => wakelock.isOn;
 
+  /// Share links the OS delivers: [launchLinks] as though one launched the
+  /// app, then anything added to [links] while it runs.
+  List<Uri> launchLinks = [];
+  final StreamController<Uri> links = StreamController<Uri>.broadcast();
+
+  /// Web pages the app asked the platform to open.
+  final List<Uri> openedPages = [];
+
+  Stream<Uri> _incomingLinks() async* {
+    yield* Stream.fromIterable(launchLinks);
+    yield* links.stream;
+  }
+
   static late AthkarLibrary library;
 
   /// Loads the athkar corpus once for the whole test file.
@@ -198,6 +215,10 @@ class AppHarness {
           appDatabaseProvider.overrideWithValue(db),
           notificationServiceProvider.overrideWithValue(notifications),
           permissionServiceProvider.overrideWithValue(permissions),
+          incomingLinksProvider.overrideWithValue(_incomingLinks()),
+          externalLinkLauncherProvider.overrideWithValue(
+            (uri) async => openedPages.add(uri),
+          ),
           clockProvider.overrideWithValue(
             () => now ?? DateTime(2026, 9, 7, 3, 18),
           ),
