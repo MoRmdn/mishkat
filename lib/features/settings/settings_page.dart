@@ -1,16 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/clock.dart';
-import '../../core/external_links.dart';
 import '../../core/format/relative_time.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/share_link.dart';
-import '../../core/store_links.dart';
 import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart' show SheetSectionLabel;
-import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/buttons.dart';
 import '../../core/widgets/list_rows.dart';
 import '../../core/widgets/mishkat_icon.dart';
@@ -18,7 +13,6 @@ import '../../core/widgets/page_scaffold.dart';
 import '../../core/widgets/segmented_control.dart';
 import '../../core/widgets/surfaces.dart';
 import '../../data/models/app_settings.dart';
-import '../../services/app_info.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/feedback/feedback_models.dart';
 import '../../services/feedback/feedback_providers.dart';
@@ -27,8 +21,8 @@ import '../account/account_screen.dart';
 import '../account/sign_in_sheet.dart';
 import '../admin/inbox_page.dart';
 import '../feedback/feedback_list_page.dart';
+import 'about_page.dart';
 import 'settings_controller.dart';
-import 'sources_page.dart';
 
 Future<void> openSettings(BuildContext context) =>
     pushPage(context, (_) => const SettingsPage());
@@ -45,11 +39,10 @@ class SettingsPage extends ConsumerWidget {
     return PageScaffold(
       title: l.settings,
       divider: true,
-      // Pinned under the header, edge to edge: the groups scroll beneath it.
-      top: cloud ? const _AccountCard() : null,
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 30),
         children: [
+          if (cloud) ...[const _AccountCard(), const SizedBox(height: 16)],
           _Group(label: l.settingsReading, child: const _ReadingGroup()),
           const SizedBox(height: 16),
           _Group(
@@ -61,9 +54,15 @@ class SettingsPage extends ConsumerWidget {
             _Group(label: l.settingsSupport, child: const _SupportGroup()),
           ],
           const SizedBox(height: 16),
-          _Group(label: l.about, child: const _AboutGroup()),
-          const SizedBox(height: 28),
-          const _AppFooter(),
+          GroupCard(
+            children: [
+              NavRow(
+                icon: MIcon.info,
+                label: l.about,
+                onTap: () => openAbout(context),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -84,14 +83,11 @@ class _Group extends StatelessWidget {
 }
 
 /// Signed out: the glowSoft invitation. Signed in: the avatar row that
-/// opens Account. Full width under the header's hairline, so only its lower
-/// corners are rounded.
+/// opens Account.
 class _AccountCard extends ConsumerWidget {
   const _AccountCard();
 
-  static const _cardRadius = BorderRadius.vertical(
-    bottom: Radius.circular(Radii.lg),
-  );
+  static const _cardRadius = BorderRadius.all(Radius.circular(Radii.lg));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -402,63 +398,6 @@ class _SupportGroup extends ConsumerWidget {
                 : null,
             onTap: () => openInbox(context),
           ),
-      ],
-    );
-  }
-}
-
-class _AboutGroup extends ConsumerWidget {
-  const _AboutGroup();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l = L.of(context);
-    final lang = ref.watch(settingsProvider).language.name;
-    final launch = ref.read(externalLinkLauncherProvider);
-    return GroupCard(
-      children: [
-        if (kShowRateApp)
-          NavRow(
-            label: l.rateApp,
-            external: true,
-            onTap: () => launch(rateAppUri(defaultTargetPlatform)),
-          ),
-        for (final page in LegalPage.values)
-          NavRow(
-            label: switch (page) {
-              LegalPage.privacy => l.privacyPolicy,
-              LegalPage.terms => l.termsOfUse,
-            },
-            external: true,
-            onTap: () => launch(legalPage(page, lang)),
-          ),
-        NavRow(label: l.thikrSources, onTap: () => openSources(context)),
-      ],
-    );
-  }
-}
-
-class _AppFooter extends ConsumerWidget {
-  const _AppFooter();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.tokens;
-    final l = L.of(context);
-    final version = ref.watch(appInfoProvider).value?.version;
-    return Column(
-      children: [
-        const BrandMark(size: 30),
-        const SizedBox(height: 6),
-        Text(l.appName, style: MishkatType.label(t).copyWith(fontSize: 13)),
-        if (version != null) ...[
-          const SizedBox(height: 6),
-          Text(
-            l.versionLine('\u2066$version\u2069'),
-            textAlign: TextAlign.center,
-            style: MishkatType.caption(t).copyWith(fontSize: 11.5),
-          ),
-        ],
       ],
     );
   }

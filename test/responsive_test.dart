@@ -143,9 +143,19 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('the athkar sources page fits — $name', (tester) async {
+    testWidgets('about and the athkar sources page fit — $name', (tester) async {
       await start(tester, v);
       await tester.tap(findIcon(MIcon.settings));
+      await AppHarness.settleWithDatabase(tester);
+      final about = find.text(tab(v.$1, 'عن التطبيق', 'About'));
+      await tester.scrollUntilVisible(
+        about,
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.ensureVisible(about);
+      await tester.pumpAndSettle();
+      await tester.tap(about);
       await AppHarness.settleWithDatabase(tester);
       final row = find.text(tab(v.$1, 'مصادر الأذكار', 'Athkar sources'));
       await tester.scrollUntilVisible(

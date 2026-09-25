@@ -556,6 +556,6 @@ void main() {
     await openSettings(tester);
     expect(find.text('Keep your progress on all your devices'), findsNothing);
     expect(find.text('Feedback'), findsNothing);
-    expect(find.text('Privacy policy'), findsOne);
+    expect(find.text('About'), findsOne);
   });
 }

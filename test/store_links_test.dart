@@ -35,6 +35,11 @@ void main() {
     await tester.tap(findIcon(MIcon.settings));
     await AppHarness.settleWithDatabase(tester);
 
+    await tester.ensureVisible(find.text('About'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('About'));
+    await tester.pumpAndSettle();
+
     final row = find.text('Rate the app');
     await tester.ensureVisible(row);
     await tester.pumpAndSettle();

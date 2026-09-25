@@ -15,7 +15,7 @@ Future<T?> pushPage<T>(BuildContext context, WidgetBuilder builder) =>
 
 /// A pushed page: back button and title on the page background, then the
 /// body. Back returns to where the user came from, so there is no «تم».
-class PageScaffold extends StatelessWidget {
+class PageScaffold extends StatefulWidget {
   const PageScaffold({
     super.key,
     required this.title,
@@ -24,19 +24,10 @@ class PageScaffold extends StatelessWidget {
     this.trailing,
     this.bottom,
     this.divider = false,
-    this.top,
   });
 
   final String title;
   final String? subtitle;
-
-  /// A hairline under the header, for a page whose body scrolls beneath it
-  /// (Settings, board AF 16a).
-  final bool divider;
-
-  /// Pinned between the header and the body, full width: Settings' account
-  /// card.
-  final Widget? top;
 
   /// Beside the title: the Inbox's unread count, a thread's status chip.
   final Widget? trailing;
@@ -44,6 +35,24 @@ class PageScaffold extends StatelessWidget {
 
   /// Pinned under the body: a composer, "New message".
   final Widget? bottom;
+
+  /// A hairline under the header once the body has scrolled beneath it
+  /// (Settings, board AF 16a: absent at the top, present when scrolled).
+  final bool divider;
+
+  @override
+  State<PageScaffold> createState() => _PageScaffoldState();
+}
+
+class _PageScaffoldState extends State<PageScaffold> {
+  bool _scrolled = false;
+
+  bool _onScroll(ScrollNotification n) {
+    if (n.depth != 0 || n.metrics.axis != Axis.vertical) return false;
+    final scrolled = n.metrics.pixels > n.metrics.minScrollExtent;
+    if (scrolled != _scrolled) setState(() => _scrolled = scrolled);
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +65,23 @@ class PageScaffold extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             PageHeader(
-              title: title,
-              subtitle: subtitle,
-              trailing: trailing,
-              divider: divider,
+              title: widget.title,
+              subtitle: widget.subtitle,
+              trailing: widget.trailing,
+              divider: widget.divider && _scrolled,
+              // Room for the hairline, kept whether or not it shows so the
+              // header never jumps.
+              bottomGap: widget.divider ? 12 : 0,
             ),
-            ?top,
-            Expanded(child: body),
-            ?bottom,
+            Expanded(
+              child: widget.divider
+                  ? NotificationListener<ScrollNotification>(
+                      onNotification: _onScroll,
+                      child: widget.body,
+                    )
+                  : widget.body,
+            ),
+            ?widget.bottom,
           ],
         ),
       ),
@@ -80,20 +98,22 @@ class PageHeader extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.divider = false,
+    this.bottomGap = 0,
   });
 
   final String title;
   final String? subtitle;
   final Widget? trailing;
   final bool divider;
+  final double bottomGap;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
     final l = L.of(context);
     return Container(
-      padding: EdgeInsets.fromLTRB(18, 14, 18, divider ? 12 : 0),
-      decoration: divider
+      padding: EdgeInsets.fromLTRB(18, 14, 18, bottomGap),
+      foregroundDecoration: divider
           ? BoxDecoration(
               border: Border(bottom: BorderSide(color: t.line)),
             )

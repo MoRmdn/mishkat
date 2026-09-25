@@ -82,10 +82,27 @@ void main() {
         handle.dispose();
       });
 
+      testWidgets('about page', (tester) async {
+        final handle = tester.ensureSemantics();
+        await start(tester);
+        await tester.tap(findIcon(MIcon.settings));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('عن التطبيق'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('عن التطبيق'));
+        await AppHarness.settleWithDatabase(tester);
+        await check(tester);
+        handle.dispose();
+      });
+
       testWidgets('athkar sources page', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester);
         await tester.tap(findIcon(MIcon.settings));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('عن التطبيق'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('عن التطبيق'));
         await tester.pumpAndSettle();
         final row = find.text('مصادر الأذكار');
         await tester.ensureVisible(row);

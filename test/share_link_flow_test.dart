@@ -55,6 +55,10 @@ void main() {
     await harness.pump(tester);
     await tester.tap(findIcon(MIcon.settings));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('عن التطبيق'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('عن التطبيق'));
+    await tester.pumpAndSettle();
 
     await tester.ensureVisible(find.text('سياسة الخصوصية'));
     await tester.tap(find.text('سياسة الخصوصية'));
@@ -69,6 +73,10 @@ void main() {
   testWidgets('English settings open the English pages', (tester) async {
     await harness.pump(tester, language: 'en');
     await tester.tap(findIcon(MIcon.settings));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('About'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('About'));
     await tester.pumpAndSettle();
 
     await tester.ensureVisible(find.text('Terms of use'));

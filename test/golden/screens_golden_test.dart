@@ -448,9 +448,23 @@ void main() {
       await shot('af_16a_settings_owner_ar');
     });
 
+    testWidgets('16a about', (tester) async {
+      await AppHarness().pump(tester, size: board, now: now);
+      await openSettings(tester);
+      await tester.ensureVisible(find.text('عن التطبيق'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('عن التطبيق'));
+      await AppHarness.settleWithDatabase(tester);
+      await shot('af_16a_about_ar');
+    });
+
     testWidgets('16a athkar sources', (tester) async {
       await AppHarness().pump(tester, size: board, now: now);
       await openSettings(tester);
+      await tester.ensureVisible(find.text('عن التطبيق'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('عن التطبيق'));
+      await AppHarness.settleWithDatabase(tester);
       final row = find.text('مصادر الأذكار');
       await tester.ensureVisible(row);
       await tester.pumpAndSettle();
