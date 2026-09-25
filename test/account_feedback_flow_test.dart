@@ -268,6 +268,54 @@ void main() {
   });
 
   group('feedback', () {
+    testWidgets('closing the sheet puts the keyboard away', (tester) async {
+      final h = AppHarness();
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettings(tester);
+      await scrollTo(tester, find.text('Feedback'));
+      await tester.tap(find.text('Feedback'));
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.text('Send feedback'));
+      await tester.pumpAndSettle();
+
+      await tester.showKeyboard(find.byType(TextField).first);
+      await tester.pumpAndSettle();
+      expect(tester.testTextInput.isVisible, isTrue);
+
+      await tester.tap(find.bySemanticsLabel('Close').last);
+      await tester.pumpAndSettle();
+      expect(tester.testTextInput.isVisible, isFalse);
+      expect(
+        FocusManager.instance.primaryFocus?.context?.widget,
+        isNot(isA<EditableText>()),
+      );
+    });
+
+    testWidgets('the sheet rises above the keyboard', (tester) async {
+      final h = AppHarness();
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettings(tester);
+      await scrollTo(tester, find.text('Feedback'));
+      await tester.tap(find.text('Feedback'));
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.text('Send feedback'));
+      await tester.pumpAndSettle();
+
+      final field = find.byType(TextField).first;
+      final before = tester.getBottomLeft(field).dy;
+      tester.view.viewInsets = FakeViewPadding(
+        bottom: 300 * tester.view.devicePixelRatio,
+      );
+      addTearDown(tester.view.resetViewInsets);
+      await tester.pumpAndSettle();
+
+      final screen =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+      final after = tester.getBottomLeft(field).dy;
+      expect(after, lessThan(before));
+      expect(after, lessThanOrEqualTo(screen - 300));
+    });
+
     testWidgets('send stays off until the message has ten characters', (
       tester,
     ) async {

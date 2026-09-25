@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../theme/mishkat_tokens.dart';
 
@@ -17,7 +18,15 @@ Future<T?> showAppSheet<T>(BuildContext context, WidgetBuilder builder) {
         ? AnimationStyle.noAnimation
         : null,
     builder: (context) => AppSheet(child: Builder(builder: builder)),
-  );
+  ).whenComplete(dismissKeyboard);
+}
+
+/// Closes the keyboard for good. A text field in a sheet or page that closes
+/// while focused can leave iOS's keyboard up over the screen underneath, with
+/// nothing on it to type into.
+void dismissKeyboard() {
+  FocusManager.instance.primaryFocus?.unfocus();
+  SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
 }
 
 class AppSheet extends StatelessWidget {
@@ -28,9 +37,19 @@ class AppSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
+    // The keyboard: the sheet rises above it rather than hiding the field
+    // being typed into.
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom;
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboard),
+      child: _surface(context, t, keyboard),
+    );
+  }
+
+  Widget _surface(BuildContext context, MishkatTokens t, double keyboard) {
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height * 0.88,
+        maxHeight: (MediaQuery.sizeOf(context).height - keyboard) * 0.88,
       ),
       decoration: BoxDecoration(
         color: t.surface,
@@ -46,6 +65,7 @@ class AppSheet extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.fromLTRB(22, 10, 22, 28),
           child: Column(
             mainAxisSize: MainAxisSize.min,

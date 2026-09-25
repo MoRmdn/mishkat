@@ -471,6 +471,8 @@ class FeedbackField extends StatelessWidget {
       keyboardType: keyboardType,
       textDirection: textDirection,
       textInputAction: maxLines == 1 ? TextInputAction.done : null,
+      // Tapping anywhere else puts the keyboard away, as on any iOS form.
+      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       style: MishkatType.body(t).copyWith(fontSize: 14, height: 1.8),
       cursorColor: t.accentText,
       decoration: InputDecoration(

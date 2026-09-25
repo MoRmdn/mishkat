@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../theme/mishkat_tokens.dart';
+import 'app_sheet.dart' show dismissKeyboard;
 import 'buttons.dart';
 import 'mishkat_icon.dart';
 
 /// Pushes a full page: Settings, Account, Feedback, a thread, the Inbox.
+/// Leaving it always closes the keyboard (a thread's composer may be focused).
 Future<T?> pushPage<T>(BuildContext context, WidgetBuilder builder) =>
-    Navigator.of(context).push<T>(MaterialPageRoute(builder: builder));
+    Navigator.of(context)
+        .push<T>(MaterialPageRoute(builder: builder))
+        .whenComplete(dismissKeyboard);
 
 /// A pushed page: back button and title on the page background, then the
 /// body. Back returns to where the user came from, so there is no «تم».
