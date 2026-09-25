@@ -1043,6 +1043,30 @@ class LAr extends L {
       'تعذّر حذف الحساب. تحقق من الاتصال وحاول مرة أخرى.';
 
   @override
+  String get deleteFailedTryLater =>
+      'تعذّر حذف الحساب الآن. حاول مرة أخرى بعد قليل.';
+
+  @override
+  String get appleAccount => 'حساب Apple';
+
+  @override
+  String get rateApp => 'قيّم التطبيق';
+
+  @override
+  String get thikrSources => 'مصادر الأذكار';
+
+  @override
+  String get sourcesIntro =>
+      'نصوص الأذكار مأخوذة من كتب السنة التالية، وكل ذكر يذكر مصدره تحته.';
+
+  @override
+  String get sourcesReview =>
+      'التخريج قيد المراجعة من مختص قبل الإصدار. إن وجدت خطأً فأبلغنا من قائمة الذكر.';
+
+  @override
+  String get contentVersionLabel => 'إصدار المحتوى';
+
+  @override
   String get accountDeletedToast => 'حُذف حسابك';
 
   @override

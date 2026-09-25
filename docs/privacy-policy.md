@@ -24,15 +24,22 @@ You can sign in with Apple or Google so that your progress, favourites and setti
 follow you to other devices. The account is kept with Google Firebase
 (Authentication and Cloud Firestore), which processes it on our behalf. We store:
 
-- your account identifier, and the name and email address Apple or Google share with
-  us (Apple lets you hide your email);
+- your account identifier, and what Apple or Google share with us when you sign in:
+  your name (and first and last name), email address and whether it is verified,
+  and from Google your profile picture link, account language and, for a work or
+  school account, its domain. Apple lets you hide your email, and we note when you
+  did;
+- which sign-in methods the account uses, when it was created and when you last
+  signed in;
+- the app version, phone system and model, and app language you last used it with,
+  and when;
 - the routines you completed: which routine and on which day;
 - your favourites: which athkar, and when you added or removed them;
 - your settings: appearance, language, text size, the Quranic-script choice, reminder
   mode and times, and the prayer-time calculation method, Asr madhab, whether device
   location is used, and the city you chose.
 
-We do **not** store your location coordinates or your unfinished reading sessions;
+We do **not** store your location coordinates, your time zone or your unfinished reading sessions;
 those stay on the device. Your synced data is used only to keep your devices in step.
 
 **Signing out** stops syncing and leaves everything on this device.

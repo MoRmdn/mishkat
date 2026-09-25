@@ -10,7 +10,7 @@ enum SyncGroup {
 
   const SyncGroup(this.key);
 
-  /// The Firestore document id under `users/{uid}/settings/`.
+  /// The group's field in `users/{uid}/data/settings`.
   final String key;
 }
 

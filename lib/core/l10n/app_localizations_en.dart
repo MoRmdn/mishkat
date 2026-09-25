@@ -1015,6 +1015,30 @@ class LEn extends L {
       'Couldn’t delete the account. Check your connection and try again.';
 
   @override
+  String get deleteFailedTryLater =>
+      'Couldn’t delete the account right now. Try again in a little while.';
+
+  @override
+  String get appleAccount => 'Apple account';
+
+  @override
+  String get rateApp => 'Rate the app';
+
+  @override
+  String get thikrSources => 'Athkar sources';
+
+  @override
+  String get sourcesIntro =>
+      'The athkar are taken from these hadith collections, and each thikr names its source beneath it.';
+
+  @override
+  String get sourcesReview =>
+      'The references are being reviewed by a qualified scholar before release. If you find a mistake, report it from the thikr’s menu.';
+
+  @override
+  String get contentVersionLabel => 'Content version';
+
+  @override
   String get accountDeletedToast => 'Your account was deleted';
 
   @override

@@ -112,6 +112,10 @@ void main() {
       );
       expect(h.syncRemote.completions['uid-google'], hasLength(2));
       expect(h.syncRemote.favorites['uid-google']!.keys, ['mo1']);
+      final profile = h.syncRemote.profiles['uid-google']!;
+      expect(profile.email, 'mohamed.r@gmail.com');
+      expect(profile.language, 'en');
+      expect(profile.appVersion, isNotNull);
 
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
@@ -192,6 +196,74 @@ void main() {
       expect(h.feedback.threads, isEmpty);
       // The device keeps what it had.
       expect((await h.db.allFavorites()).single.thikrId, 'mo1');
+    });
+  });
+
+  group('deleting', () {
+    testWidgets('offline, nothing is deleted and the toast says why', (
+      tester,
+    ) async {
+      final h = AppHarness(auth: FakeAuthService(initialUser: _me));
+      await h.syncRemote.putFavorites('me', [
+        SyncFavorite(thikrId: 'mo1', addedAt: DateTime(2026, 9, 1)),
+      ]);
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettings(tester);
+      await tester.tap(find.text('Mohamed Ramadan'));
+      await tester.pumpAndSettle();
+      h.syncRemote.online = false;
+
+      await scrollTo(tester, find.text('Delete account'));
+      await tester.tap(find.text('Delete account'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete account permanently'));
+      await AppHarness.settleWithDatabase(tester);
+
+      expect(h.auth.deleted, isFalse);
+      expect(h.syncRemote.holds('me'), isTrue);
+      expect(find.textContaining('Check your connection'), findsOne);
+    });
+
+    testWidgets('a failure that is not the network says try later', (
+      tester,
+    ) async {
+      final h = AppHarness(auth: FakeAuthService(initialUser: _me));
+      h.auth.deleteError = StateError('invalid-credential');
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettings(tester);
+      await tester.tap(find.text('Mohamed Ramadan'));
+      await tester.pumpAndSettle();
+
+      await scrollTo(tester, find.text('Delete account'));
+      await tester.tap(find.text('Delete account'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete account permanently'));
+      await AppHarness.settleWithDatabase(tester);
+
+      expect(find.textContaining('Try again in a little while'), findsOne);
+    });
+
+    testWidgets('an Apple relay address reads as «Apple account»', (
+      tester,
+    ) async {
+      final h = AppHarness(
+        auth: FakeAuthService(
+          initialUser: const AppUser(
+            uid: 'me',
+            isAnonymous: false,
+            email: 'rtszkw7f75@privaterelay.appleid.com',
+            provider: AuthProviderKind.apple,
+          ),
+        ),
+      );
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettings(tester);
+      expect(find.text('Apple account'), findsOne);
+
+      await tester.tap(find.text('Apple account'));
+      await tester.pumpAndSettle();
+      expect(find.text('Apple account'), findsOne);
+      expect(find.textContaining('privaterelay.appleid.com'), findsOne);
     });
   });
 

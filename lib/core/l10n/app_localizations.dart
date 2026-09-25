@@ -1651,6 +1651,48 @@ abstract class L {
   /// **'تعذّر حذف الحساب. تحقق من الاتصال وحاول مرة أخرى.'**
   String get deleteFailed;
 
+  /// No description provided for @deleteFailedTryLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حذف الحساب الآن. حاول مرة أخرى بعد قليل.'**
+  String get deleteFailedTryLater;
+
+  /// No description provided for @appleAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب Apple'**
+  String get appleAccount;
+
+  /// No description provided for @rateApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم التطبيق'**
+  String get rateApp;
+
+  /// No description provided for @thikrSources.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصادر الأذكار'**
+  String get thikrSources;
+
+  /// No description provided for @sourcesIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'نصوص الأذكار مأخوذة من كتب السنة التالية، وكل ذكر يذكر مصدره تحته.'**
+  String get sourcesIntro;
+
+  /// No description provided for @sourcesReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخريج قيد المراجعة من مختص قبل الإصدار. إن وجدت خطأً فأبلغنا من قائمة الذكر.'**
+  String get sourcesReview;
+
+  /// No description provided for @contentVersionLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار المحتوى'**
+  String get contentVersionLabel;
+
   /// No description provided for @accountDeletedToast.
   ///
   /// In ar, this message translates to:

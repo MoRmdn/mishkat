@@ -2,8 +2,9 @@ rules_version = '2';
 
 // Mishkat Al-Wird. Tested in firestore_rules_test/ against the emulator.
 //
-// users/{uid}/**        a signed-in user's synced progress, favourites and
-//                       settings: theirs alone.
+// users/{uid}           the account's profile; below it, synced progress
+//                       (completions/{yyyy-MM}), favourites and settings
+//                       (data/{favorites|settings}): theirs alone.
 // feedback/{id}         a conversation. The sender reads their own; the owner
 //                       (admins/{uid}) reads all and alone changes status.
 // admins/{uid}          written from the console only.
@@ -38,21 +39,57 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
+      // The profile document: who the account is (as the provider shared
+      // it) and which build last opened it. lastSyncAt is the first
+      // layout's, still on early accounts.
+      function validUser(d) {
+        return d.keys().hasOnly(['schema', 'profile', 'providers',
+            'createdAt', 'lastSignInAt', 'app', 'lastActiveAt',
+            'lastFeedbackAt', 'lastSyncAt'])
+          && (!('profile' in d) || (d.profile is map
+              && d.profile.keys().hasOnly(['displayName', 'email',
+                  'emailVerified', 'photoUrl', 'givenName', 'familyName',
+                  'locale', 'hostedDomain', 'isPrivateEmail'])))
+          && (!('providers' in d)
+              || (d.providers is list && d.providers.size() <= 4))
+          && (!('app' in d) || (d.app is map
+              && d.app.keys().hasOnly(['version', 'platform', 'language'])));
+      }
+
       allow read, delete: if isSelf(uid);
       // lastFeedbackAt is the feedback rate limit, so it may only ever move
       // to the time of the request that writes it.
       allow create: if isSelf(uid)
+        && validUser(request.resource.data)
         && (!('lastFeedbackAt' in request.resource.data)
             || request.resource.data.lastFeedbackAt == request.time);
       allow update: if isSelf(uid)
+        && validUser(request.resource.data)
         && (!('lastFeedbackAt' in changed())
             || request.resource.data.lastFeedbackAt == request.time);
 
-      // Exactly one level down (completions, favorites, settings). A
-      // recursive {rest=**} would also match users/{uid} itself and undo the
-      // rate-limit rule above.
-      match /{collection}/{docId} {
-        allow read, write: if isSelf(uid);
+      // One document per month of finished routines. The first layout kept
+      // one per day and routine here too; those can still be read and
+      // deleted, not written.
+      match /completions/{month} {
+        allow read, delete: if isSelf(uid);
+        allow create, update: if isSelf(uid)
+          && month.matches('^[0-9]{4}-[0-9]{2}$');
+      }
+
+      // data/settings and data/favorites: a document each.
+      match /data/{doc} {
+        allow read, delete: if isSelf(uid);
+        allow create, update: if isSelf(uid)
+          && doc in ['settings', 'favorites'];
+      }
+
+      // The first layout's collections: cleared on account deletion.
+      match /favorites/{id} {
+        allow read, delete: if isSelf(uid);
+      }
+      match /settings/{id} {
+        allow read, delete: if isSelf(uid);
       }
     }
 

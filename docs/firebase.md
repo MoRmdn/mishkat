@@ -32,9 +32,15 @@ Apple and Google accounts.
      `oauth_client` must list a web client (type 3), which Credential Manager
      needs as the server client ID.
    - **Apple**. In the Apple Developer account, enable *Sign in with Apple* on
-     the App ID `com.mormdn.mishkat`. For Android's web flow, create a
-     Services ID and a key, and enter the Services ID, team ID, key ID and
-     private key in the Firebase Apple provider. Add Firebase's
+     the App ID `com.mormdn.mishkat`. Create a Services ID and a key with
+     Sign in with Apple enabled, and enter the Services ID, team ID, key ID
+     and private key in the Firebase Apple provider. **Do this even for an
+     iOS-only release:** sign-in works without them, but deleting an account
+     must revoke the user's Apple token (App Store guideline 5.1.1(v)), and
+     Firebase can only revoke with that key. Without it the app still
+     deletes the account and logs `Apple token revocation failed`, and the
+     person stays listed under Settings → Apple ID → Sign in with Apple. The
+     same Services ID serves Android's web flow. Add Firebase's
      `https://mishkat-al-wird.firebaseapp.com/__/auth/handler` as a return URL
      on the Services ID.
 2. iOS: `ios/Runner/GoogleService-Info.plist` must contain `CLIENT_ID` and
@@ -87,16 +93,33 @@ flutter run --dart-define=FIREBASE_EMULATOR=10.0.2.2   # Android emulator; use l
 
 ## Data layout
 
+Laid out so a sync touches few documents: a full pull reads two documents plus
+one per month of history (about twelve a year), and a resume pull reads only
+the months changed since the last one, normally one.
+
 ```
-users/{uid}                               {lastSyncAt, lastFeedbackAt}
-users/{uid}/completions/{day}_{category}  {category, day, completedAt, syncedAt}
-users/{uid}/favorites/{thikrId}           {addedAt, deletedAt}
-users/{uid}/settings/{app|reminders|prayer}  {…values, updatedAt}
-feedback/{id}                             thread (FeedbackThread)
-feedback/{id}/messages/{mid}              {from: user|admin, body, createdAt}
-admins/{uid}                              console only
-counters/feedback                         {next}: the owner's message numbers
+users/{uid}                        {schema: 2, profile, providers, createdAt,
+                                    lastSignInAt, app, lastActiveAt,
+                                    lastFeedbackAt}
+  profile: {displayName, email, emailVerified, photoUrl, givenName,
+            familyName, locale, hostedDomain, isPrivateEmail}
+  app:     {version, platform, language}
+users/{uid}/data/settings          {app|reminders|prayer: {…values, updatedAt}}
+users/{uid}/data/favorites         {items: {thikrId: {addedAt, deletedAt}}, updatedAt}
+users/{uid}/completions/{yyyy-MM}  {days: {'2026-09-25': {morning: at, …}}, updatedAt}
+feedback/{id}                      thread (FeedbackThread)
+feedback/{id}/messages/{mid}       {from: user|admin, body, createdAt}
+admins/{uid}                       console only
+counters/feedback                  {next}: the owner's message numbers
 ```
+
+`users/{uid}` is written on sign-in (with the provider's claims) and once per
+launch (`app`, `lastActiveAt`); fields a write leaves out keep their value, so
+Apple withholding the name after the first sign-in erases nothing. No
+location or time zone is stored. The first layout (`favorites/{id}`,
+`settings/{group}`, `completions/{day}_{category}`) may remain on early test
+accounts; the rules allow only reading and deleting it, account deletion
+clears it, and the next full sync rewrites the data in the new layout.
 
 ## Diagnostics (not wired yet)
 

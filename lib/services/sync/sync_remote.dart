@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'sync_models.dart';
+import 'user_profile.dart';
 
 /// The account's copy of a user's data. Firestore in the app, an in-memory
 /// map in tests.
@@ -19,6 +20,10 @@ abstract class SyncRemote {
   Future<void> putCompletions(String uid, List<SyncCompletion> rows);
   Future<void> putFavorites(String uid, List<SyncFavorite> rows);
   Future<void> putSettings(String uid, SettingsSnapshot snapshot);
+
+  /// Merges [profile] into `users/{uid}` and stamps the last time the app
+  /// was opened. Fields the profile leaves out keep their stored value.
+  Future<void> putProfile(String uid, UserProfile profile);
 
   /// Deletes everything under `users/{uid}`.
   Future<void> deleteAll(String uid);
@@ -45,6 +50,9 @@ class _NoRemote implements SyncRemote {
 
   @override
   Future<void> putSettings(String uid, SettingsSnapshot snapshot) async {}
+
+  @override
+  Future<void> putProfile(String uid, UserProfile profile) async {}
 
   @override
   Future<void> deleteAll(String uid) async {}

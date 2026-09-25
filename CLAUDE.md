@@ -52,7 +52,10 @@ pulled on sign-in, resume and «زامن الآن». What wins is decided in the
 `lib/services/sync/merge.dart` (`test/sync_merge_test.dart`): completions are a
 union on `(day, category)`, favourites are last-writer-wins with tombstones
 (`Favorites.deletedAt` — never hard-delete a favourite), settings are
-last-writer-wins per group on `sync.updatedAt.<group>`. Only a change to a
+last-writer-wins per group on `sync.updatedAt.<group>`. On the server that
+is one `data/settings` and one `data/favorites` document and a document per
+month of completions (`docs/firebase.md` → Data layout), so a sync reads a
+handful of documents, not one per row. Only a change to a
 *synced* value stamps a group — onboarding and a fresh GPS fix must not.
 Pulled settings go through `replaceFromSync`, so reminders reschedule via
 `currentScheduleProvider` as usual. **Location coordinates never sync**, and

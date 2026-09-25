@@ -5,6 +5,7 @@ import 'package:mishkat/services/feedback/feedback_models.dart';
 import 'package:mishkat/services/feedback/feedback_repository.dart';
 import 'package:mishkat/services/sync/sync_models.dart';
 import 'package:mishkat/services/sync/sync_remote.dart';
+import 'package:mishkat/services/sync/user_profile.dart';
 
 /// Sign-in without Firebase. [nextUser] is who the provider sheet "returns".
 class FakeAuthService implements AuthService {
@@ -27,6 +28,9 @@ class FakeAuthService implements AuthService {
   bool online = true;
   int reauthentications = 0;
   bool deleted = false;
+
+  /// Thrown by [deleteUser] in place of deleting.
+  Object? deleteError;
 
   void _set(AppUser? user) {
     _user = user;
@@ -82,6 +86,7 @@ class FakeAuthService implements AuthService {
 
   @override
   Future<void> deleteUser() async {
+    if (deleteError != null) throw deleteError!;
     deleted = true;
     _set(null);
   }
@@ -92,6 +97,7 @@ class FakeSyncRemote implements SyncRemote {
   final Map<String, Map<String, SyncCompletion>> completions = {};
   final Map<String, Map<String, SyncFavorite>> favorites = {};
   final Map<String, Map<SyncGroup, SettingsSnapshot>> settings = {};
+  final Map<String, UserProfile> profiles = {};
   bool online = true;
   int fetches = 0;
 
@@ -128,7 +134,14 @@ class FakeSyncRemote implements SyncRemote {
   }
 
   @override
+  Future<void> putProfile(String uid, UserProfile profile) async {
+    profiles[uid] = profile;
+  }
+
+  @override
   Future<void> deleteAll(String uid) async {
+    if (!online) throw const SyncOffline();
+    profiles.remove(uid);
     completions.remove(uid);
     favorites.remove(uid);
     settings.remove(uid);
@@ -137,7 +150,8 @@ class FakeSyncRemote implements SyncRemote {
   bool holds(String uid) =>
       completions.containsKey(uid) ||
       favorites.containsKey(uid) ||
-      settings.containsKey(uid);
+      settings.containsKey(uid) ||
+      profiles.containsKey(uid);
 }
 
 /// Feedback threads held in memory, following the same rules as

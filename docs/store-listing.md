@@ -78,13 +78,16 @@ for advertising, tracking or sold.
 | Data type (Play category) | Collected when | Purpose |
 |---|---|---|
 | Name, email address (Personal info) | Signing in | Account management |
+| Photos and videos: no. The Google profile picture is stored as a link, not an image | — | — |
+| App info and performance / device IDs (app version, OS version, device model, app language, last opened) | Signed in, once per launch | Account management, app functionality (support) |
 | User IDs (Personal info) | Signing in, or sending feedback while signed out (anonymous ID) | Account management, app functionality |
 | App activity: other actions (routines completed, favourites) | Signed in | App functionality (sync) |
 | App info: other (settings, incl. city chosen — not coordinates) | Signed in | App functionality (sync) |
 | Messages: other in-app messages (feedback text, optional contact email) | Sending feedback | Developer communications |
 | Device or other IDs / diagnostics (app version, OS version, device model) | Feedback with "attach device information" on | Analytics of the reported problem |
 
-Location is **not** collected: coordinates never leave the device. If analytics
+Location is **not** collected: coordinates never leave the device, and the
+account stores no time zone. If analytics
 or crash reporting is enabled in the shipped build, also declare app
 interactions and crash logs (see `docs/firebase.md`).
 

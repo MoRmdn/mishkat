@@ -11,6 +11,8 @@ import '../../core/widgets/list_rows.dart';
 import '../../core/widgets/mishkat_icon.dart';
 import '../../core/widgets/page_scaffold.dart';
 import '../../services/auth/auth_service.dart';
+import '../../services/feedback/feedback_repository.dart';
+import '../../services/sync/sync_remote.dart';
 import '../../services/sync/sync_service.dart';
 import '../settings/settings_controller.dart';
 import 'account_actions.dart';
@@ -38,6 +40,7 @@ class AccountScreen extends ConsumerWidget {
       null => null,
     };
     final email = account.user.email;
+    final title = accountTitle(account, appleAccount: l.appleAccount);
 
     return PageScaffold(
       title: l.account,
@@ -53,19 +56,18 @@ class AccountScreen extends ConsumerWidget {
                   Center(child: AccountAvatar(account, size: 64)),
                   const SizedBox(height: 10),
                   Text(
-                    account.label,
+                    title,
                     textAlign: TextAlign.center,
                     style: MishkatType.headline(t),
                   ),
-                  if (email != null && email != account.label ||
-                      provider != null)
+                  if (email != null && email != title || provider != null)
                     Text.rich(
                       TextSpan(
                         children: [
-                          if (email != null && email != account.label)
+                          if (email != null && email != title)
                             TextSpan(text: '\u2068$email\u2069'),
                           if (email != null &&
-                              email != account.label &&
+                              email != title &&
                               provider != null)
                             const TextSpan(text: ' · '),
                           if (provider != null)
@@ -400,10 +402,13 @@ class _DeleteAccountSheetState extends ConsumerState<DeleteAccountSheet> {
       messenger.showSnackBar(SnackBar(content: Text(l.accountDeletedToast)));
     } on SignInCancelled {
       if (mounted) setState(() => _busy = false);
-    } catch (_) {
+    } catch (e) {
+      debugPrint('Account deletion failed: $e');
       if (!mounted) return;
       setState(() => _busy = false);
-      showToast(context, l.deleteFailed);
+      final offline =
+          e is AuthOffline || e is SyncOffline || e is FeedbackOffline;
+      showToast(context, offline ? l.deleteFailed : l.deleteFailedTryLater);
     }
   }
 

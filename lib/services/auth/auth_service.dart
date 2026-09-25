@@ -13,6 +13,12 @@ class AppUser {
     this.displayName,
     this.email,
     this.provider,
+    this.emailVerified = false,
+    this.photoUrl,
+    this.providers = const [],
+    this.createdAt,
+    this.lastSignInAt,
+    this.providerProfile,
   });
 
   final String uid;
@@ -23,6 +29,45 @@ class AppUser {
   final String? displayName;
   final String? email;
   final AuthProviderKind? provider;
+  final bool emailVerified;
+
+  /// Google's profile picture. Apple has none.
+  final String? photoUrl;
+
+  /// Firebase provider ids linked to the user: `apple.com`, `google.com`.
+  final List<String> providers;
+  final DateTime? createdAt;
+  final DateTime? lastSignInAt;
+
+  /// What the provider said about the person at this sign-in. Only present on
+  /// the user returned by [AuthService.signIn]; never on [AuthService.currentUser].
+  final ProviderProfile? providerProfile;
+}
+
+/// The extra claims a provider hands over at sign-in, beyond what Firebase
+/// keeps on the user. Apple's name arrives only on the first authorization
+/// (Firebase then stores it as the display name); Google's on every one.
+@immutable
+class ProviderProfile {
+  const ProviderProfile({
+    this.givenName,
+    this.familyName,
+    this.locale,
+    this.hostedDomain,
+    this.isPrivateEmail,
+  });
+
+  final String? givenName;
+  final String? familyName;
+
+  /// Google's account language, `ar` or `en-GB`.
+  final String? locale;
+
+  /// A Google Workspace domain, for a work or school account.
+  final String? hostedDomain;
+
+  /// Apple: the email is a relay address.
+  final bool? isPrivateEmail;
 }
 
 /// Where the account stands, as the UI sees it.
@@ -60,10 +105,29 @@ class SignedIn extends Account {
   bool get canSync => true;
 
   /// The name, or the email when the provider withheld the name (Apple does
-  /// after the first sign-in).
-  String get label => user.displayName?.trim().isNotEmpty == true
-      ? user.displayName!.trim()
-      : user.email ?? '';
+  /// after the first sign-in). Empty when all there is is an Apple relay
+  /// address, which reads as noise: the screens then say «حساب Apple».
+  String get label {
+    final name = user.displayName?.trim();
+    if (name != null && name.isNotEmpty) return name;
+    final email = user.email;
+    if (email == null || isAppleRelayEmail(email)) return '';
+    return email;
+  }
+}
+
+/// «…@privaterelay.appleid.com»: the forwarding address Apple hands out when
+/// someone hides their email.
+bool isAppleRelayEmail(String email) =>
+    email.toLowerCase().endsWith('@privaterelay.appleid.com');
+
+/// What the Account screen and the Settings card call a signed-in account.
+String accountTitle(SignedIn account, {required String appleAccount}) {
+  final label = account.label;
+  if (label.isNotEmpty) return label;
+  return account.user.provider == AuthProviderKind.apple
+      ? appleAccount
+      : account.user.email ?? '';
 }
 
 Account accountOf(AppUser? user) => switch (user) {

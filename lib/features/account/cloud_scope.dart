@@ -6,6 +6,7 @@ import '../../services/auth/auth_service.dart';
 import '../../services/feedback/feedback_outbox.dart';
 import '../../services/feedback/feedback_providers.dart';
 import '../../services/sync/sync_service.dart';
+import 'account_actions.dart';
 
 /// Brings the account and feedback up to date on launch and on resume:
 /// pulls what other devices changed, retries feedback still in the outbox,
@@ -26,6 +27,7 @@ class _CloudScopeState extends ConsumerState<CloudScope>
   /// A phone switched between apps does not need a pull every time.
   static const _minInterval = Duration(minutes: 1);
   DateTime? _lastRefresh;
+  bool _profileSaved = false;
 
   @override
   void initState() {
@@ -53,6 +55,11 @@ class _CloudScopeState extends ConsumerState<CloudScope>
     _lastRefresh = now;
 
     ref.read(syncProvider.notifier).sync();
+    // Once a launch: the build and language the account was last used with.
+    if (!_profileSaved && ref.read(accountProvider).canSync) {
+      _profileSaved = true;
+      ref.read(accountActionsProvider).saveProfile();
+    }
     ref.read(feedbackOutboxProvider.notifier).flush();
     refreshFeedbackFromWidget(ref);
   }

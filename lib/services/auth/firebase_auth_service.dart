@@ -28,7 +28,7 @@ class FirebaseAuthService implements AuthService {
   @override
   AppUser? get currentUser => _toAppUser(_auth.currentUser);
 
-  static AppUser? _toAppUser(User? u) {
+  static AppUser? _toAppUser(User? u, [AdditionalUserInfo? info]) {
     if (u == null) return null;
     final providers = u.providerData.map((p) => p.providerId).toSet();
     return AppUser(
@@ -41,6 +41,36 @@ class FirebaseAuthService implements AuthService {
           : providers.contains('google.com')
           ? AuthProviderKind.google
           : null,
+      emailVerified: u.emailVerified,
+      photoUrl:
+          u.photoURL ??
+          u.providerData.map((p) => p.photoURL).nonNulls.firstOrNull,
+      providers: providers.toList()..sort(),
+      createdAt: u.metadata.creationTime,
+      lastSignInAt: u.metadata.lastSignInTime,
+      providerProfile: info == null ? null : _providerProfile(info),
+    );
+  }
+
+  /// Google's ID-token claims and Apple's, as Firebase relays them.
+  static ProviderProfile _providerProfile(AdditionalUserInfo info) {
+    final p = info.profile ?? const <String, dynamic>{};
+    String? text(String key) {
+      final v = p[key];
+      return v is String && v.trim().isNotEmpty ? v.trim() : null;
+    }
+
+    final private = p['is_private_email'];
+    return ProviderProfile(
+      givenName: text('given_name'),
+      familyName: text('family_name'),
+      locale: text('locale'),
+      hostedDomain: text('hd'),
+      isPrivateEmail: switch (private) {
+        bool b => b,
+        String s => s == 'true',
+        _ => null,
+      },
     );
   }
 
@@ -59,7 +89,7 @@ class FirebaseAuthService implements AuthService {
     }
     _appleAuthorizationCode =
         result.additionalUserInfo?.authorizationCode ?? _appleAuthorizationCode;
-    return _toAppUser(result.user)!;
+    return _toAppUser(result.user, result.additionalUserInfo)!;
   }
 
   Future<UserCredential> _withApple(User? current) async {
@@ -147,8 +177,10 @@ class FirebaseAuthService implements AuthService {
       switch (currentUser?.provider) {
         case AuthProviderKind.apple:
           final result = await user.reauthenticateWithProvider(
-            AppleAuthProvider(),
+            AppleAuthProvider()..addScope('email'),
           );
+          // Apple's code is single-use and short-lived: keep only this one,
+          // never an older code from sign-in.
           _appleAuthorizationCode =
               result.additionalUserInfo?.authorizationCode;
         case AuthProviderKind.google:
@@ -158,6 +190,8 @@ class FirebaseAuthService implements AuthService {
       }
     } on FirebaseAuthException catch (e) {
       if (_isCancel(e.code)) throw const SignInCancelled();
+      debugPrint('Re-authentication failed: ${e.code} ${e.message}');
+      if (e.code == 'network-request-failed') throw const AuthOffline();
       rethrow;
     }
   }
@@ -166,20 +200,54 @@ class FirebaseAuthService implements AuthService {
   Future<void> deleteUser() async {
     final user = _auth.currentUser;
     if (user == null) return;
-    final code = _appleAuthorizationCode;
-    if (currentUser?.provider == AuthProviderKind.apple && code != null) {
-      // App Store Review Guideline 5.1.1(v): deleting the account must also
-      // revoke the Sign in with Apple token.
-      await _auth.revokeTokenWithAuthorizationCode(code);
-      _appleAuthorizationCode = null;
+    if (currentUser?.provider == AuthProviderKind.apple) {
+      await _revokeApple();
     }
-    await user.delete();
+    try {
+      await _deleteOrReauthenticate(user);
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Deleting the user failed: ${e.code} ${e.message}');
+      if (e.code == 'network-request-failed') throw const AuthOffline();
+      rethrow;
+    }
     if (_googleReady != null) {
       try {
         await _google.disconnect();
       } catch (e) {
         debugPrint('Google disconnect failed: $e');
       }
+    }
+  }
+
+  /// App Store Review Guideline 5.1.1(v): deleting the account must also
+  /// revoke the Sign in with Apple token. Firebase can only do that when the
+  /// Apple provider in the console carries the Services ID, team ID, key ID
+  /// and private key; without them (or with a spent code) the call fails.
+  /// That must not leave the person with an account they asked to delete, so
+  /// the revocation is best-effort and the deletion goes ahead.
+  Future<void> _revokeApple() async {
+    final code = _appleAuthorizationCode;
+    _appleAuthorizationCode = null;
+    if (code == null) {
+      debugPrint('Apple token not revoked: no authorization code');
+      return;
+    }
+    try {
+      await _auth.revokeTokenWithAuthorizationCode(code);
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Apple token revocation failed: ${e.code} ${e.message}');
+    }
+  }
+
+  /// Firebase refuses to delete a user whose sign-in is too old even right
+  /// after [reauthenticate] on some platforms; confirm once more and retry.
+  Future<void> _deleteOrReauthenticate(User user) async {
+    try {
+      await user.delete();
+    } on FirebaseAuthException catch (e) {
+      if (e.code != 'requires-recent-login') rethrow;
+      await reauthenticate();
+      await (_auth.currentUser ?? user).delete();
     }
   }
 }

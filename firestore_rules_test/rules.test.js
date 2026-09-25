@@ -107,19 +107,75 @@ describe('users/{uid}', () => {
   test('a user reads and writes their own synced data', async () => {
     const db = as('alice');
     await assertSucceeds(
-      setDoc(doc(db, 'users/alice/favorites/mo1'), { addedAt: new Date(), deletedAt: null }),
+      setDoc(
+        doc(db, 'users/alice/completions/2026-09'),
+        { days: { '2026-09-25': { morning: new Date() } }, updatedAt: serverTimestamp() },
+        { merge: true },
+      ),
+    );
+    await assertSucceeds(
+      setDoc(
+        doc(db, 'users/alice/data/favorites'),
+        { items: { mo1: { addedAt: new Date(), deletedAt: null } }, updatedAt: serverTimestamp() },
+        { merge: true },
+      ),
+    );
+    await assertSucceeds(
+      setDoc(
+        doc(db, 'users/alice/data/settings'),
+        { app: { language: 'ar', updatedAt: new Date() } },
+        { merge: true },
+      ),
     );
     await assertSucceeds(getDocs(collection(db, 'users/alice/completions')));
+    await assertSucceeds(getDoc(doc(db, 'users/alice/data/settings')));
+  });
+
+  test('the profile is written with the fields the app sends', async () => {
     await assertSucceeds(
-      setDoc(doc(db, 'users/alice'), { lastSyncAt: serverTimestamp() }, { merge: true }),
+      setDoc(
+        doc(as('alice'), 'users/alice'),
+        {
+          schema: 2,
+          profile: {
+            displayName: 'Alice',
+            email: 'a@privaterelay.appleid.com',
+            emailVerified: true,
+            givenName: 'Alice',
+            isPrivateEmail: true,
+          },
+          providers: ['apple.com'],
+          createdAt: new Date(2026, 8, 1),
+          lastSignInAt: new Date(2026, 8, 25),
+          app: { version: '1.2.0 (34)', platform: 'iOS 26.0 · iPhone', language: 'ar' },
+          lastActiveAt: serverTimestamp(),
+        },
+        { merge: true },
+      ),
     );
   });
 
+  test('nothing else goes into the profile document', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'users/alice'), { location: [30.0, 31.2] }, { merge: true }));
+    await assertFails(setDoc(doc(db, 'users/alice'), { profile: { timezone: 'Africa/Cairo' } }, { merge: true }));
+    await assertFails(setDoc(doc(db, 'users/alice'), { app: { lat: 30 } }, { merge: true }));
+  });
+
+  test('only the known documents and month ids are written', async () => {
+    const db = as('alice');
+    await assertFails(setDoc(doc(db, 'users/alice/data/other'), { x: 1 }));
+    await assertFails(setDoc(doc(db, 'users/alice/completions/2026-09-25_morning'), { x: 1 }));
+    await assertFails(setDoc(doc(db, 'users/alice/favorites/mo1'), { addedAt: new Date() }));
+    await assertFails(setDoc(doc(db, 'users/alice/anything/x'), { x: 1 }));
+  });
+
   test('nobody else can read or write it', async () => {
-    await assertFails(getDoc(doc(as('bob'), 'users/alice/favorites/mo1')));
-    await assertFails(setDoc(doc(as('bob'), 'users/alice/settings/app'), {}));
+    await assertFails(getDoc(doc(as('bob'), 'users/alice/data/favorites')));
+    await assertFails(setDoc(doc(as('bob'), 'users/alice/data/settings'), {}));
     await assertFails(getDocs(collection(anon(), 'users/alice/completions')));
     await assertFails(getDocs(collection(as('owner'), 'users/alice/completions')));
+    await assertFails(getDoc(doc(as('bob'), 'users/alice')));
   });
 
   test('the rate-limit stamp cannot be backdated', async () => {
@@ -128,11 +184,30 @@ describe('users/{uid}', () => {
     );
   });
 
-  test('a user can delete their account data', async () => {
+  test('a user can delete their account data, first layout included', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      const db = ctx.firestore();
+      await setDoc(doc(db, 'users/alice'), { lastSyncAt: new Date() });
+      await setDoc(doc(db, 'users/alice/favorites/mo1'), { addedAt: new Date() });
+      await setDoc(doc(db, 'users/alice/settings/app'), { updatedAt: new Date() });
+      await setDoc(doc(db, 'users/alice/completions/2026-09-24_morning'), {});
+    });
     const db = as('alice');
-    await setDoc(doc(db, 'users/alice/favorites/mo1'), { addedAt: new Date() });
+    await setDoc(doc(db, 'users/alice/data/favorites'), { items: {} });
     await assertSucceeds(deleteDoc(doc(db, 'users/alice/favorites/mo1')));
+    await assertSucceeds(deleteDoc(doc(db, 'users/alice/settings/app')));
+    await assertSucceeds(deleteDoc(doc(db, 'users/alice/completions/2026-09-24_morning')));
+    await assertSucceeds(deleteDoc(doc(db, 'users/alice/data/favorites')));
     await assertSucceeds(deleteDoc(doc(db, 'users/alice')));
+  });
+
+  test('an early account with lastSyncAt can still be updated', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'users/alice'), { lastSyncAt: new Date() });
+    });
+    await assertSucceeds(
+      setDoc(doc(as('alice'), 'users/alice'), { schema: 2, lastActiveAt: serverTimestamp() }, { merge: true }),
+    );
   });
 });
 
