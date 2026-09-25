@@ -12,7 +12,20 @@
           "package_name": "com.mormdn.mishkat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "9295918147-l31ua3iefcns4o6f8996e7etq4s9l97r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mormdn.mishkat",
+            "certificate_hash": "c1909e355dbab0f872a9bf6a1e300f48287371c0"
+          }
+        },
+        {
+          "client_id": "9295918147-vjkrc48lrlqis61rno25c4omlucqcb0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBhdrShHnIz0ViRx2KMLtJb-mihZCxY96g"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "9295918147-vjkrc48lrlqis61rno25c4omlucqcb0c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "9295918147-fc5vqo3kv859e6pfmkqgujbsq0pk9lnj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mormdn.mishkat"
+              }
+            }
+          ]
         }
       }
     }
