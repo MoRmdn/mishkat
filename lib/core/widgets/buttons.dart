@@ -98,6 +98,63 @@ class SecondaryButton extends StatelessWidget {
   }
 }
 
+/// A compact 44px pill in primary (cta on dark), sized to its label: «دخول»
+/// on the account card, «تسجيل الدخول» on the streak nudge.
+class SmallPillButton extends StatelessWidget {
+  const SmallPillButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.height = 44,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final bg = t.isDark ? t.cta : t.primary;
+    final fg = t.isDark ? t.onCta : t.onPrimary;
+    return Semantics(
+      button: true,
+      enabled: onPressed != null,
+      label: label,
+      excludeSemantics: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onPressed,
+        child: SizedBox(
+          height: height < Sizes.touchMin ? Sizes.touchMin : height,
+          child: Center(
+            widthFactor: 1,
+            child: Container(
+              height: height,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: bg,
+                borderRadius: BorderRadius.circular(height / 2),
+              ),
+              child: Text(
+                label,
+                maxLines: 1,
+                style: TextStyle(
+                  fontFamily: kUiFont,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: fg,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// A borderless text action under a primary button ("ليس الآن", "لاحقاً").
 class TextAction extends StatelessWidget {
   const TextAction({super.key, required this.label, required this.onPressed});
@@ -145,10 +202,15 @@ class IconCircleButton extends StatelessWidget {
     this.iconSize = 20,
     this.background,
     this.color,
+    this.showDot = false,
   });
 
   final MIcon icon;
   final String semanticLabel;
+
+  /// The glow dot with a surface ring, top-end: Home's settings button when a
+  /// reply is unread. Say so in [semanticLabel] too.
+  final bool showDot;
   final VoidCallback? onPressed;
   final double size;
   final double iconSize;
@@ -182,7 +244,35 @@ class IconCircleButton extends StatelessWidget {
                   color: background ?? t.surface,
                   shape: BoxShape.circle,
                 ),
-                child: MishkatIcon(icon, color: color ?? t.ink, size: iconSize),
+                child: showDot
+                    ? Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.center,
+                        children: [
+                          MishkatIcon(
+                            icon,
+                            color: color ?? t.ink,
+                            size: iconSize,
+                          ),
+                          PositionedDirectional(
+                            top: -(size - iconSize) / 2 + 7,
+                            end: -(size - iconSize) / 2 + 7,
+                            child: Container(
+                              width: 11,
+                              height: 11,
+                              decoration: BoxDecoration(
+                                color: t.glow,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: background ?? t.surface,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : MishkatIcon(icon, color: color ?? t.ink, size: iconSize),
               ),
             ),
           ),

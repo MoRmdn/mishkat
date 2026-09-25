@@ -110,6 +110,8 @@ flutter:
     # in the design handoff; assets/branding/png holds generator inputs.
     - assets/branding/svg/symbol-color.svg
     - assets/branding/svg/symbol-small-color.svg
+    # Sign in with Apple / Google marks, drawn at the providers' own colours.
+    - assets/branding/providers/
 
   fonts:
     # UI. Static instances of the official variable font — see

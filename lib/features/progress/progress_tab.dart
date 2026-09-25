@@ -10,6 +10,7 @@ import '../../data/models/thikr.dart';
 import '../../data/repositories/progress_providers.dart';
 import '../../data/repositories/progress_repository.dart';
 import '../settings/settings_controller.dart';
+import 'streak_nudge.dart';
 
 /// The routines the week card lists, in the board's order.
 const _weekRows = [
@@ -26,12 +27,14 @@ class ProgressTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L.of(context);
     final stats = ref.watch(progressStatsProvider);
+    final nudge = ref.watch(streakNudgeVisibleProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
       children: [
         PageTitle(l.titleProgress),
         const SizedBox(height: 12),
+        if (nudge) ...[const StreakNudge(), const SizedBox(height: 12)],
         _StreakCard(stats: stats),
         const SizedBox(height: 12),
         _LastFourteenCard(levels: stats.last14Routines),

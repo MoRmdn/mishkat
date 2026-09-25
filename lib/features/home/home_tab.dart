@@ -19,7 +19,8 @@ import '../../services/diagnostics.dart';
 import '../reader/reader_screen.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
-import '../settings/settings_sheet.dart';
+import '../../services/feedback/feedback_providers.dart';
+import '../settings/settings_page.dart';
 import '../shell/app_shell.dart';
 import '../tasbih/tasbih_screen.dart';
 import 'home_now.dart';
@@ -114,6 +115,7 @@ class _Header extends ConsumerWidget {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
     final streak = ref.watch(progressStatsProvider).currentStreak;
+    final unread = ref.watch(feedbackBadgesProvider).value?.any ?? false;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,8 +147,13 @@ class _Header extends ConsumerWidget {
               const SizedBox(width: 6),
               IconCircleButton(
                 icon: MIcon.settings,
-                semanticLabel: l.settings,
-                onPressed: () => showSettingsSheet(context),
+                // One dot, no count: an unread reply, or for the owner new
+                // inbox items (board AF 15).
+                showDot: unread,
+                semanticLabel: unread
+                    ? l.withUnread(l.settings, l.unreadReply)
+                    : l.settings,
+                onPressed: () => openSettings(context),
               ),
             ],
           ),

@@ -1284,6 +1284,840 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا.'**
   String get readerSaveError;
+
+  /// No description provided for @back.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get back;
+
+  /// No description provided for @settingsReading.
+  ///
+  /// In ar, this message translates to:
+  /// **'القراءة'**
+  String get settingsReading;
+
+  /// No description provided for @settingsLanguageAppearance.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة والمظهر'**
+  String get settingsLanguageAppearance;
+
+  /// No description provided for @settingsSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم'**
+  String get settingsSupport;
+
+  /// No description provided for @versionLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'نور الذكر اليومي · الإصدار {version}'**
+  String versionLine(String version);
+
+  /// No description provided for @account.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get account;
+
+  /// No description provided for @accountCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ تقدّمك على كل أجهزتك'**
+  String get accountCardTitle;
+
+  /// No description provided for @accountCardBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختياري · التطبيق يعمل كاملاً بدونه'**
+  String get accountCardBody;
+
+  /// No description provided for @signInShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخول'**
+  String get signInShort;
+
+  /// No description provided for @syncedAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر مزامنة {ago}'**
+  String syncedAgo(String ago);
+
+  /// No description provided for @notSyncedYet.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تتم المزامنة بعد'**
+  String get notSyncedYet;
+
+  /// No description provided for @feedback.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات واقتراحات'**
+  String get feedback;
+
+  /// No description provided for @inbox.
+  ///
+  /// In ar, this message translates to:
+  /// **'صندوق الوارد'**
+  String get inbox;
+
+  /// No description provided for @unreadReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'رد جديد'**
+  String get unreadReply;
+
+  /// No description provided for @withUnread.
+  ///
+  /// In ar, this message translates to:
+  /// **'{label}، {state}'**
+  String withUnread(String label, String state);
+
+  /// No description provided for @unreadCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{واحدة غير مقروءة} =2{اثنتان غير مقروءتين} few{{digits} غير مقروءة} many{{digits} غير مقروءة} other{{digits} غير مقروءة}}'**
+  String unreadCount(num count, String digits);
+
+  /// No description provided for @signInTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ وِردك على كل أجهزتك'**
+  String get signInTitle;
+
+  /// No description provided for @signInSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب اختياري، والتطبيق يعمل كاملاً بدونه.'**
+  String get signInSubtitle;
+
+  /// No description provided for @signInStreak.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتابعك وجلساتك'**
+  String get signInStreak;
+
+  /// No description provided for @signInStreakBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا تضيع عند تغيير الجهاز'**
+  String get signInStreakBody;
+
+  /// No description provided for @signInFavorites.
+  ///
+  /// In ar, this message translates to:
+  /// **'المفضلة'**
+  String get signInFavorites;
+
+  /// No description provided for @signInFavoritesBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أذكارك المحفوظة معك على كل جهاز'**
+  String get signInFavoritesBody;
+
+  /// No description provided for @signInSettingsBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوقات التذكير والمظهر تنتقل معك'**
+  String get signInSettingsBody;
+
+  /// No description provided for @signInApple.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول باستخدام Apple'**
+  String get signInApple;
+
+  /// No description provided for @signInGoogle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول باستخدام Google'**
+  String get signInGoogle;
+
+  /// No description provided for @notNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'ليس الآن'**
+  String get notNow;
+
+  /// No description provided for @signInPrivacy.
+  ///
+  /// In ar, this message translates to:
+  /// **'نستخدم حسابك لمزامنة تقدّمك ومفضلتك وإعداداتك.'**
+  String get signInPrivacy;
+
+  /// No description provided for @signInFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تسجيل الدخول. حاول مرة أخرى.'**
+  String get signInFailed;
+
+  /// No description provided for @signedInToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل الدخول'**
+  String get signedInToast;
+
+  /// No description provided for @mergeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم ربط حسابك'**
+  String get mergeTitle;
+
+  /// No description provided for @mergeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'دمجنا {items} من هذا الجهاز مع حسابك.'**
+  String mergeBody(String items);
+
+  /// No description provided for @mergeAnd.
+  ///
+  /// In ar, this message translates to:
+  /// **'{a} و{b}'**
+  String mergeAnd(String a, String b);
+
+  /// No description provided for @mergeSettingsOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'دمجنا إعداداتك من هذا الجهاز مع حسابك.'**
+  String get mergeSettingsOnly;
+
+  /// No description provided for @mergeSessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{جلسة واحدة} =2{جلستين} few{{digits} جلسات} many{{digits} جلسة} other{{digits} جلسة}}'**
+  String mergeSessions(num count, String digits);
+
+  /// No description provided for @mergeFavorites.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{ذكراً محفوظاً} =2{ذكرين محفوظين} few{{digits} أذكار محفوظة} many{{digits} ذكراً محفوظاً} other{{digits} ذكر محفوظ}}'**
+  String mergeFavorites(num count, String digits);
+
+  /// No description provided for @sessionsChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{جلسة واحدة} =2{جلستان} few{{digits} جلسات} many{{digits} جلسة} other{{digits} جلسة}}'**
+  String sessionsChip(num count, String digits);
+
+  /// No description provided for @favoritesChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{ذكر محفوظ} =2{ذكران محفوظان} few{{digits} أذكار محفوظة} many{{digits} ذكراً محفوظاً} other{{digits} ذكر محفوظ}}'**
+  String favoritesChip(num count, String digits);
+
+  /// No description provided for @currentStreakLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتابعك الحالي: {days}'**
+  String currentStreakLine(String days);
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get continueLabel;
+
+  /// No description provided for @viaProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'عبر {provider}'**
+  String viaProvider(String provider);
+
+  /// No description provided for @syncSynced.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت المزامنة'**
+  String get syncSynced;
+
+  /// No description provided for @syncSyncing.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ المزامنة…'**
+  String get syncSyncing;
+
+  /// No description provided for @syncSyncingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك متابعة القراءة'**
+  String get syncSyncingBody;
+
+  /// No description provided for @syncOffline.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متصل'**
+  String get syncOffline;
+
+  /// No description provided for @syncOfflineBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستتم المزامنة عند الاتصال'**
+  String get syncOfflineBody;
+
+  /// No description provided for @syncError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّرت المزامنة'**
+  String get syncError;
+
+  /// No description provided for @syncErrorBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'بياناتك آمنة على هذا الجهاز'**
+  String get syncErrorBody;
+
+  /// No description provided for @syncNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'زامن الآن'**
+  String get syncNow;
+
+  /// No description provided for @signOut.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get signOut;
+
+  /// No description provided for @signOutBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تبقى بياناتك على هذا الجهاز'**
+  String get signOutBody;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف حسابك؟'**
+  String get deleteTitle;
+
+  /// No description provided for @deleteSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن التراجع عن هذا.'**
+  String get deleteSubtitle;
+
+  /// No description provided for @deleteRemovedHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُحذف من حسابك'**
+  String get deleteRemovedHeading;
+
+  /// No description provided for @deleteItemProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقدّم والتتابع المتزامن'**
+  String get deleteItemProgress;
+
+  /// No description provided for @deleteItemMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسائلك مع فريق مشكاة'**
+  String get deleteItemMessages;
+
+  /// No description provided for @deleteKeptHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'يبقى على هذا الجهاز'**
+  String get deleteKeptHeading;
+
+  /// No description provided for @deleteKeptBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل ما هو محفوظ هنا يبقى، وتستمر في استخدام التطبيق بدون حساب.'**
+  String get deleteKeptBody;
+
+  /// No description provided for @deleteConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب نهائياً'**
+  String get deleteConfirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get cancel;
+
+  /// No description provided for @deleteFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حذف الحساب. تحقق من الاتصال وحاول مرة أخرى.'**
+  String get deleteFailed;
+
+  /// No description provided for @accountDeletedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُذف حسابك'**
+  String get accountDeletedToast;
+
+  /// No description provided for @nudgeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ تتابعك'**
+  String get nudgeTitle;
+
+  /// No description provided for @nudgeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول ليبقى تتابعك محفوظاً إذا غيّرت جهازك.'**
+  String get nudgeBody;
+
+  /// No description provided for @signIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get signIn;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء'**
+  String get dismiss;
+
+  /// No description provided for @more.
+  ///
+  /// In ar, this message translates to:
+  /// **'المزيد'**
+  String get more;
+
+  /// No description provided for @reportThikr.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن خطأ في هذا الذكر'**
+  String get reportThikr;
+
+  /// No description provided for @copyText.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسخ النص'**
+  String get copyText;
+
+  /// No description provided for @copied.
+  ///
+  /// In ar, this message translates to:
+  /// **'نُسخ النص'**
+  String get copied;
+
+  /// No description provided for @feedbackIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقرأ كل رسالة، ويصلك الرد في «ملاحظات واقتراحات».'**
+  String get feedbackIntro;
+
+  /// No description provided for @typeFeature.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراح ميزة'**
+  String get typeFeature;
+
+  /// No description provided for @typeThikr.
+  ///
+  /// In ar, this message translates to:
+  /// **'خطأ في ذكر'**
+  String get typeThikr;
+
+  /// No description provided for @typeBug.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكلة في التطبيق'**
+  String get typeBug;
+
+  /// No description provided for @yourMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالتك'**
+  String get yourMessage;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالتك…'**
+  String get messageHint;
+
+  /// No description provided for @charCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} / {max}'**
+  String charCount(String count, String max);
+
+  /// No description provided for @replyEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريدك للرد (اختياري)'**
+  String get replyEmail;
+
+  /// No description provided for @replyEmailNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'نرد داخل التطبيق، والبريد احتياطي فقط.'**
+  String get replyEmailNote;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد غير صحيح'**
+  String get invalidEmail;
+
+  /// No description provided for @attachDevice.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرفاق معلومات الجهاز'**
+  String get attachDevice;
+
+  /// No description provided for @attachDeviceBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار التطبيق، النظام، اللغة'**
+  String get attachDeviceBody;
+
+  /// No description provided for @send.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get send;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن خطأ في ذكر'**
+  String get reportTitle;
+
+  /// No description provided for @whatsWrong.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما الخطأ؟'**
+  String get whatsWrong;
+
+  /// No description provided for @issueText.
+  ///
+  /// In ar, this message translates to:
+  /// **'النص'**
+  String get issueText;
+
+  /// No description provided for @issueSource.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخريج'**
+  String get issueSource;
+
+  /// No description provided for @issueCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد المرات'**
+  String get issueCount;
+
+  /// No description provided for @issueTranslation.
+  ///
+  /// In ar, this message translates to:
+  /// **'الترجمة'**
+  String get issueTranslation;
+
+  /// No description provided for @details.
+  ///
+  /// In ar, this message translates to:
+  /// **'التفاصيل'**
+  String get details;
+
+  /// No description provided for @sendReport.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال البلاغ'**
+  String get sendReport;
+
+  /// No description provided for @sentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلتنا رسالتك'**
+  String get sentTitle;
+
+  /// No description provided for @sentBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستجد الرد في «ملاحظات واقتراحات». ستظهر نقطة على الإعدادات عند وصوله.'**
+  String get sentBody;
+
+  /// No description provided for @viewMyMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض رسائلي'**
+  String get viewMyMessages;
+
+  /// No description provided for @queuedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستُرسل عند الاتصال'**
+  String get queuedTitle;
+
+  /// No description provided for @queuedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظناها على جهازك وسنرسلها تلقائياً.'**
+  String get queuedBody;
+
+  /// No description provided for @sendFailedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الإرسال'**
+  String get sendFailedTitle;
+
+  /// No description provided for @sendFailedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالتك محفوظة كمسودة.'**
+  String get sendFailedBody;
+
+  /// No description provided for @statusNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديدة'**
+  String get statusNew;
+
+  /// No description provided for @statusInReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get statusInReview;
+
+  /// No description provided for @statusAnswered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الرد'**
+  String get statusAnswered;
+
+  /// No description provided for @statusClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلقة'**
+  String get statusClosed;
+
+  /// No description provided for @statusQueued.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الاتصال'**
+  String get statusQueued;
+
+  /// No description provided for @repliesInAppOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'الردود تظهر هنا فقط، ولا تصل كإشعارات.'**
+  String get repliesInAppOnly;
+
+  /// No description provided for @newMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة جديدة'**
+  String get newMessage;
+
+  /// No description provided for @noMessagesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا رسائل بعد'**
+  String get noMessagesTitle;
+
+  /// No description provided for @noMessagesBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'إذا أرسلت اقتراحاً أو أبلغت عن خطأ، ستجد الرد هنا.'**
+  String get noMessagesBody;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل ملاحظة'**
+  String get sendFeedback;
+
+  /// No description provided for @startedOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدأت {date}'**
+  String startedOn(String date);
+
+  /// No description provided for @mishkatTeam.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق مشكاة'**
+  String get mishkatTeam;
+
+  /// No description provided for @writeReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رداً…'**
+  String get writeReply;
+
+  /// No description provided for @sendReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الرد'**
+  String get sendReply;
+
+  /// No description provided for @closedOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُغلقت في {date}'**
+  String closedOn(String date);
+
+  /// No description provided for @threadClosedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه المحادثة مغلقة'**
+  String get threadClosedTitle;
+
+  /// No description provided for @threadClosedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحتاج مساعدة أخرى؟ ابدأ محادثة جديدة.'**
+  String get threadClosedBody;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get filterAll;
+
+  /// No description provided for @filterIdeas.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراحات'**
+  String get filterIdeas;
+
+  /// No description provided for @filterAthkar.
+  ///
+  /// In ar, this message translates to:
+  /// **'أذكار'**
+  String get filterAthkar;
+
+  /// No description provided for @filterApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكلات'**
+  String get filterApp;
+
+  /// No description provided for @inboxEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جديد هنا'**
+  String get inboxEmptyTitle;
+
+  /// No description provided for @inboxEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا رسائل تطابق هذا الاختيار.'**
+  String get inboxEmptyBody;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح التصفية'**
+  String get clearFilters;
+
+  /// No description provided for @messageNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة #{number}'**
+  String messageNumber(String number);
+
+  /// No description provided for @messageUnnumbered.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة'**
+  String get messageUnnumbered;
+
+  /// No description provided for @metaType.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوع'**
+  String get metaType;
+
+  /// No description provided for @metaVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار'**
+  String get metaVersion;
+
+  /// No description provided for @metaPlatform.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنصة'**
+  String get metaPlatform;
+
+  /// No description provided for @metaDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'التاريخ'**
+  String get metaDate;
+
+  /// No description provided for @metaEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد'**
+  String get metaEmail;
+
+  /// No description provided for @notAttached.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مرفق'**
+  String get notAttached;
+
+  /// No description provided for @openThikr.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح الذكر'**
+  String get openThikr;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get statusLabel;
+
+  /// No description provided for @theUser.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستخدم'**
+  String get theUser;
+
+  /// No description provided for @adminReplyNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يظهر ردّك لدى المستخدم في «ملاحظات واقتراحات»، ويتحول الوضع إلى «تم الرد».'**
+  String get adminReplyNote;
+
+  /// No description provided for @writeReplyToUser.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رداً للمستخدم…'**
+  String get writeReplyToUser;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{قبل دقيقة} =2{قبل دقيقتين} few{قبل {digits} دقائق} many{قبل {digits} دقيقة} other{قبل {digits} دقيقة}}'**
+  String minutesAgo(num count, String digits);
+
+  /// No description provided for @minutesAgoShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبل {digits} د'**
+  String minutesAgoShort(String digits);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{قبل ساعة} =2{قبل ساعتين} few{قبل {digits} ساعات} many{قبل {digits} ساعة} other{قبل {digits} ساعة}}'**
+  String hoursAgo(num count, String digits);
+
+  /// No description provided for @yesterday.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس'**
+  String get yesterday;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

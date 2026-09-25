@@ -72,6 +72,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.ensureVisible(find.text('Terms of use'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Terms of use'));
     expect(
       harness.openedPages.single.toString(),

@@ -747,4 +747,547 @@ class LEn extends L {
   @override
   String get readerSaveError =>
       'Progress could not be saved. Keep the app open and try again.';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get settingsReading => 'Reading';
+
+  @override
+  String get settingsLanguageAppearance => 'Language and appearance';
+
+  @override
+  String get settingsSupport => 'Support';
+
+  @override
+  String versionLine(String version) {
+    return 'A light for daily remembrance · Version $version';
+  }
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get accountCardTitle => 'Keep your progress on all your devices';
+
+  @override
+  String get accountCardBody => 'Optional · the app works fully without it';
+
+  @override
+  String get signInShort => 'Sign in';
+
+  @override
+  String syncedAgo(String ago) {
+    return 'Synced $ago';
+  }
+
+  @override
+  String get notSyncedYet => 'Not synced yet';
+
+  @override
+  String get feedback => 'Feedback';
+
+  @override
+  String get inbox => 'Inbox';
+
+  @override
+  String get unreadReply => 'new reply';
+
+  @override
+  String withUnread(String label, String state) {
+    return '$label, $state';
+  }
+
+  @override
+  String unreadCount(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits unread',
+      one: '1 unread',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get signInTitle => 'Keep your wird on every device';
+
+  @override
+  String get signInSubtitle => 'Optional. The app works fully without it.';
+
+  @override
+  String get signInStreak => 'Your streak and sessions';
+
+  @override
+  String get signInStreakBody => 'Kept when you change phones';
+
+  @override
+  String get signInFavorites => 'Favourites';
+
+  @override
+  String get signInFavoritesBody => 'Your saved athkar on every device';
+
+  @override
+  String get signInSettingsBody => 'Reminder times and appearance follow you';
+
+  @override
+  String get signInApple => 'Sign in with Apple';
+
+  @override
+  String get signInGoogle => 'Sign in with Google';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get signInPrivacy =>
+      'We use your account to sync progress, favourites and settings.';
+
+  @override
+  String get signInFailed => 'Couldn’t sign in. Please try again.';
+
+  @override
+  String get signedInToast => 'Signed in';
+
+  @override
+  String get mergeTitle => 'Your account is linked';
+
+  @override
+  String mergeBody(String items) {
+    return 'We merged $items from this device into your account.';
+  }
+
+  @override
+  String mergeAnd(String a, String b) {
+    return '$a and $b';
+  }
+
+  @override
+  String get mergeSettingsOnly =>
+      'We merged your settings from this device into your account.';
+
+  @override
+  String mergeSessions(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits sessions',
+      one: '1 session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mergeFavorites(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits saved athkar',
+      one: '1 saved thikr',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sessionsChip(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits sessions',
+      one: '1 session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String favoritesChip(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits saved athkar',
+      one: '1 saved thikr',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String currentStreakLine(String days) {
+    return 'Current streak: $days';
+  }
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String viaProvider(String provider) {
+    return 'via $provider';
+  }
+
+  @override
+  String get syncSynced => 'Synced';
+
+  @override
+  String get syncSyncing => 'Syncing…';
+
+  @override
+  String get syncSyncingBody => 'You can keep reading';
+
+  @override
+  String get syncOffline => 'Offline';
+
+  @override
+  String get syncOfflineBody => 'Will sync when you’re back online';
+
+  @override
+  String get syncError => 'Couldn’t sync';
+
+  @override
+  String get syncErrorBody => 'Your data is safe on this device';
+
+  @override
+  String get syncNow => 'Sync now';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get signOutBody => 'Your data stays on this device';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteTitle => 'Delete your account?';
+
+  @override
+  String get deleteSubtitle => 'This can’t be undone.';
+
+  @override
+  String get deleteRemovedHeading => 'Removed from your account';
+
+  @override
+  String get deleteItemProgress => 'Synced progress and streak';
+
+  @override
+  String get deleteItemMessages => 'Your messages with the Mishkat team';
+
+  @override
+  String get deleteKeptHeading => 'Stays on this device';
+
+  @override
+  String get deleteKeptBody =>
+      'Everything saved here stays, and you keep using the app without an account.';
+
+  @override
+  String get deleteConfirm => 'Delete account permanently';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get deleteFailed =>
+      'Couldn’t delete the account. Check your connection and try again.';
+
+  @override
+  String get accountDeletedToast => 'Your account was deleted';
+
+  @override
+  String get nudgeTitle => 'Save your streak';
+
+  @override
+  String get nudgeBody =>
+      'Sign in so your streak is kept if you change phones.';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get reportThikr => 'Report a problem with this thikr';
+
+  @override
+  String get copyText => 'Copy text';
+
+  @override
+  String get copied => 'Text copied';
+
+  @override
+  String get feedbackIntro =>
+      'We read every message. Replies appear under “Feedback”.';
+
+  @override
+  String get typeFeature => 'Suggest a feature';
+
+  @override
+  String get typeThikr => 'Thikr error';
+
+  @override
+  String get typeBug => 'App problem';
+
+  @override
+  String get yourMessage => 'Your message';
+
+  @override
+  String get messageHint => 'Write your message…';
+
+  @override
+  String charCount(String count, String max) {
+    return '$count / $max';
+  }
+
+  @override
+  String get replyEmail => 'Your email for replies (optional)';
+
+  @override
+  String get replyEmailNote => 'We reply in the app; email is only a fallback.';
+
+  @override
+  String get invalidEmail => 'That email doesn’t look right';
+
+  @override
+  String get attachDevice => 'Attach device information';
+
+  @override
+  String get attachDeviceBody => 'App version, system, language';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get reportTitle => 'Report a thikr error';
+
+  @override
+  String get whatsWrong => 'What’s wrong?';
+
+  @override
+  String get issueText => 'Text';
+
+  @override
+  String get issueSource => 'Source';
+
+  @override
+  String get issueCount => 'Repetitions';
+
+  @override
+  String get issueTranslation => 'Translation';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get sendReport => 'Send report';
+
+  @override
+  String get sentTitle => 'We got your message';
+
+  @override
+  String get sentBody =>
+      'You’ll find the reply under “Feedback”. A dot appears on Settings when it arrives.';
+
+  @override
+  String get viewMyMessages => 'View my messages';
+
+  @override
+  String get queuedTitle => 'Will send when you’re online';
+
+  @override
+  String get queuedBody =>
+      'Saved on your device — we’ll send it automatically.';
+
+  @override
+  String get sendFailedTitle => 'Couldn’t send';
+
+  @override
+  String get sendFailedBody => 'Your message is saved as a draft.';
+
+  @override
+  String get statusNew => 'New';
+
+  @override
+  String get statusInReview => 'In review';
+
+  @override
+  String get statusAnswered => 'Replied';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get statusQueued => 'Waiting to send';
+
+  @override
+  String get repliesInAppOnly =>
+      'Replies appear here only, never as notifications.';
+
+  @override
+  String get newMessage => 'New message';
+
+  @override
+  String get noMessagesTitle => 'No messages yet';
+
+  @override
+  String get noMessagesBody =>
+      'If you send a suggestion or report a problem, the reply will be here.';
+
+  @override
+  String get sendFeedback => 'Send feedback';
+
+  @override
+  String startedOn(String date) {
+    return 'Started $date';
+  }
+
+  @override
+  String get mishkatTeam => 'Mishkat team';
+
+  @override
+  String get writeReply => 'Write a reply…';
+
+  @override
+  String get sendReply => 'Send reply';
+
+  @override
+  String closedOn(String date) {
+    return 'Closed on $date';
+  }
+
+  @override
+  String get threadClosedTitle => 'This conversation is closed';
+
+  @override
+  String get threadClosedBody => 'Need more help? Start a new one.';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterIdeas => 'Ideas';
+
+  @override
+  String get filterAthkar => 'Athkar';
+
+  @override
+  String get filterApp => 'App';
+
+  @override
+  String get inboxEmptyTitle => 'Nothing new here';
+
+  @override
+  String get inboxEmptyBody => 'No messages match these filters.';
+
+  @override
+  String get clearFilters => 'Clear filters';
+
+  @override
+  String messageNumber(String number) {
+    return 'Message #$number';
+  }
+
+  @override
+  String get messageUnnumbered => 'Message';
+
+  @override
+  String get metaType => 'Type';
+
+  @override
+  String get metaVersion => 'Version';
+
+  @override
+  String get metaPlatform => 'Platform';
+
+  @override
+  String get metaDate => 'Date';
+
+  @override
+  String get metaEmail => 'Email';
+
+  @override
+  String get notAttached => 'Not attached';
+
+  @override
+  String get openThikr => 'Open thikr';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String get theUser => 'User';
+
+  @override
+  String get adminReplyNote =>
+      'Your reply appears under “Feedback” for the user, and the status becomes “Replied”.';
+
+  @override
+  String get writeReplyToUser => 'Write a reply to the user…';
+
+  @override
+  String minutesAgo(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits min ago',
+      one: '1 min ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesAgoShort(String digits) {
+    return '${digits}m ago';
+  }
+
+  @override
+  String hoursAgo(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yesterday => 'Yesterday';
 }

@@ -69,8 +69,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Done'));
+    // Settings is a page now: changes apply live and back returns to Home.
+    await tester.tap(find.bySemanticsLabel('Back'));
     await tester.pumpAndSettle();
+    expect(findIcon(MIcon.settings), findsOneWidget);
 
     // Cold launch again against the same backing store. resetPrefs: false is
     // the whole point — with a fresh store this would prove nothing.

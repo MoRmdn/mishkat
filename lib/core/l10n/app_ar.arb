@@ -443,5 +443,314 @@
   "readerStartAgain": "البدء من جديد",
   "readerRestartQuestion": "هل تريد بدء هذه الجلسة من جديد؟",
   "readerRestoreError": "تعذّر استعادة القراءة المحفوظة. يمكنك الإغلاق أو البدء من جديد.",
-  "readerSaveError": "تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا."
+  "readerSaveError": "تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا.",
+  "back": "رجوع",
+  "settingsReading": "القراءة",
+  "settingsLanguageAppearance": "اللغة والمظهر",
+  "settingsSupport": "الدعم",
+  "versionLine": "نور الذكر اليومي · الإصدار {version}",
+  "@versionLine": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "account": "الحساب",
+  "accountCardTitle": "احفظ تقدّمك على كل أجهزتك",
+  "accountCardBody": "اختياري · التطبيق يعمل كاملاً بدونه",
+  "signInShort": "دخول",
+  "syncedAgo": "آخر مزامنة {ago}",
+  "@syncedAgo": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "notSyncedYet": "لم تتم المزامنة بعد",
+  "feedback": "ملاحظات واقتراحات",
+  "inbox": "صندوق الوارد",
+  "unreadReply": "رد جديد",
+  "withUnread": "{label}، {state}",
+  "@withUnread": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "unreadCount": "{count, plural, =1{واحدة غير مقروءة} =2{اثنتان غير مقروءتين} few{{digits} غير مقروءة} many{{digits} غير مقروءة} other{{digits} غير مقروءة}}",
+  "@unreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "signInTitle": "احفظ وِردك على كل أجهزتك",
+  "signInSubtitle": "الحساب اختياري، والتطبيق يعمل كاملاً بدونه.",
+  "signInStreak": "تتابعك وجلساتك",
+  "signInStreakBody": "لا تضيع عند تغيير الجهاز",
+  "signInFavorites": "المفضلة",
+  "signInFavoritesBody": "أذكارك المحفوظة معك على كل جهاز",
+  "signInSettingsBody": "أوقات التذكير والمظهر تنتقل معك",
+  "signInApple": "تسجيل الدخول باستخدام Apple",
+  "signInGoogle": "تسجيل الدخول باستخدام Google",
+  "notNow": "ليس الآن",
+  "signInPrivacy": "نستخدم حسابك لمزامنة تقدّمك ومفضلتك وإعداداتك.",
+  "signInFailed": "تعذّر تسجيل الدخول. حاول مرة أخرى.",
+  "signedInToast": "تم تسجيل الدخول",
+  "mergeTitle": "تم ربط حسابك",
+  "mergeBody": "دمجنا {items} من هذا الجهاز مع حسابك.",
+  "@mergeBody": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "mergeAnd": "{a} و{b}",
+  "@mergeAnd": {
+    "placeholders": {
+      "a": {
+        "type": "String"
+      },
+      "b": {
+        "type": "String"
+      }
+    }
+  },
+  "mergeSettingsOnly": "دمجنا إعداداتك من هذا الجهاز مع حسابك.",
+  "mergeSessions": "{count, plural, =1{جلسة واحدة} =2{جلستين} few{{digits} جلسات} many{{digits} جلسة} other{{digits} جلسة}}",
+  "@mergeSessions": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "mergeFavorites": "{count, plural, =1{ذكراً محفوظاً} =2{ذكرين محفوظين} few{{digits} أذكار محفوظة} many{{digits} ذكراً محفوظاً} other{{digits} ذكر محفوظ}}",
+  "@mergeFavorites": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsChip": "{count, plural, =1{جلسة واحدة} =2{جلستان} few{{digits} جلسات} many{{digits} جلسة} other{{digits} جلسة}}",
+  "@sessionsChip": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "favoritesChip": "{count, plural, =1{ذكر محفوظ} =2{ذكران محفوظان} few{{digits} أذكار محفوظة} many{{digits} ذكراً محفوظاً} other{{digits} ذكر محفوظ}}",
+  "@favoritesChip": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "currentStreakLine": "تتابعك الحالي: {days}",
+  "@currentStreakLine": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "continueLabel": "متابعة",
+  "viaProvider": "عبر {provider}",
+  "@viaProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "syncSynced": "تمت المزامنة",
+  "syncSyncing": "جارٍ المزامنة…",
+  "syncSyncingBody": "يمكنك متابعة القراءة",
+  "syncOffline": "غير متصل",
+  "syncOfflineBody": "ستتم المزامنة عند الاتصال",
+  "syncError": "تعذّرت المزامنة",
+  "syncErrorBody": "بياناتك آمنة على هذا الجهاز",
+  "syncNow": "زامن الآن",
+  "signOut": "تسجيل الخروج",
+  "signOutBody": "تبقى بياناتك على هذا الجهاز",
+  "deleteAccount": "حذف الحساب",
+  "deleteTitle": "حذف حسابك؟",
+  "deleteSubtitle": "لا يمكن التراجع عن هذا.",
+  "deleteRemovedHeading": "يُحذف من حسابك",
+  "deleteItemProgress": "التقدّم والتتابع المتزامن",
+  "deleteItemMessages": "رسائلك مع فريق مشكاة",
+  "deleteKeptHeading": "يبقى على هذا الجهاز",
+  "deleteKeptBody": "كل ما هو محفوظ هنا يبقى، وتستمر في استخدام التطبيق بدون حساب.",
+  "deleteConfirm": "حذف الحساب نهائياً",
+  "cancel": "إلغاء",
+  "deleteFailed": "تعذّر حذف الحساب. تحقق من الاتصال وحاول مرة أخرى.",
+  "accountDeletedToast": "حُذف حسابك",
+  "nudgeTitle": "احفظ تتابعك",
+  "nudgeBody": "سجّل الدخول ليبقى تتابعك محفوظاً إذا غيّرت جهازك.",
+  "signIn": "تسجيل الدخول",
+  "dismiss": "إخفاء",
+  "more": "المزيد",
+  "reportThikr": "الإبلاغ عن خطأ في هذا الذكر",
+  "copyText": "نسخ النص",
+  "copied": "نُسخ النص",
+  "feedbackIntro": "نقرأ كل رسالة، ويصلك الرد في «ملاحظات واقتراحات».",
+  "typeFeature": "اقتراح ميزة",
+  "typeThikr": "خطأ في ذكر",
+  "typeBug": "مشكلة في التطبيق",
+  "yourMessage": "رسالتك",
+  "messageHint": "اكتب رسالتك…",
+  "charCount": "{count} / {max}",
+  "@charCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "replyEmail": "بريدك للرد (اختياري)",
+  "replyEmailNote": "نرد داخل التطبيق، والبريد احتياطي فقط.",
+  "invalidEmail": "البريد غير صحيح",
+  "attachDevice": "إرفاق معلومات الجهاز",
+  "attachDeviceBody": "إصدار التطبيق، النظام، اللغة",
+  "send": "إرسال",
+  "reportTitle": "الإبلاغ عن خطأ في ذكر",
+  "whatsWrong": "ما الخطأ؟",
+  "issueText": "النص",
+  "issueSource": "التخريج",
+  "issueCount": "عدد المرات",
+  "issueTranslation": "الترجمة",
+  "details": "التفاصيل",
+  "sendReport": "إرسال البلاغ",
+  "sentTitle": "وصلتنا رسالتك",
+  "sentBody": "ستجد الرد في «ملاحظات واقتراحات». ستظهر نقطة على الإعدادات عند وصوله.",
+  "viewMyMessages": "عرض رسائلي",
+  "queuedTitle": "ستُرسل عند الاتصال",
+  "queuedBody": "حفظناها على جهازك وسنرسلها تلقائياً.",
+  "sendFailedTitle": "تعذّر الإرسال",
+  "sendFailedBody": "رسالتك محفوظة كمسودة.",
+  "statusNew": "جديدة",
+  "statusInReview": "قيد المراجعة",
+  "statusAnswered": "تم الرد",
+  "statusClosed": "مغلقة",
+  "statusQueued": "بانتظار الاتصال",
+  "repliesInAppOnly": "الردود تظهر هنا فقط، ولا تصل كإشعارات.",
+  "newMessage": "رسالة جديدة",
+  "noMessagesTitle": "لا رسائل بعد",
+  "noMessagesBody": "إذا أرسلت اقتراحاً أو أبلغت عن خطأ، ستجد الرد هنا.",
+  "sendFeedback": "أرسل ملاحظة",
+  "startedOn": "بدأت {date}",
+  "@startedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "mishkatTeam": "فريق مشكاة",
+  "writeReply": "اكتب رداً…",
+  "sendReply": "إرسال الرد",
+  "closedOn": "أُغلقت في {date}",
+  "@closedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "threadClosedTitle": "هذه المحادثة مغلقة",
+  "threadClosedBody": "تحتاج مساعدة أخرى؟ ابدأ محادثة جديدة.",
+  "filterAll": "الكل",
+  "filterIdeas": "اقتراحات",
+  "filterAthkar": "أذكار",
+  "filterApp": "مشكلات",
+  "inboxEmptyTitle": "لا جديد هنا",
+  "inboxEmptyBody": "لا رسائل تطابق هذا الاختيار.",
+  "clearFilters": "مسح التصفية",
+  "messageNumber": "رسالة #{number}",
+  "@messageNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "messageUnnumbered": "رسالة",
+  "metaType": "النوع",
+  "metaVersion": "الإصدار",
+  "metaPlatform": "المنصة",
+  "metaDate": "التاريخ",
+  "metaEmail": "البريد",
+  "notAttached": "غير مرفق",
+  "openThikr": "افتح الذكر",
+  "statusLabel": "الحالة",
+  "theUser": "المستخدم",
+  "adminReplyNote": "يظهر ردّك لدى المستخدم في «ملاحظات واقتراحات»، ويتحول الوضع إلى «تم الرد».",
+  "writeReplyToUser": "اكتب رداً للمستخدم…",
+  "minutesAgo": "{count, plural, =1{قبل دقيقة} =2{قبل دقيقتين} few{قبل {digits} دقائق} many{قبل {digits} دقيقة} other{قبل {digits} دقيقة}}",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesAgoShort": "قبل {digits} د",
+  "@minutesAgoShort": {
+    "placeholders": {
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "hoursAgo": "{count, plural, =1{قبل ساعة} =2{قبل ساعتين} few{قبل {digits} ساعات} many{قبل {digits} ساعة} other{قبل {digits} ساعة}}",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      },
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterday": "أمس"
 }

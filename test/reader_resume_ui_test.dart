@@ -168,7 +168,10 @@ void main() {
       await open(tester);
       final controller = container.read(readerControllerProvider.notifier);
       controller.countOne(items);
-      await tester.tap(find.bySemanticsLabel('Start again'));
+      // Start again lives in the header's overflow menu (board AF 7).
+      await tester.tap(find.bySemanticsLabel('More'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Start again'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Start again').last);
       await AppHarness.settleWithDatabase(tester);

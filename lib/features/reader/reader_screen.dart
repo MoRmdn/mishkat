@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -11,11 +12,14 @@ import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart';
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/buttons.dart';
+import '../../core/widgets/list_rows.dart';
 import '../../core/widgets/mishkat_icon.dart';
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
+import '../../services/auth/auth_service.dart';
 import '../../services/diagnostics.dart';
+import '../feedback/feedback_sheet.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
 import '../share/share_card.dart';
@@ -261,43 +265,6 @@ class _ReaderHeader extends ConsumerWidget {
             ),
           ),
           IconCircleButton(
-            icon: MIcon.reset,
-            iconSize: 18,
-            semanticLabel: l.readerStartAgain,
-            onPressed: () async {
-              final restart = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(l.readerRestartQuestion),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text(l.close),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text(l.readerStartAgain),
-                    ),
-                  ],
-                ),
-              );
-              if (restart != true || !context.mounted) return;
-              final controller = ref.read(readerControllerProvider.notifier);
-              final session = ref.read(readerControllerProvider).session!;
-              final library = ref.read(athkarLibraryProvider).value!;
-              try {
-                await controller.open(
-                  category,
-                  session.isWholeRoutine ? library[category] : items,
-                  subset: !session.isWholeRoutine,
-                  restart: true,
-                );
-              } catch (error, stack) {
-                ref.read(diagnosticsProvider).recordError(error, stack);
-              }
-            },
-          ),
-          IconCircleButton(
             icon: MIcon.share,
             iconSize: 18,
             semanticLabel: l.share,
@@ -312,11 +279,132 @@ class _ReaderHeader extends ConsumerWidget {
                 .read(readerControllerProvider.notifier)
                 .toggleFavorite(current.id),
           ),
+          Builder(
+            builder: (button) => IconCircleButton(
+              icon: MIcon.more,
+              iconSize: 18,
+              semanticLabel: l.more,
+              onPressed: () => _showMenu(button, ref, current, lang),
+            ),
+          ),
         ],
       ),
     );
   }
+
+  /// Board AF 7: a raised menu under the button, no scrim. Report and copy,
+  /// and starting the session again, which used to sit in the header.
+  Future<void> _showMenu(
+    BuildContext button,
+    WidgetRef ref,
+    Thikr current,
+    String lang,
+  ) async {
+    final t = button.tokens;
+    final l = L.of(button);
+    final box = button.findRenderObject()! as RenderBox;
+    final overlay = Overlay.of(button).context.findRenderObject()! as RenderBox;
+    final origin = box.localToGlobal(
+      Offset(0, box.size.height),
+      ancestor: overlay,
+    );
+    PopupMenuItem<_ReaderAction> item(
+      _ReaderAction value,
+      MIcon icon,
+      String label,
+    ) => PopupMenuItem(
+      value: value,
+      height: 48,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: [
+          MishkatIcon(icon, color: t.ink, size: 18),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              label,
+              style: MishkatType.body(t).copyWith(fontSize: 13.5),
+            ),
+          ),
+        ],
+      ),
+    );
+    final action = await showMenu<_ReaderAction>(
+      context: button,
+      color: t.surfaceRaised,
+      elevation: 12,
+      shadowColor: MishkatTokens.dark.bg.withValues(alpha: 0.4),
+      constraints: const BoxConstraints(minWidth: 220, maxWidth: 262),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Radii.lg),
+      ),
+      menuPadding: const EdgeInsets.all(6),
+      position: RelativeRect.fromRect(
+        Rect.fromLTWH(origin.dx, origin.dy + 4, box.size.width, 0),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        if (ref.read(cloudAvailableProvider))
+          item(_ReaderAction.report, MIcon.flag, l.reportThikr),
+        item(_ReaderAction.copy, MIcon.copy, l.copyText),
+        item(_ReaderAction.restart, MIcon.reset, l.readerStartAgain),
+      ],
+    );
+    if (action == null || !button.mounted) return;
+    switch (action) {
+      case _ReaderAction.report:
+        await showFeedbackSheet(
+          button,
+          thikr: current,
+          position: l.positionOf(
+            localizeDigits(index + 1, lang),
+            localizeDigits(items.length, lang),
+          ),
+        );
+      case _ReaderAction.copy:
+        await Clipboard.setData(ClipboardData(text: current.text));
+        if (button.mounted) showToast(button, l.copied);
+      case _ReaderAction.restart:
+        await _restart(button, ref);
+    }
+  }
+
+  Future<void> _restart(BuildContext context, WidgetRef ref) async {
+    final l = L.of(context);
+    final restart = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.readerRestartQuestion),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l.close),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l.readerStartAgain),
+          ),
+        ],
+      ),
+    );
+    if (restart != true || !context.mounted) return;
+    final controller = ref.read(readerControllerProvider.notifier);
+    final session = ref.read(readerControllerProvider).session!;
+    final library = ref.read(athkarLibraryProvider).value!;
+    try {
+      await controller.open(
+        category,
+        session.isWholeRoutine ? library[category] : items,
+        subset: !session.isWholeRoutine,
+        restart: true,
+      );
+    } catch (error, stack) {
+      ref.read(diagnosticsProvider).recordError(error, stack);
+    }
+  }
 }
+
+enum _ReaderAction { report, copy, restart }
 
 /// One 3px segment per thikr: done, current, still to come.
 class _Progress extends StatelessWidget {

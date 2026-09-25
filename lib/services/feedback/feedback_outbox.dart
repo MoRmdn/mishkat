@@ -7,7 +7,6 @@ import '../../features/settings/settings_controller.dart';
 import '../auth/auth_service.dart';
 import '../diagnostics.dart';
 import 'feedback_models.dart';
-import 'feedback_providers.dart';
 import 'feedback_repository.dart';
 
 /// How a send attempt ended, for board 10's three states.
@@ -62,8 +61,9 @@ class FeedbackOutbox extends Notifier<List<FeedbackDraft>> {
 
   /// Saves [draft] and tries to deliver it.
   Future<SendResult> send(FeedbackDraft draft) async {
+    // The conversation list watches this outbox, so saving and removing a
+    // draft is all it takes to refresh it.
     await _save([...state.where((d) => d.id != draft.id), draft]);
-    refreshFeedback(ref);
     return _deliver(draft);
   }
 
@@ -98,7 +98,6 @@ class FeedbackOutbox extends Notifier<List<FeedbackDraft>> {
     }
     if (!ref.mounted) return SendResult.sent;
     await _save([...state.where((d) => d.id != draft.id)]);
-    refreshFeedback(ref);
     return SendResult.sent;
   }
 }

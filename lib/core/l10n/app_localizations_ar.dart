@@ -762,4 +762,563 @@ class LAr extends L {
   @override
   String get readerSaveError =>
       'تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا.';
+
+  @override
+  String get back => 'رجوع';
+
+  @override
+  String get settingsReading => 'القراءة';
+
+  @override
+  String get settingsLanguageAppearance => 'اللغة والمظهر';
+
+  @override
+  String get settingsSupport => 'الدعم';
+
+  @override
+  String versionLine(String version) {
+    return 'نور الذكر اليومي · الإصدار $version';
+  }
+
+  @override
+  String get account => 'الحساب';
+
+  @override
+  String get accountCardTitle => 'احفظ تقدّمك على كل أجهزتك';
+
+  @override
+  String get accountCardBody => 'اختياري · التطبيق يعمل كاملاً بدونه';
+
+  @override
+  String get signInShort => 'دخول';
+
+  @override
+  String syncedAgo(String ago) {
+    return 'آخر مزامنة $ago';
+  }
+
+  @override
+  String get notSyncedYet => 'لم تتم المزامنة بعد';
+
+  @override
+  String get feedback => 'ملاحظات واقتراحات';
+
+  @override
+  String get inbox => 'صندوق الوارد';
+
+  @override
+  String get unreadReply => 'رد جديد';
+
+  @override
+  String withUnread(String label, String state) {
+    return '$label، $state';
+  }
+
+  @override
+  String unreadCount(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits غير مقروءة',
+      many: '$digits غير مقروءة',
+      few: '$digits غير مقروءة',
+      two: 'اثنتان غير مقروءتين',
+      one: 'واحدة غير مقروءة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get signInTitle => 'احفظ وِردك على كل أجهزتك';
+
+  @override
+  String get signInSubtitle => 'الحساب اختياري، والتطبيق يعمل كاملاً بدونه.';
+
+  @override
+  String get signInStreak => 'تتابعك وجلساتك';
+
+  @override
+  String get signInStreakBody => 'لا تضيع عند تغيير الجهاز';
+
+  @override
+  String get signInFavorites => 'المفضلة';
+
+  @override
+  String get signInFavoritesBody => 'أذكارك المحفوظة معك على كل جهاز';
+
+  @override
+  String get signInSettingsBody => 'أوقات التذكير والمظهر تنتقل معك';
+
+  @override
+  String get signInApple => 'تسجيل الدخول باستخدام Apple';
+
+  @override
+  String get signInGoogle => 'تسجيل الدخول باستخدام Google';
+
+  @override
+  String get notNow => 'ليس الآن';
+
+  @override
+  String get signInPrivacy => 'نستخدم حسابك لمزامنة تقدّمك ومفضلتك وإعداداتك.';
+
+  @override
+  String get signInFailed => 'تعذّر تسجيل الدخول. حاول مرة أخرى.';
+
+  @override
+  String get signedInToast => 'تم تسجيل الدخول';
+
+  @override
+  String get mergeTitle => 'تم ربط حسابك';
+
+  @override
+  String mergeBody(String items) {
+    return 'دمجنا $items من هذا الجهاز مع حسابك.';
+  }
+
+  @override
+  String mergeAnd(String a, String b) {
+    return '$a و$b';
+  }
+
+  @override
+  String get mergeSettingsOnly => 'دمجنا إعداداتك من هذا الجهاز مع حسابك.';
+
+  @override
+  String mergeSessions(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits جلسة',
+      many: '$digits جلسة',
+      few: '$digits جلسات',
+      two: 'جلستين',
+      one: 'جلسة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String mergeFavorites(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits ذكر محفوظ',
+      many: '$digits ذكراً محفوظاً',
+      few: '$digits أذكار محفوظة',
+      two: 'ذكرين محفوظين',
+      one: 'ذكراً محفوظاً',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sessionsChip(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits جلسة',
+      many: '$digits جلسة',
+      few: '$digits جلسات',
+      two: 'جلستان',
+      one: 'جلسة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String favoritesChip(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$digits ذكر محفوظ',
+      many: '$digits ذكراً محفوظاً',
+      few: '$digits أذكار محفوظة',
+      two: 'ذكران محفوظان',
+      one: 'ذكر محفوظ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String currentStreakLine(String days) {
+    return 'تتابعك الحالي: $days';
+  }
+
+  @override
+  String get continueLabel => 'متابعة';
+
+  @override
+  String viaProvider(String provider) {
+    return 'عبر $provider';
+  }
+
+  @override
+  String get syncSynced => 'تمت المزامنة';
+
+  @override
+  String get syncSyncing => 'جارٍ المزامنة…';
+
+  @override
+  String get syncSyncingBody => 'يمكنك متابعة القراءة';
+
+  @override
+  String get syncOffline => 'غير متصل';
+
+  @override
+  String get syncOfflineBody => 'ستتم المزامنة عند الاتصال';
+
+  @override
+  String get syncError => 'تعذّرت المزامنة';
+
+  @override
+  String get syncErrorBody => 'بياناتك آمنة على هذا الجهاز';
+
+  @override
+  String get syncNow => 'زامن الآن';
+
+  @override
+  String get signOut => 'تسجيل الخروج';
+
+  @override
+  String get signOutBody => 'تبقى بياناتك على هذا الجهاز';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get deleteTitle => 'حذف حسابك؟';
+
+  @override
+  String get deleteSubtitle => 'لا يمكن التراجع عن هذا.';
+
+  @override
+  String get deleteRemovedHeading => 'يُحذف من حسابك';
+
+  @override
+  String get deleteItemProgress => 'التقدّم والتتابع المتزامن';
+
+  @override
+  String get deleteItemMessages => 'رسائلك مع فريق مشكاة';
+
+  @override
+  String get deleteKeptHeading => 'يبقى على هذا الجهاز';
+
+  @override
+  String get deleteKeptBody =>
+      'كل ما هو محفوظ هنا يبقى، وتستمر في استخدام التطبيق بدون حساب.';
+
+  @override
+  String get deleteConfirm => 'حذف الحساب نهائياً';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get deleteFailed =>
+      'تعذّر حذف الحساب. تحقق من الاتصال وحاول مرة أخرى.';
+
+  @override
+  String get accountDeletedToast => 'حُذف حسابك';
+
+  @override
+  String get nudgeTitle => 'احفظ تتابعك';
+
+  @override
+  String get nudgeBody => 'سجّل الدخول ليبقى تتابعك محفوظاً إذا غيّرت جهازك.';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get dismiss => 'إخفاء';
+
+  @override
+  String get more => 'المزيد';
+
+  @override
+  String get reportThikr => 'الإبلاغ عن خطأ في هذا الذكر';
+
+  @override
+  String get copyText => 'نسخ النص';
+
+  @override
+  String get copied => 'نُسخ النص';
+
+  @override
+  String get feedbackIntro =>
+      'نقرأ كل رسالة، ويصلك الرد في «ملاحظات واقتراحات».';
+
+  @override
+  String get typeFeature => 'اقتراح ميزة';
+
+  @override
+  String get typeThikr => 'خطأ في ذكر';
+
+  @override
+  String get typeBug => 'مشكلة في التطبيق';
+
+  @override
+  String get yourMessage => 'رسالتك';
+
+  @override
+  String get messageHint => 'اكتب رسالتك…';
+
+  @override
+  String charCount(String count, String max) {
+    return '$count / $max';
+  }
+
+  @override
+  String get replyEmail => 'بريدك للرد (اختياري)';
+
+  @override
+  String get replyEmailNote => 'نرد داخل التطبيق، والبريد احتياطي فقط.';
+
+  @override
+  String get invalidEmail => 'البريد غير صحيح';
+
+  @override
+  String get attachDevice => 'إرفاق معلومات الجهاز';
+
+  @override
+  String get attachDeviceBody => 'إصدار التطبيق، النظام، اللغة';
+
+  @override
+  String get send => 'إرسال';
+
+  @override
+  String get reportTitle => 'الإبلاغ عن خطأ في ذكر';
+
+  @override
+  String get whatsWrong => 'ما الخطأ؟';
+
+  @override
+  String get issueText => 'النص';
+
+  @override
+  String get issueSource => 'التخريج';
+
+  @override
+  String get issueCount => 'عدد المرات';
+
+  @override
+  String get issueTranslation => 'الترجمة';
+
+  @override
+  String get details => 'التفاصيل';
+
+  @override
+  String get sendReport => 'إرسال البلاغ';
+
+  @override
+  String get sentTitle => 'وصلتنا رسالتك';
+
+  @override
+  String get sentBody =>
+      'ستجد الرد في «ملاحظات واقتراحات». ستظهر نقطة على الإعدادات عند وصوله.';
+
+  @override
+  String get viewMyMessages => 'عرض رسائلي';
+
+  @override
+  String get queuedTitle => 'ستُرسل عند الاتصال';
+
+  @override
+  String get queuedBody => 'حفظناها على جهازك وسنرسلها تلقائياً.';
+
+  @override
+  String get sendFailedTitle => 'تعذّر الإرسال';
+
+  @override
+  String get sendFailedBody => 'رسالتك محفوظة كمسودة.';
+
+  @override
+  String get statusNew => 'جديدة';
+
+  @override
+  String get statusInReview => 'قيد المراجعة';
+
+  @override
+  String get statusAnswered => 'تم الرد';
+
+  @override
+  String get statusClosed => 'مغلقة';
+
+  @override
+  String get statusQueued => 'بانتظار الاتصال';
+
+  @override
+  String get repliesInAppOnly => 'الردود تظهر هنا فقط، ولا تصل كإشعارات.';
+
+  @override
+  String get newMessage => 'رسالة جديدة';
+
+  @override
+  String get noMessagesTitle => 'لا رسائل بعد';
+
+  @override
+  String get noMessagesBody =>
+      'إذا أرسلت اقتراحاً أو أبلغت عن خطأ، ستجد الرد هنا.';
+
+  @override
+  String get sendFeedback => 'أرسل ملاحظة';
+
+  @override
+  String startedOn(String date) {
+    return 'بدأت $date';
+  }
+
+  @override
+  String get mishkatTeam => 'فريق مشكاة';
+
+  @override
+  String get writeReply => 'اكتب رداً…';
+
+  @override
+  String get sendReply => 'إرسال الرد';
+
+  @override
+  String closedOn(String date) {
+    return 'أُغلقت في $date';
+  }
+
+  @override
+  String get threadClosedTitle => 'هذه المحادثة مغلقة';
+
+  @override
+  String get threadClosedBody => 'تحتاج مساعدة أخرى؟ ابدأ محادثة جديدة.';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get filterIdeas => 'اقتراحات';
+
+  @override
+  String get filterAthkar => 'أذكار';
+
+  @override
+  String get filterApp => 'مشكلات';
+
+  @override
+  String get inboxEmptyTitle => 'لا جديد هنا';
+
+  @override
+  String get inboxEmptyBody => 'لا رسائل تطابق هذا الاختيار.';
+
+  @override
+  String get clearFilters => 'مسح التصفية';
+
+  @override
+  String messageNumber(String number) {
+    return 'رسالة #$number';
+  }
+
+  @override
+  String get messageUnnumbered => 'رسالة';
+
+  @override
+  String get metaType => 'النوع';
+
+  @override
+  String get metaVersion => 'الإصدار';
+
+  @override
+  String get metaPlatform => 'المنصة';
+
+  @override
+  String get metaDate => 'التاريخ';
+
+  @override
+  String get metaEmail => 'البريد';
+
+  @override
+  String get notAttached => 'غير مرفق';
+
+  @override
+  String get openThikr => 'افتح الذكر';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String get theUser => 'المستخدم';
+
+  @override
+  String get adminReplyNote =>
+      'يظهر ردّك لدى المستخدم في «ملاحظات واقتراحات»، ويتحول الوضع إلى «تم الرد».';
+
+  @override
+  String get writeReplyToUser => 'اكتب رداً للمستخدم…';
+
+  @override
+  String minutesAgo(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قبل $digits دقيقة',
+      many: 'قبل $digits دقيقة',
+      few: 'قبل $digits دقائق',
+      two: 'قبل دقيقتين',
+      one: 'قبل دقيقة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesAgoShort(String digits) {
+    return 'قبل $digits د';
+  }
+
+  @override
+  String hoursAgo(num count, String digits) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'قبل $digits ساعة',
+      many: 'قبل $digits ساعة',
+      few: 'قبل $digits ساعات',
+      two: 'قبل ساعتين',
+      one: 'قبل ساعة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yesterday => 'أمس';
 }
