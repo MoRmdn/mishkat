@@ -4,7 +4,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/app.dart';
-import 'package:mishkat/core/widgets/buttons.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/features/account/sign_in_sheet.dart';
 import 'package:mishkat/data/models/thikr.dart';
@@ -358,7 +357,11 @@ void main() {
   group('AF accounts and feedback', () {
     final now = DateTime(2026, 9, 25, 10, 20);
 
-    Future<void> openSettings(WidgetTester tester) async {
+    /// The «عن التطبيق» page, where the account card, feedback and the
+    /// owner's inbox live.
+    Future<void> openSettings(WidgetTester tester) => openAboutPage(tester);
+
+    Future<void> openSettingsSheet(WidgetTester tester) async {
       await tester.tap(findIcon(MIcon.settings));
       await AppHarness.settleWithDatabase(tester);
     }
@@ -430,50 +433,13 @@ void main() {
         );
     }
 
-    testWidgets('16a settings page, signed out', (tester) async {
+    testWidgets('16b settings sheet, signed out', (tester) async {
       await AppHarness().pump(tester, size: board, now: now);
-      await openSettings(tester);
-      await shot('af_16a_settings_top_ar');
+      await openSettingsSheet(tester);
+      await shot('af_16b_settings_sheet_ar');
     });
 
-    testWidgets('16a settings page, owner, scrolled', (tester) async {
-      final h = owner();
-      h.feedback.seed(
-        _thread('i1', FeedbackType.bug, 'x', now, unreadForAdmin: true),
-      );
-      await h.pump(tester, size: board, now: now);
-      await openSettings(tester);
-      await tester.drag(find.byType(Scrollable).last, const Offset(0, -600));
-      await AppHarness.settleWithDatabase(tester);
-      await shot('af_16a_settings_owner_ar');
-    });
-
-    testWidgets('16a about', (tester) async {
-      await AppHarness().pump(tester, size: board, now: now);
-      await openSettings(tester);
-      await tester.ensureVisible(find.text('عن التطبيق'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('عن التطبيق'));
-      await AppHarness.settleWithDatabase(tester);
-      await shot('af_16a_about_ar');
-    });
-
-    testWidgets('16a athkar sources', (tester) async {
-      await AppHarness().pump(tester, size: board, now: now);
-      await openSettings(tester);
-      await tester.ensureVisible(find.text('عن التطبيق'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('عن التطبيق'));
-      await AppHarness.settleWithDatabase(tester);
-      final row = find.text('مصادر الأذكار');
-      await tester.ensureVisible(row);
-      await tester.pumpAndSettle();
-      await tester.tap(row);
-      await AppHarness.settleWithDatabase(tester);
-      await shot('af_16a_sources_ar');
-    });
-
-    testWidgets('1b settings, signed in owner, English dark', (tester) async {
+    testWidgets('16b settings sheet, signed in, English dark', (tester) async {
       final h = owner();
       h.feedback.seed(
         _thread('i1', FeedbackType.bug, 'x', now, unreadForAdmin: true),
@@ -490,13 +456,42 @@ void main() {
               .millisecondsSinceEpoch,
         },
       );
-      await openSettings(tester);
-      await shot('af_1b_settings_owner_dark_en');
+      await openSettingsSheet(tester);
+      await shot('af_16b_settings_sheet_signed_in_dark_en');
     });
 
-    Future<void> signInSheet(WidgetTester tester, AppHarness h) async {
+    testWidgets('16a about, signed out', (tester) async {
+      await AppHarness().pump(tester, size: board, now: now);
       await openSettings(tester);
-      await tester.tap(find.byType(SmallPillButton).first);
+      await shot('af_16a_about_ar');
+    });
+
+    testWidgets('16a about, owner', (tester) async {
+      final h = owner();
+      h.feedback.seed(
+        _thread('i1', FeedbackType.bug, 'x', now, unreadForAdmin: true),
+      );
+      await h.pump(tester, size: board, now: now);
+      await openSettings(tester);
+      await shot('af_16a_about_owner_ar');
+    });
+
+    testWidgets('16a athkar sources', (tester) async {
+      await AppHarness().pump(tester, size: board, now: now);
+      await openSettings(tester);
+      final row = find.text('مصادر الأذكار');
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
+      await tester.tap(row);
+      await AppHarness.settleWithDatabase(tester);
+      await shot('af_16a_sources_ar');
+    });
+
+    /// Sign-in from the settings sheet's account row: the settings sheet
+    /// closes and the sign-in sheet rises over Home.
+    Future<void> signInSheet(WidgetTester tester, AppHarness h) async {
+      await openSettingsSheet(tester);
+      await tester.tap(findIcon(MIcon.cloudSync));
       await tester.pumpAndSettle();
     }
 

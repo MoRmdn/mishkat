@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
+import 'package:mishkat/features/reader/reader_controller.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
 
 import 'support/app_harness.dart';
@@ -35,6 +36,39 @@ void main() {
 
     expect(find.byType(ReaderScreen), findsOneWidget);
     expect(find.text('١ من ١'), findsOneWidget);
+  });
+
+  testWidgets('a link tapped mid-routine replaces the reader, and home is '
+      'reachable', (tester) async {
+    await harness.pump(tester);
+    await tester.tap(find.text('مساء'));
+    await AppHarness.settleWithDatabase(tester);
+    await tester.tapAt(const Offset(195, 400));
+    await tester.pump();
+    await tester.pump(kAutoAdvanceDelay + const Duration(milliseconds: 60));
+    await tester.pumpAndSettle();
+    expect(find.text('٢ من ٤'), findsOneWidget);
+
+    harness.links.add(Uri.parse('https://mishkatalwird.com/t/sl1'));
+    await AppHarness.settleWithDatabase(tester);
+
+    // One reader, not the shared thikr stacked on the evening routine.
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    expect(find.text('١ من ١'), findsOneWidget);
+
+    await tester.tapAt(const Offset(195, 400));
+    await tester.pump();
+    await tester.pump(kAutoAdvanceDelay + const Duration(milliseconds: 60));
+    await AppHarness.settleWithDatabase(tester);
+    await tester.tap(find.text('العودة للرئيسية'));
+    await AppHarness.settleWithDatabase(tester);
+
+    expect(find.byType(ReaderScreen), findsNothing);
+
+    // The interrupted routine was checkpointed and resumes.
+    await tester.tap(find.text('مساء'));
+    await AppHarness.settleWithDatabase(tester);
+    expect(find.text('٢ من ٤'), findsOneWidget);
   });
 
   testWidgets('an unknown id leaves the user on home', (tester) async {

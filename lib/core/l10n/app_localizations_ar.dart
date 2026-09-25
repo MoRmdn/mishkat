@@ -793,6 +793,9 @@ class LAr extends L {
   String get signInShort => 'دخول';
 
   @override
+  String get signInToSync => 'سجّل الدخول لمزامنة تقدّمك';
+
+  @override
   String syncedAgo(String ago) {
     return 'آخر مزامنة $ago';
   }

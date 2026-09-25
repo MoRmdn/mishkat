@@ -7,20 +7,24 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/share_link.dart';
 import '../../core/store_links.dart';
 import '../../core/theme/mishkat_tokens.dart';
+import '../../core/widgets/app_sheet.dart' show SheetSectionLabel;
 import '../../core/widgets/brand_mark.dart';
 import '../../core/widgets/list_rows.dart';
 import '../../core/widgets/page_scaffold.dart';
 import '../../core/widgets/surfaces.dart';
 import '../../services/app_info.dart';
+import '../../services/auth/auth_service.dart';
 import 'settings_controller.dart';
+import 'settings_parts.dart';
 import 'sources_page.dart';
 
 Future<void> openAbout(BuildContext context) =>
     pushPage(context, (_) => const AboutPage());
 
-/// «عن التطبيق», opened from the last row of Settings: rating, the legal
-/// pages, the athkar sources, and the brand with the version at the foot
-/// (board AF 16a, «عن التطبيق» and footer).
+/// «عن التطبيق», opened from the last row of the settings sheet. Laid out as
+/// board AF 16a: the account card, «الدعم» (feedback, and the owner's inbox),
+/// rating, the legal pages and the athkar sources, and the brand with the
+/// version at the foot.
 class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
@@ -29,6 +33,7 @@ class AboutPage extends ConsumerWidget {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
     final launch = ref.read(externalLinkLauncherProvider);
+    final cloud = ref.watch(cloudAvailableProvider);
     return PageScaffold(
       title: l.about,
       divider: true,
@@ -43,6 +48,14 @@ class AboutPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (cloud) ...[
+                    const AccountCard(),
+                    const SizedBox(height: 16),
+                    SheetSectionLabel(l.settingsSupport, topPadding: 0),
+                    const SupportGroup(),
+                    const SizedBox(height: 16),
+                    SheetSectionLabel(l.about, topPadding: 0),
+                  ],
                   GroupCard(
                     children: [
                       if (kShowRateApp)

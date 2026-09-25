@@ -1339,6 +1339,12 @@ abstract class L {
   /// **'دخول'**
   String get signInShort;
 
+  /// No description provided for @signInToSync.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول لمزامنة تقدّمك'**
+  String get signInToSync;
+
   /// No description provided for @syncedAgo.
   ///
   /// In ar, this message translates to:

@@ -278,3 +278,20 @@ Finder findIcon(MIcon icon) =>
 
 TextDirection shellDirection(WidgetTester tester) =>
     Directionality.of(tester.element(find.byType(Scaffold).first));
+
+/// Home ⚙ opens the settings sheet (board AF 16b); its «عن التطبيق» row
+/// opens the full page with the account card, feedback, the owner's inbox
+/// and the legal links (board AF 16a). Language-independent: finds the row
+/// by its ⓘ glyph.
+Future<void> openAboutPage(WidgetTester tester) async {
+  await tester.tap(findIcon(MIcon.settings));
+  await AppHarness.settleWithDatabase(tester);
+  final about = find.ancestor(
+    of: findIcon(MIcon.info),
+    matching: find.byType(InkWell),
+  );
+  await tester.ensureVisible(about.first);
+  await tester.pumpAndSettle();
+  await tester.tap(about.first);
+  await AppHarness.settleWithDatabase(tester);
+}

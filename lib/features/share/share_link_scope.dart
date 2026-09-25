@@ -65,6 +65,11 @@ class _ShareLinkScopeState extends ConsumerState<ShareLinkScope> {
     final library = await ref.read(athkarLibraryProvider.future);
     final thikr = library.byId(id);
     if (thikr == null || !mounted) return;
+    // The reader controller holds one session: a reader stacked on one already
+    // open would take it over, and closing it would leave the first one blank.
+    // A link is a fresh start, so go back to the shell first; popping an open
+    // reader checkpoints it.
+    Navigator.of(context).popUntil((route) => route.isFirst);
     await openReader(context, ref, thikr.category, [thikr], subset: true);
   }
 

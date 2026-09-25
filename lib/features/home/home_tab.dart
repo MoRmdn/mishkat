@@ -20,7 +20,7 @@ import '../reader/reader_screen.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
 import '../../services/feedback/feedback_providers.dart';
-import '../settings/settings_page.dart';
+import '../settings/settings_sheet.dart';
 import '../shell/app_shell.dart';
 import '../tasbih/tasbih_screen.dart';
 import 'home_now.dart';

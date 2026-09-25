@@ -119,10 +119,20 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('settings, sign-in and account fit — $name', (tester) async {
+    testWidgets('the settings sheet fits — $name', (tester) async {
       await start(tester, v);
       await tester.tap(findIcon(MIcon.settings));
       await AppHarness.settleWithDatabase(tester);
+      await tester.scrollUntilVisible(
+        findIcon(MIcon.info),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+    });
+
+    testWidgets('settings, sign-in and account fit — $name', (tester) async {
+      await start(tester, v);
+      await openAboutPage(tester);
       await tester.tap(find.byType(SmallPillButton));
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.byType(ProviderButton).first);
@@ -143,7 +153,9 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('about and the athkar sources page fit — $name', (tester) async {
+    testWidgets('about and the athkar sources page fit — $name', (
+      tester,
+    ) async {
       await start(tester, v);
       await tester.tap(findIcon(MIcon.settings));
       await AppHarness.settleWithDatabase(tester);
@@ -219,8 +231,7 @@ void main() {
           ],
         );
       await start(tester, v, harness: h);
-      await tester.tap(findIcon(MIcon.settings));
-      await AppHarness.settleWithDatabase(tester);
+      await openAboutPage(tester);
 
       final feedback = find.text(tab(v.$1, 'ملاحظات واقتراحات', 'Feedback'));
       await tester.scrollUntilVisible(

@@ -195,7 +195,7 @@ catches an error here.
 | M7 | `feat/firebase` | Icons, splash, diagnostics seam, store prep | ✅ done (Firebase config pending — see `docs/firebase.md`) |
 | 2a | `feat/redesign-2a` | Dusk Grid redesign: tokens, fonts, icons, brand, every screen | ✅ done |
 | SL | `feat/share-links` | Share links: app_links, entitlements, App Links, store-redirect site | 🚧 app side done; store IDs + deploy pending |
-| AF | `feat/accounts-feedback` | Optional Apple/Google account and sync, feedback, owner inbox, Settings page | 🚧 code done; console setup in `docs/firebase.md` |
+| AF | `feat/accounts-feedback` | Optional Apple/Google account and sync, feedback, owner inbox, Settings sheet (16b) + «عن التطبيق» page (16a) | 🚧 code done; console setup in `docs/firebase.md` |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.

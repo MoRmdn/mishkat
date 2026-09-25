@@ -207,6 +207,7 @@
   "accountCardTitle": "Keep your progress on all your devices",
   "accountCardBody": "Optional · the app works fully without it",
   "signInShort": "Sign in",
+  "signInToSync": "Sign in to sync your progress",
   "syncedAgo": "Synced {ago}",
   "notSyncedYet": "Not synced yet",
   "feedback": "Feedback",

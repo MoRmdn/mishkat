@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mishkat/core/widgets/app_sheet.dart';
 import 'package:mishkat/core/widgets/buttons.dart';
 import 'package:mishkat/core/widgets/list_rows.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
+import 'package:mishkat/features/settings/settings_sheet.dart';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_models.dart';
 import 'package:mishkat/services/sync/sync_models.dart';
@@ -70,8 +72,27 @@ NavRow row(WidgetTester tester, String label) => tester.widget<NavRow>(
   find.byWidgetPredicate((w) => w is NavRow && w.label == label),
 );
 
-Future<void> openSettings(WidgetTester tester) async {
+/// Home ⚙: the settings sheet (board AF 16b).
+Future<void> openSettingsSheet(WidgetTester tester) async {
   await tester.tap(findIcon(MIcon.settings));
+  await AppHarness.settleWithDatabase(tester);
+}
+
+/// The settings sheet, then its «عن التطبيق» row: the full page with the
+/// account card, support and the legal links (board AF 16a).
+Future<void> openSettings(WidgetTester tester) async {
+  await openSettingsSheet(tester);
+  final about = find.text(
+    Localizations.localeOf(
+              tester.element(find.byType(SheetTitle)),
+            ).languageCode ==
+            'ar'
+        ? 'عن التطبيق'
+        : 'About',
+  );
+  await tester.ensureVisible(about);
+  await tester.pumpAndSettle();
+  await tester.tap(about);
   await AppHarness.settleWithDatabase(tester);
 }
 
@@ -196,6 +217,63 @@ void main() {
       expect(h.feedback.threads, isEmpty);
       // The device keeps what it had.
       expect((await h.db.allFavorites()).single.thikrId, 'mo1');
+    });
+  });
+
+  group('the settings sheet', () {
+    testWidgets('signed out, its account row starts sign-in', (tester) async {
+      final h = AppHarness();
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettingsSheet(tester);
+      expect(find.text('Settings'), findsOne);
+
+      await tester.tap(find.text('Sign in to sync your progress'));
+      await tester.pumpAndSettle();
+      // The settings sheet closed; the sign-in sheet opened from Home.
+      expect(find.byType(SettingsSheet), findsNothing);
+      expect(find.text('Keep your wird on every device'), findsOne);
+      await tester.tap(find.text('Sign in with Google'));
+      await AppHarness.settleWithDatabase(tester);
+      expect(h.auth.currentUser?.uid, 'uid-google');
+    });
+
+    testWidgets('signed in, its account row opens Account', (tester) async {
+      final h = AppHarness(auth: FakeAuthService(initialUser: _me));
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettingsSheet(tester);
+      await tester.tap(find.text('Mohamed Ramadan'));
+      await AppHarness.settleWithDatabase(tester);
+      expect(find.textContaining('via Google'), findsOne);
+
+      // Back returns to Home, not to the sheet.
+      await tester.tap(find.bySemanticsLabel('Back').last);
+      await AppHarness.settleWithDatabase(tester);
+      expect(find.byType(SettingsSheet), findsNothing);
+      expect(findIcon(MIcon.settings), findsOne);
+    });
+
+    testWidgets('an unread reply puts a dot on «About»', (tester) async {
+      final h = AppHarness(auth: FakeAuthService(initialUser: _me));
+      h.feedback.seed(
+        _thread('t1', unreadForUser: true),
+        messages: _messages(replied: true),
+      );
+      await h.pump(tester, language: 'en', now: _now);
+      expect(settingsButton(tester).showDot, isTrue);
+      await openSettingsSheet(tester);
+      expect(row(tester, 'About').unread, isTrue);
+
+      await tester.tap(find.text('About'));
+      await AppHarness.settleWithDatabase(tester);
+      expect(row(tester, 'Feedback').unread, isTrue);
+    });
+
+    testWidgets('without Firebase there is no account row', (tester) async {
+      final h = AppHarness(cloud: false);
+      await h.pump(tester, language: 'en', now: _now);
+      await openSettingsSheet(tester);
+      expect(find.text('Sign in to sync your progress'), findsNothing);
+      expect(row(tester, 'About').unread, isFalse);
     });
   });
 

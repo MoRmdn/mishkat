@@ -73,7 +73,7 @@ void main() {
         handle.dispose();
       });
 
-      testWidgets('settings page', (tester) async {
+      testWidgets('settings sheet', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester);
         await tester.tap(findIcon(MIcon.settings));
@@ -182,8 +182,7 @@ void main() {
       testWidgets('sign-in sheet', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester);
-        await tester.tap(findIcon(MIcon.settings));
-        await AppHarness.settleWithDatabase(tester);
+        await openAboutPage(tester);
         await tester.tap(find.text('دخول'));
         await tester.pumpAndSettle();
         await check(tester);
@@ -193,8 +192,7 @@ void main() {
       testWidgets('account', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester, harness: owner());
-        await tester.tap(findIcon(MIcon.settings));
-        await AppHarness.settleWithDatabase(tester);
+        await openAboutPage(tester);
         await tester.tap(find.text('محمد رمضان'));
         await AppHarness.settleWithDatabase(tester);
         await check(tester);
@@ -204,8 +202,7 @@ void main() {
       testWidgets('feedback list, thread and sheet', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester, harness: owner());
-        await tester.tap(findIcon(MIcon.settings));
-        await AppHarness.settleWithDatabase(tester);
+        await openAboutPage(tester);
         await openRow(tester, 'ملاحظات واقتراحات');
         await check(tester);
         await tester.tap(find.byType(ThreadRow).first);
@@ -222,8 +219,7 @@ void main() {
       testWidgets('owner inbox and thread', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester, harness: owner());
-        await tester.tap(findIcon(MIcon.settings));
-        await AppHarness.settleWithDatabase(tester);
+        await openAboutPage(tester);
         await openRow(tester, 'صندوق الوارد');
         await check(tester);
         await tester.tap(find.byType(ThreadRow).first);

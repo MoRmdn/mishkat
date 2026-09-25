@@ -460,6 +460,7 @@
   "accountCardTitle": "احفظ تقدّمك على كل أجهزتك",
   "accountCardBody": "اختياري · التطبيق يعمل كاملاً بدونه",
   "signInShort": "دخول",
+  "signInToSync": "سجّل الدخول لمزامنة تقدّمك",
   "syncedAgo": "آخر مزامنة {ago}",
   "@syncedAgo": {
     "placeholders": {

@@ -778,6 +778,9 @@ class LEn extends L {
   String get signInShort => 'Sign in';
 
   @override
+  String get signInToSync => 'Sign in to sync your progress';
+
+  @override
   String syncedAgo(String ago) {
     return 'Synced $ago';
   }

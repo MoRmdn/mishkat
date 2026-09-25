@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/core/theme/mishkat_tokens.dart';
+import 'package:mishkat/core/widgets/mishkat_icon.dart';
+import 'package:mishkat/data/models/reminder_settings.dart';
 import 'package:mishkat/features/reader/reader_controller.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
 import 'package:mishkat/features/tasbih/tasbih_screen.dart';
@@ -43,6 +45,23 @@ void main() {
 
     expect(find.text('٢ من ٤'), findsOneWidget);
     expect(find.text('٣'), findsOneWidget, reason: 'three repetitions left');
+  });
+
+  testWidgets('a reminder tapped mid-routine replaces the reader', (
+    tester,
+  ) async {
+    await harness.pump(tester);
+    await openEvening(tester);
+
+    harness.notifications.tapHandler!(ReminderSlotId.sleep);
+    await AppHarness.settleWithDatabase(tester);
+
+    // One reader: a second stacked on the first would leave it blank once
+    // closed.
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    await tester.tap(findIcon(MIcon.close));
+    await AppHarness.settleWithDatabase(tester);
+    expect(find.byType(ReaderScreen), findsNothing);
   });
 
   testWidgets('the counter announces what is left', (tester) async {

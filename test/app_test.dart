@@ -69,8 +69,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
-    // Settings is a page now: changes apply live and back returns to Home.
-    await tester.tap(find.bySemanticsLabel('Back'));
+    // The settings sheet has no «تم»: changes apply live, and a tap on the
+    // scrim closes it.
+    await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
     expect(findIcon(MIcon.settings), findsOneWidget);
 
