@@ -61,16 +61,19 @@ class FeedbackListPage extends ConsumerWidget {
                     ThreadRow(
                       thread: thread,
                       unread: thread.unreadForUser,
+                      dimmed: thread.isClosed,
                       title: thread.preview.isEmpty
                           ? _reportTitle(l, thread)
                           : null,
                       onTap: thread.queued
                           ? null
                           : () => openThread(context, thread.id),
-                      meta: Row(
+                      meta: Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           StatusChip(thread),
-                          const SizedBox(width: 8),
                           Text(
                             formatDayMonth(thread.createdAt, lang),
                             style: MishkatType.caption(

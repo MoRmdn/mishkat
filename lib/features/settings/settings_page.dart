@@ -244,8 +244,8 @@ class _ReadingGroup extends ConsumerWidget {
                     ? null
                     : () => c.stepTextSize(-1),
               ),
-              SizedBox(
-                width: 52,
+              ConstrainedBox(
+                constraints: const BoxConstraints(minWidth: 52),
                 child: Text(
                   switch (s.textSize) {
                     ThikrSize.small => l.fontSizeSmall,

@@ -16,7 +16,7 @@ String formatRelative(
   bool short = false,
 }) {
   final diff = now.difference(at);
-  if (diff.inMinutes < 1) return l.nowLabel;
+  if (diff.inMinutes < 1) return l.justNow;
   if (diff.inMinutes < 60) {
     final m = diff.inMinutes;
     final digits = localizeDigits(m, languageCode);

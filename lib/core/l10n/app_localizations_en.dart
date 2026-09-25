@@ -1290,4 +1290,7 @@ class LEn extends L {
 
   @override
   String get yesterday => 'Yesterday';
+
+  @override
+  String get justNow => 'just now';
 }

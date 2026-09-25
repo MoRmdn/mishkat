@@ -200,12 +200,14 @@ class SyncStatusCard extends ConsumerWidget {
     Widget scopeChip(String label) => Container(
       height: 28,
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: t.bg,
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Text(label, style: MishkatType.body(t).copyWith(fontSize: 11.5)),
+      child: Center(
+        widthFactor: 1,
+        child: Text(label, style: MishkatType.body(t).copyWith(fontSize: 11.5)),
+      ),
     );
 
     return Semantics(

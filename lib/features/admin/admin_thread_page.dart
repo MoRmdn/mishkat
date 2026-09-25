@@ -108,6 +108,7 @@ class _AdminThreadPageState extends ConsumerState<AdminThreadPage> {
           ),
           const SizedBox(height: 6),
           _StatusControl(value: thread.status, onChanged: _setStatus),
+          const SizedBox(height: 4),
           ...conversation(
             context: context,
             messages: messages,
@@ -192,7 +193,9 @@ class _Metadata extends ConsumerWidget {
       if (thread.contactEmail != null) (l.metaEmail, thread.contactEmail, true),
     ];
 
-    final key = MishkatType.caption(t).copyWith(fontSize: 12);
+    final key = MishkatType.caption(
+      t,
+    ).copyWith(fontSize: 12, fontWeight: FontWeight.w400);
     final value = MishkatType.label(t).copyWith(fontSize: 12);
 
     return Container(
@@ -222,18 +225,22 @@ class _Metadata extends ConsumerWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5),
-                      child: Text(
-                        v ?? l.notAttached,
-                        textDirection: v != null && ltr
-                            ? TextDirection.ltr
-                            : null,
-                        textAlign: TextAlign.start,
-                        style: v == null
-                            ? value.copyWith(
-                                color: t.inkMuted,
-                                fontWeight: FontWeight.w300,
-                              )
-                            : value,
+                      // A version or a device model stays left-to-right but
+                      // lines up with the Arabic values beside it.
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          v ?? l.notAttached,
+                          textDirection: v != null && ltr
+                              ? TextDirection.ltr
+                              : null,
+                          style: v == null
+                              ? value.copyWith(
+                                  color: t.inkMuted,
+                                  fontWeight: FontWeight.w300,
+                                )
+                              : value,
+                        ),
                       ),
                     ),
                   ],

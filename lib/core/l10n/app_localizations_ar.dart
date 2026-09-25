@@ -1321,4 +1321,7 @@ class LAr extends L {
 
   @override
   String get yesterday => 'أمس';
+
+  @override
+  String get justNow => 'الآن';
 }

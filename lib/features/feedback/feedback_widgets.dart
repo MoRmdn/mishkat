@@ -79,6 +79,18 @@ String formatDateTime(L l, DateTime at, String lang) {
   return '$date${lang == 'ar' ? '،' : ','} ${formatTime(at, lang, am: l.am, pm: l.pm)}';
 }
 
+/// The direction of what a user wrote, by its first strong character: an
+/// English message in the Arabic inbox still reads left to right.
+TextDirection? writtenDirection(String text) {
+  for (final rune in text.runes) {
+    if (rune >= 0x0590 && rune <= 0x08FF) return TextDirection.rtl;
+    if ((rune >= 0x41 && rune <= 0x5A) || (rune >= 0x61 && rune <= 0x7A)) {
+      return TextDirection.ltr;
+    }
+  }
+  return null;
+}
+
 /// A conversation in a list: type glyph, first line, unread dot, then a
 /// status chip and date (the sender's list) or a language tag and relative
 /// time (the owner's inbox).
@@ -90,10 +102,14 @@ class ThreadRow extends StatelessWidget {
     required this.meta,
     required this.onTap,
     this.title,
+    this.dimmed = false,
   });
 
   final FeedbackThread thread;
   final bool unread;
+
+  /// Closed (the sender's list) or already read (the owner's inbox).
+  final bool dimmed;
 
   /// The line under the title.
   final Widget meta;
@@ -106,8 +122,10 @@ class ThreadRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
     final l = L.of(context);
-    final muted = thread.isClosed || (!unread && thread.queued);
+    final muted = dimmed;
     final text = title ?? thread.preview;
+    final direction = writtenDirection(text);
+    final rtlLayout = Directionality.of(context) == TextDirection.rtl;
     return Semantics(
       button: onTap != null,
       label: [
@@ -128,12 +146,12 @@ class ThreadRow extends StatelessWidget {
                 height: 36,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: thread.isClosed ? t.bg : t.glowSoft,
+                  color: muted ? t.bg : t.glowSoft,
                   shape: BoxShape.circle,
                 ),
                 child: MishkatIcon(
                   feedbackTypeIcon(thread.type),
-                  color: thread.isClosed
+                  color: muted
                       ? t.inkMuted
                       : (t.isDark ? t.accentText : t.primary),
                   size: 16,
@@ -151,6 +169,10 @@ class ThreadRow extends StatelessWidget {
                             text,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
+                            textDirection: direction,
+                            textAlign: rtlLayout
+                                ? TextAlign.right
+                                : TextAlign.left,
                             style: TextStyle(
                               fontFamily: kUiFont,
                               fontSize: 13.5,
@@ -251,6 +273,10 @@ class MessageBubble extends StatelessWidget {
         children: [
           Text(
             body,
+            textDirection: writtenDirection(body),
+            textAlign: Directionality.of(context) == TextDirection.rtl
+                ? TextAlign.right
+                : TextAlign.left,
             style: MishkatType.body(t).copyWith(fontSize: 13.5, height: 1.75),
           ),
           const SizedBox(height: 4),
@@ -302,7 +328,11 @@ class DayDivider extends StatelessWidget {
   Widget build(BuildContext context) => Text(
     text,
     textAlign: TextAlign.center,
-    style: MishkatType.caption(context.tokens).copyWith(fontSize: 11),
+    // 400, not the caption's 300: at 11px a light weight measures under
+    // 4.5:1 once antialiased.
+    style: MishkatType.caption(
+      context.tokens,
+    ).copyWith(fontSize: 11, fontWeight: FontWeight.w400),
   );
 }
 
@@ -452,12 +482,14 @@ class FeedbackField extends StatelessWidget {
           t,
         ).copyWith(fontSize: 13.5, color: t.inkFaint),
         counterText: '',
+        // A tap target like any other: at least 48px tall.
+        constraints: const BoxConstraints(minHeight: Sizes.touchMin),
         errorText: errorText,
         labelText: null,
         semanticCounterText: '',
         contentPadding: EdgeInsets.symmetric(
           horizontal: pill ? 16 : 14,
-          vertical: pill ? 11 : 12,
+          vertical: pill ? 13 : 12,
         ),
         enabledBorder: border(t.line, 1),
         focusedBorder: border(t.accentText, 1.5),

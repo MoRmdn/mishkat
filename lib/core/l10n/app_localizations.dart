@@ -2118,6 +2118,12 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'أمس'**
   String get yesterday;
+
+  /// No description provided for @justNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'الآن'**
+  String get justNow;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

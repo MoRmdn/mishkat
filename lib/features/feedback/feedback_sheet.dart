@@ -165,10 +165,15 @@ class _FeedbackSheetState extends ConsumerState<FeedbackSheet> {
           SegmentedControl<FeedbackType>(
             value: _type,
             onSurface: true,
+            fontSize: 12,
             onChanged: (v) => setState(() => _type = v),
             options: [
               for (final type in FeedbackType.values)
-                SegmentedOption(type, feedbackTypeLabel(l, type)),
+                SegmentedOption(
+                  type,
+                  feedbackTypeLabel(l, type),
+                  flex: type == FeedbackType.bug ? 5 : 4,
+                ),
             ],
           ),
         ],
@@ -214,7 +219,9 @@ class _FeedbackSheetState extends ConsumerState<FeedbackSheet> {
                 localizeDigits(FeedbackDraft.maxBody, lang),
               ),
               textAlign: TextAlign.end,
-              style: MishkatType.caption(t).copyWith(fontSize: 11),
+              style: MishkatType.caption(
+                t,
+              ).copyWith(fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ),
         if (!_isReport) ...[
@@ -299,15 +306,14 @@ class _AttachedThikr extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 6),
-          Row(
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: 8,
             children: [
-              Expanded(
-                child: Text(
-                  library?.referenceLine(thikr, lang) ?? '',
-                  style: MishkatType.caption(t).copyWith(fontSize: 11.5),
-                ),
+              Text(
+                library?.referenceLine(thikr, lang) ?? '',
+                style: MishkatType.caption(t).copyWith(fontSize: 11.5),
               ),
-              const SizedBox(width: 8),
               Text(
                 where,
                 style: MishkatType.caption(t).copyWith(fontSize: 11.5),

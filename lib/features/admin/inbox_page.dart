@@ -98,6 +98,7 @@ class _InboxPageState extends ConsumerState<InboxPage> {
                     ThreadRow(
                       thread: thread,
                       unread: thread.unreadForAdmin,
+                      dimmed: !thread.unreadForAdmin,
                       title: thread.preview.isEmpty
                           ? [
                               feedbackTypeLabel(l, thread.type),
@@ -105,12 +106,13 @@ class _InboxPageState extends ConsumerState<InboxPage> {
                             ].join(' · ')
                           : null,
                       onTap: () => openAdminThread(context, thread.id),
-                      meta: Row(
+                      meta: Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          if (thread.device != null) ...[
+                          if (thread.device != null)
                             LanguageTag(thread.device!.language),
-                            const SizedBox(width: 8),
-                          ],
                           Text(
                             formatRelative(
                               l,

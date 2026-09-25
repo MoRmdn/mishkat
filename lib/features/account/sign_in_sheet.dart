@@ -334,12 +334,14 @@ class MergeResultSheet extends ConsumerWidget {
     Widget chip(String label) => Container(
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: t.bg,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Text(label, style: MishkatType.body(t).copyWith(fontSize: 12.5)),
+      child: Center(
+        widthFactor: 1,
+        child: Text(label, style: MishkatType.body(t).copyWith(fontSize: 12.5)),
+      ),
     );
 
     return Column(

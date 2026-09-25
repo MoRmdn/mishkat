@@ -336,5 +336,6 @@
   "minutesAgo": "{count, plural, =1{1 min ago} other{{digits} min ago}}",
   "minutesAgoShort": "{digits}m ago",
   "hoursAgo": "{count, plural, =1{1 hour ago} other{{digits} hours ago}}",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "justNow": "just now"
 }

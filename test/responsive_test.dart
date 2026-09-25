@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mishkat/core/widgets/brand_mark.dart';
+import 'package:mishkat/core/widgets/buttons.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
+import 'package:mishkat/features/account/account_screen.dart';
+import 'package:mishkat/features/account/sign_in_sheet.dart';
+import 'package:mishkat/features/feedback/feedback_widgets.dart';
+import 'package:mishkat/services/auth/auth_service.dart';
+import 'package:mishkat/services/feedback/feedback_models.dart';
 import 'package:mishkat/data/models/thikr.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
 import 'package:mishkat/features/share/share_card.dart';
@@ -34,10 +41,11 @@ void main() {
     bool onboarding = true,
     Map<String, Object> prefs = const {},
     FakePermissionService? permissions,
+    AppHarness? harness,
   }) async {
     tester.platformDispatcher.textScaleFactorTestValue = 2;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-    final h = AppHarness(permissions: permissions);
+    final h = harness ?? AppHarness(permissions: permissions);
     await h.db.recordCompletion('wake', DateTime(2026, 9, 7, 5, 5));
     await h.db.recordCompletion('morning', DateTime(2026, 9, 6, 7));
     await h.pump(
@@ -112,9 +120,128 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('settings sheet fits — $name', (tester) async {
+    testWidgets('settings, sign-in and account fit — $name', (tester) async {
       await start(tester, v);
       await tester.tap(findIcon(MIcon.settings));
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.byType(SmallPillButton));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byType(ProviderButton).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(ProviderButton).first);
+      await AppHarness.settleWithDatabase(tester);
+      // The merge sheet: this device brought two completions.
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(AccountAvatar));
+      await AppHarness.settleWithDatabase(tester);
+      await tester.scrollUntilVisible(
+        find.text(tab(v.$1, 'حذف الحساب', 'Delete account')),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.tap(find.text(tab(v.$1, 'حذف الحساب', 'Delete account')));
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('feedback and the owner inbox fit — $name', (tester) async {
+      final h = AppHarness(
+        auth: FakeAuthService(
+          initialUser: const AppUser(uid: 'me', isAnonymous: false),
+        ),
+      );
+      h.feedback
+        ..admins.add('me')
+        ..seed(
+          FeedbackThread(
+            id: 't1',
+            uid: 'me',
+            type: FeedbackType.thikr,
+            status: FeedbackStatus.inReview,
+            preview: 'التشكيل في «يَضُرُّ» يختلف عن النسخة المطبوعة لديّ',
+            createdAt: DateTime(2026, 9, 6),
+            updatedAt: DateTime(2026, 9, 6),
+            unreadForUser: true,
+            unreadForAdmin: true,
+            thikrId: AppHarness.library.all.first.id,
+            issues: const {ThikrIssue.text, ThikrIssue.count},
+            contactEmail: 'someone.with.a.long.address@example.com',
+            device: const DeviceDetails(
+              appVersion: '1.2.0 (34)',
+              platform: 'Android 14 · Pixel 7 Pro',
+              language: 'ar',
+            ),
+          ),
+          messages: [
+            FeedbackMessage(
+              id: 'a',
+              from: MessageAuthor.user,
+              body:
+                  'التشكيل في «يَضُرُّ» يختلف عن نسخة حصن المسلم المطبوعة لديّ.',
+              createdAt: DateTime(2026, 9, 6, 9, 36),
+            ),
+            FeedbackMessage(
+              id: 'b',
+              from: MessageAuthor.admin,
+              body: 'Thanks — we checked the source and will add a note.',
+              createdAt: DateTime(2026, 9, 6, 10, 5),
+            ),
+          ],
+        );
+      await start(tester, v, harness: h);
+      await tester.tap(findIcon(MIcon.settings));
+      await AppHarness.settleWithDatabase(tester);
+
+      final feedback = find.text(tab(v.$1, 'ملاحظات واقتراحات', 'Feedback'));
+      await tester.scrollUntilVisible(
+        feedback,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.tap(feedback);
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.byType(ThreadRow).first);
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.bySemanticsLabel(tab(v.$1, 'رجوع', 'Back')).last);
+      await AppHarness.settleWithDatabase(tester);
+
+      await tester.tap(find.byType(PrimaryButton).last);
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      await tester.tap(find.bySemanticsLabel(tab(v.$1, 'رجوع', 'Back')).last);
+      await AppHarness.settleWithDatabase(tester);
+
+      final inbox = find.text(tab(v.$1, 'صندوق الوارد', 'Inbox'));
+      await tester.scrollUntilVisible(
+        find.byType(BrandMark),
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(inbox);
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.byType(ThreadRow).first);
+      await AppHarness.settleWithDatabase(tester);
+    });
+
+    testWidgets('the reader menu and a thikr report fit — $name', (
+      tester,
+    ) async {
+      await start(tester, v);
+      await tester.tap(find.text(tab(v.$1, 'صباح', 'Morning')).first);
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.bySemanticsLabel(tab(v.$1, 'المزيد', 'More')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.text(
+          tab(
+            v.$1,
+            'الإبلاغ عن خطأ في هذا الذكر',
+            'Report a problem with this thikr',
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
     });
 

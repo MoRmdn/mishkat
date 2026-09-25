@@ -4,11 +4,14 @@ import '../theme/mishkat_tokens.dart';
 import 'mishkat_icon.dart';
 
 class SegmentedOption<T> {
-  const SegmentedOption(this.value, this.label, {this.icon});
+  const SegmentedOption(this.value, this.label, {this.icon, this.flex = 1});
 
   final T value;
   final String label;
   final MIcon? icon;
+
+  /// Relative width, for a label longer than its neighbours.
+  final int flex;
 }
 
 /// The 2a segmented control: a pill track with the selected segment raised
@@ -24,6 +27,7 @@ class SegmentedControl<T> extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.onSurface = false,
+    this.fontSize = 13.5,
   });
 
   final List<SegmentedOption<T>> options;
@@ -32,6 +36,9 @@ class SegmentedControl<T> extends StatelessWidget {
 
   /// True inside a sheet or card, where the page colour is the recess.
   final bool onSurface;
+
+  /// 12 where three long labels share the track (the feedback types).
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +55,10 @@ class SegmentedControl<T> extends StatelessWidget {
         children: [
           for (final o in options)
             Expanded(
+              flex: o.flex,
               child: _Segment(
                 option: o,
+                fontSize: fontSize,
                 selected: o.value == value,
                 onTap: () => onChanged(o.value),
               ),
@@ -65,9 +74,11 @@ class _Segment<T> extends StatelessWidget {
     required this.option,
     required this.selected,
     required this.onTap,
+    required this.fontSize,
   });
 
   final SegmentedOption<T> option;
+  final double fontSize;
   final bool selected;
   final VoidCallback onTap;
 
@@ -88,7 +99,7 @@ class _Segment<T> extends StatelessWidget {
             duration: Motion.of(context, Motion.base),
             curve: Motion.curve,
             constraints: const BoxConstraints(minHeight: 40),
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: selected
@@ -111,7 +122,7 @@ class _Segment<T> extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: kUiFont,
-                      fontSize: 13.5,
+                      fontSize: fontSize,
                       fontWeight: selected ? FontWeight.w500 : FontWeight.w400,
                       color: fg,
                     ),

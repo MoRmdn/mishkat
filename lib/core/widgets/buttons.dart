@@ -132,19 +132,21 @@ class SmallPillButton extends StatelessWidget {
             child: Container(
               height: height,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: bg,
                 borderRadius: BorderRadius.circular(height / 2),
               ),
-              child: Text(
-                label,
-                maxLines: 1,
-                style: TextStyle(
-                  fontFamily: kUiFont,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: fg,
+              child: Center(
+                widthFactor: 1,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontFamily: kUiFont,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: fg,
+                  ),
                 ),
               ),
             ),

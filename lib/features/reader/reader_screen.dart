@@ -332,8 +332,8 @@ class _ReaderHeader extends ConsumerWidget {
     final action = await showMenu<_ReaderAction>(
       context: button,
       color: t.surfaceRaised,
-      elevation: 12,
-      shadowColor: MishkatTokens.dark.bg.withValues(alpha: 0.4),
+      elevation: 8,
+      shadowColor: MishkatTokens.dark.bg.withValues(alpha: 0.18),
       constraints: const BoxConstraints(minWidth: 220, maxWidth: 262),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Radii.lg),
