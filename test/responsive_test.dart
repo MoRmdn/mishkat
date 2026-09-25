@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mishkat/core/widgets/brand_mark.dart';
 import 'package:mishkat/core/widgets/buttons.dart';
 import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/features/account/account_screen.dart';
@@ -144,6 +143,27 @@ void main() {
       await tester.pumpAndSettle();
     });
 
+    testWidgets('the athkar sources page fits — $name', (tester) async {
+      await start(tester, v);
+      await tester.tap(findIcon(MIcon.settings));
+      await AppHarness.settleWithDatabase(tester);
+      final row = find.text(tab(v.$1, 'مصادر الأذكار', 'Athkar sources'));
+      await tester.scrollUntilVisible(
+        row,
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
+      await tester.tap(row);
+      await AppHarness.settleWithDatabase(tester);
+      await tester.scrollUntilVisible(
+        find.text(v.$1 == 'ar' ? 'إصدار المحتوى' : 'Content version'),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+    });
+
     testWidgets('feedback and the owner inbox fit — $name', (tester) async {
       final h = AppHarness(
         auth: FakeAuthService(
@@ -214,10 +234,11 @@ void main() {
 
       final inbox = find.text(tab(v.$1, 'صندوق الوارد', 'Inbox'));
       await tester.scrollUntilVisible(
-        find.byType(BrandMark),
-        300,
+        inbox,
+        200,
         scrollable: find.byType(Scrollable).last,
       );
+      await tester.ensureVisible(inbox);
       await tester.pumpAndSettle();
       await tester.tap(inbox);
       await AppHarness.settleWithDatabase(tester);

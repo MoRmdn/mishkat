@@ -82,6 +82,20 @@ void main() {
         handle.dispose();
       });
 
+      testWidgets('athkar sources page', (tester) async {
+        final handle = tester.ensureSemantics();
+        await start(tester);
+        await tester.tap(findIcon(MIcon.settings));
+        await tester.pumpAndSettle();
+        final row = find.text('مصادر الأذكار');
+        await tester.ensureVisible(row);
+        await tester.pumpAndSettle();
+        await tester.tap(row);
+        await AppHarness.settleWithDatabase(tester);
+        await check(tester);
+        handle.dispose();
+      });
+
       testWidgets('progress', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester);

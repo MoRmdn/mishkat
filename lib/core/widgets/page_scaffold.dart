@@ -19,10 +19,20 @@ class PageScaffold extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.bottom,
+    this.divider = false,
+    this.top,
   });
 
   final String title;
   final String? subtitle;
+
+  /// A hairline under the header, for a page whose body scrolls beneath it
+  /// (Settings, board AF 16a).
+  final bool divider;
+
+  /// Pinned between the header and the body, full width: Settings' account
+  /// card.
+  final Widget? top;
 
   /// Beside the title: the Inbox's unread count, a thread's status chip.
   final Widget? trailing;
@@ -41,7 +51,13 @@ class PageScaffold extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PageHeader(title: title, subtitle: subtitle, trailing: trailing),
+            PageHeader(
+              title: title,
+              subtitle: subtitle,
+              trailing: trailing,
+              divider: divider,
+            ),
+            ?top,
             Expanded(child: body),
             ?bottom,
           ],
@@ -59,18 +75,25 @@ class PageHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.divider = false,
   });
 
   final String title;
   final String? subtitle;
   final Widget? trailing;
+  final bool divider;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
     final l = L.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 14, 18, 0),
+    return Container(
+      padding: EdgeInsets.fromLTRB(18, 14, 18, divider ? 12 : 0),
+      decoration: divider
+          ? BoxDecoration(
+              border: Border(bottom: BorderSide(color: t.line)),
+            )
+          : null,
       child: Row(
         children: [
           IconCircleButton(

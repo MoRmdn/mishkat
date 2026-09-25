@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,6 +7,7 @@ import '../../core/external_links.dart';
 import '../../core/format/relative_time.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/share_link.dart';
+import '../../core/store_links.dart';
 import '../../core/theme/mishkat_tokens.dart';
 import '../../core/widgets/app_sheet.dart' show SheetSectionLabel;
 import '../../core/widgets/brand_mark.dart';
@@ -26,6 +28,7 @@ import '../account/sign_in_sheet.dart';
 import '../admin/inbox_page.dart';
 import '../feedback/feedback_list_page.dart';
 import 'settings_controller.dart';
+import 'sources_page.dart';
 
 Future<void> openSettings(BuildContext context) =>
     pushPage(context, (_) => const SettingsPage());
@@ -41,10 +44,12 @@ class SettingsPage extends ConsumerWidget {
     final cloud = ref.watch(cloudAvailableProvider);
     return PageScaffold(
       title: l.settings,
+      divider: true,
+      // Pinned under the header, edge to edge: the groups scroll beneath it.
+      top: cloud ? const _AccountCard() : null,
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
         children: [
-          if (cloud) ...[const _AccountCard(), const SizedBox(height: 16)],
           _Group(label: l.settingsReading, child: const _ReadingGroup()),
           const SizedBox(height: 16),
           _Group(
@@ -79,9 +84,14 @@ class _Group extends StatelessWidget {
 }
 
 /// Signed out: the glowSoft invitation. Signed in: the avatar row that
-/// opens Account.
+/// opens Account. Full width under the header's hairline, so only its lower
+/// corners are rounded.
 class _AccountCard extends ConsumerWidget {
   const _AccountCard();
+
+  static const _cardRadius = BorderRadius.vertical(
+    bottom: Radius.circular(Radii.lg),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -94,6 +104,7 @@ class _AccountCard extends ConsumerWidget {
       final lang = ref.watch(settingsProvider).language.name;
       final now = ref.watch(clockProvider)();
       final last = status.lastSyncAt;
+      final title = accountTitle(account, appleAccount: l.appleAccount);
       final line = switch (status.phase) {
         SyncPhase.syncing => l.syncSyncing,
         SyncPhase.offline => l.syncOfflineBody,
@@ -105,11 +116,11 @@ class _AccountCard extends ConsumerWidget {
       };
       return Material(
         color: t.surface,
-        borderRadius: BorderRadius.circular(Radii.lg),
+        borderRadius: _cardRadius,
         clipBehavior: Clip.antiAlias,
         child: Semantics(
           button: true,
-          label: '${l.account}، ${account.label}، $line',
+          label: '${l.account}، $title، $line',
           excludeSemantics: true,
           child: InkWell(
             onTap: () => openAccount(context),
@@ -124,7 +135,7 @@ class _AccountCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          account.label,
+                          title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: MishkatType.label(t).copyWith(fontSize: 14),
@@ -166,10 +177,7 @@ class _AccountCard extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: t.glowSoft,
-        borderRadius: BorderRadius.circular(Radii.lg),
-      ),
+      decoration: BoxDecoration(color: t.glowSoft, borderRadius: _cardRadius),
       child: Row(
         children: [
           Container(
@@ -406,8 +414,15 @@ class _AboutGroup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = L.of(context);
     final lang = ref.watch(settingsProvider).language.name;
+    final launch = ref.read(externalLinkLauncherProvider);
     return GroupCard(
       children: [
+        if (kShowRateApp)
+          NavRow(
+            label: l.rateApp,
+            external: true,
+            onTap: () => launch(rateAppUri(defaultTargetPlatform)),
+          ),
         for (final page in LegalPage.values)
           NavRow(
             label: switch (page) {
@@ -415,9 +430,9 @@ class _AboutGroup extends ConsumerWidget {
               LegalPage.terms => l.termsOfUse,
             },
             external: true,
-            onTap: () =>
-                ref.read(externalLinkLauncherProvider)(legalPage(page, lang)),
+            onTap: () => launch(legalPage(page, lang)),
           ),
+        NavRow(label: l.thikrSources, onTap: () => openSources(context)),
       ],
     );
   }

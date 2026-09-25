@@ -448,6 +448,17 @@ void main() {
       await shot('af_16a_settings_owner_ar');
     });
 
+    testWidgets('16a athkar sources', (tester) async {
+      await AppHarness().pump(tester, size: board, now: now);
+      await openSettings(tester);
+      final row = find.text('مصادر الأذكار');
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
+      await tester.tap(row);
+      await AppHarness.settleWithDatabase(tester);
+      await shot('af_16a_sources_ar');
+    });
+
     testWidgets('1b settings, signed in owner, English dark', (tester) async {
       final h = owner();
       h.feedback.seed(

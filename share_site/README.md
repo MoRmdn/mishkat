@@ -16,7 +16,9 @@ Served by Firebase Hosting on the `mishkat-al-wird` project (`firebase.json`,
 ## Before the first release deploy
 
 1. **App Store ID.** Replace `APP_STORE_ID` in `public/t/index.html` with the
-   numeric ID from App Store Connect → App Information → Apple ID.
+   numeric ID from App Store Connect → App Information → Apple ID. Put the
+   same ID in `kAppStoreId` (`lib/core/store_links.dart`): release builds hide
+   Settings' «قيّم التطبيق» until it is set.
 2. **Android fingerprints.** `assetlinks.json` holds only the local debug key.
    Add the SHA‑256 of the **app signing key** and of the **upload key** from
    Play Console → Test and release → App integrity. Play re-signs every
