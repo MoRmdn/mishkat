@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "9295918147-dhi6uor2a41pgngbfh9p0i0ap4ockh6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mormdn.mishkat",
+            "certificate_hash": "94877839181ee2ba20bcdc453f5d9f8520611303"
+          }
+        },
+        {
           "client_id": "9295918147-l31ua3iefcns4o6f8996e7etq4s9l97r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
