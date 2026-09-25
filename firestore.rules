@@ -1,0 +1,147 @@
+rules_version = '2';
+
+// Mishkat Al-Wird. Tested in firestore_rules_test/ against the emulator.
+//
+// users/{uid}/**        a signed-in user's synced progress, favourites and
+//                       settings: theirs alone.
+// feedback/{id}         a conversation. The sender reads their own; the owner
+//                       (admins/{uid}) reads all and alone changes status.
+// admins/{uid}          written from the console only.
+// counters/feedback     the owner's running message number.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function changed() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    match /admins/{uid} {
+      allow get: if isSelf(uid);
+      allow list, write: if false;
+    }
+
+    match /counters/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    match /users/{uid} {
+      allow read, delete: if isSelf(uid);
+      // lastFeedbackAt is the feedback rate limit, so it may only ever move
+      // to the time of the request that writes it.
+      allow create: if isSelf(uid)
+        && (!('lastFeedbackAt' in request.resource.data)
+            || request.resource.data.lastFeedbackAt == request.time);
+      allow update: if isSelf(uid)
+        && (!('lastFeedbackAt' in changed())
+            || request.resource.data.lastFeedbackAt == request.time);
+
+      match /{rest=**} {
+        allow read, write: if isSelf(uid);
+      }
+    }
+
+    match /feedback/{id} {
+      function thread() {
+        return /databases/$(database)/documents/feedback/$(id);
+      }
+
+      function userDoc() {
+        return /databases/$(database)/documents/users/$(request.auth.uid);
+      }
+
+      function validNew(d) {
+        return d.keys().hasOnly(['uid', 'type', 'status', 'preview', 'issues',
+            'thikrId', 'contentVersion', 'contactEmail', 'device',
+            'createdAt', 'updatedAt', 'unreadForUser', 'unreadForAdmin'])
+          && d.uid == request.auth.uid
+          && d.type in ['feature', 'thikr', 'bug']
+          && d.status == 'new'
+          && d.unreadForUser == false
+          && d.unreadForAdmin == true
+          && d.createdAt == request.time
+          && d.updatedAt == request.time
+          && d.preview is string && d.preview.size() <= 200
+          && d.issues is list && d.issues.size() <= 4
+          && (d.get('thikrId', null) == null
+              || (d.thikrId is string && d.thikrId.size() <= 64))
+          && (d.get('contentVersion', null) == null
+              || (d.contentVersion is string && d.contentVersion.size() <= 64))
+          && (d.get('contactEmail', null) == null
+              || (d.contactEmail is string && d.contactEmail.size() <= 200))
+          && (d.get('device', null) == null || d.device is map);
+      }
+
+      // One new conversation a minute per sender: the submission must stamp
+      // users/{uid}.lastFeedbackAt in the same transaction, and the previous
+      // stamp must be at least a minute old.
+      function withinRate() {
+        return getAfter(userDoc()).data.get('lastFeedbackAt', null) == request.time
+          && (!exists(userDoc())
+              || get(userDoc()).data.get('lastFeedbackAt', null) == null
+              || get(userDoc()).data.lastFeedbackAt
+                   < request.time - duration.value(60, 's'));
+      }
+
+      // resource == null lets the sender's transaction check that a draft
+      // has not already been delivered, without revealing anyone's thread.
+      allow get: if signedIn()
+        && (resource == null || resource.data.uid == request.auth.uid || isAdmin());
+      allow list: if signedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+
+      allow create: if signedIn() && validNew(request.resource.data) && withinRate();
+
+      allow update: if
+        // The owner: status, number, read flags.
+        (isAdmin()
+          && changed().hasOnly(['status', 'closedAt', 'number',
+                                'unreadForAdmin', 'unreadForUser', 'updatedAt'])
+          && request.resource.data.status in ['new', 'inReview', 'answered', 'closed'])
+        // The sender: mark the team's reply read.
+        || (isSelf(resource.data.uid)
+          && changed().hasOnly(['unreadForUser'])
+          && request.resource.data.unreadForUser == false)
+        // The sender: reply to an open conversation.
+        || (isSelf(resource.data.uid)
+          && resource.data.status != 'closed'
+          && changed().hasOnly(['unreadForAdmin', 'updatedAt'])
+          && request.resource.data.unreadForAdmin == true
+          && request.resource.data.updatedAt == request.time);
+
+      allow delete: if isSelf(resource.data.uid);
+
+      match /messages/{mid} {
+        allow read: if signedIn()
+          && (isAdmin() || get(thread()).data.uid == request.auth.uid);
+
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['from', 'body', 'createdAt'])
+          && request.resource.data.body is string
+          && request.resource.data.body.size() <= 2000
+          && request.resource.data.createdAt == request.time
+          && ((request.resource.data.from == 'admin' && isAdmin())
+              // getAfter: the first message is written in the same
+              // transaction that creates its thread.
+              || (request.resource.data.from == 'user'
+                  && getAfter(thread()).data.uid == request.auth.uid
+                  && getAfter(thread()).data.status != 'closed'));
+
+        allow update: if false;
+        allow delete: if signedIn() && get(thread()).data.uid == request.auth.uid;
+      }
+    }
+  }
+}

@@ -79,6 +79,19 @@
 	</array>
 	<!-- app_links receives Universal Links; Flutter's own handler would also
 	     push them onto the navigator as routes. -->
+	<!-- Google Sign-In returns to the app through its reversed client ID
+	     (REVERSED_CLIENT_ID in GoogleService-Info.plist). -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.9295918147-fc5vqo3kv859e6pfmkqgujbsq0pk9lnj</string>
+			</array>
+		</dict>
+	</array>
 	<key>FlutterDeepLinkingEnabled</key>
 	<false/>
 </dict>

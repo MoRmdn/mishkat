@@ -1,0 +1,13 @@
+{
+  "name": "mishkat-firestore-rules-test",
+  "private": true,
+  "description": "firestore.rules against the Firestore emulator. Needs a JDK (the emulator is Java) and firebase-tools.",
+  "type": "module",
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore --project demo-mishkat --config ../firebase.json \"node --test rules.test.js\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^11.10.0"
+  }
+}
