@@ -33,7 +33,10 @@ the evening.
 - Save any thikr, and share it as an image with its reference
 - Light and dark appearance, or follow your device
 - Full Arabic and English, with Arabic-Indic numerals throughout
-- Completely offline. No account, no tracking, no ads
+- Optional sign-in with Apple or Google keeps your streak, favourites and
+  settings on every device
+- Send suggestions or report a mistake in a thikr, and read the reply in the app
+- Works fully offline. Account optional, no tracking, no ads
 
 ## Description (Arabic)
 
@@ -50,7 +53,9 @@ the evening.
 - حفظ أي ذكر ومشاركته كصورة مع تخريجه
 - مظهر فاتح وغامق، أو حسب إعداد الجهاز
 - عربي وإنجليزي بالكامل
-- يعمل دون إنترنت. بلا حساب، بلا تتبّع، بلا إعلانات
+- تسجيل دخول اختياري بحساب Apple أو Google يحفظ تتابعك ومفضلتك وإعداداتك على كل أجهزتك
+- أرسل اقتراحك أو أبلغ عن خطأ في ذكر، واقرأ الرد داخل التطبيق
+- يعمل دون إنترنت. الحساب اختياري، بلا تتبّع، بلا إعلانات
 
 ## Permissions to declare
 
@@ -61,9 +66,32 @@ the evening.
 | Battery optimisation exemption | Some vendors cancel scheduled alarms | Yes |
 | Approximate location | Prayer-time calculation, on-device only | Yes — city list is offered instead |
 
-Google Play requires a Data Safety declaration. The honest answer is: **no data
-collected or shared** unless analytics is enabled in the shipped build, in which
-case declare app interactions and crash logs, not linked to identity.
+Sign in with Apple and Google Sign-In need no extra runtime permission.
+
+## Data Safety (Google Play) and App Privacy (App Store)
+
+Nothing is collected until the user signs in or sends feedback; everything below
+is optional for the user, linked to their account, encrypted in transit, and
+deletable in the app (Settings → Account → Delete account). None of it is used
+for advertising, tracking or sold.
+
+| Data type (Play category) | Collected when | Purpose |
+|---|---|---|
+| Name, email address (Personal info) | Signing in | Account management |
+| User IDs (Personal info) | Signing in, or sending feedback while signed out (anonymous ID) | Account management, app functionality |
+| App activity: other actions (routines completed, favourites) | Signed in | App functionality (sync) |
+| App info: other (settings, incl. city chosen — not coordinates) | Signed in | App functionality (sync) |
+| Messages: other in-app messages (feedback text, optional contact email) | Sending feedback | Developer communications |
+| Device or other IDs / diagnostics (app version, OS version, device model) | Feedback with "attach device information" on | Analytics of the reported problem |
+
+Location is **not** collected: coordinates never leave the device. If analytics
+or crash reporting is enabled in the shipped build, also declare app
+interactions and crash logs (see `docs/firebase.md`).
+
+App Store: the same data under "Contact Info", "Identifiers", "User Content"
+and "Usage Data", all "Linked to You", none "Used to Track You". Account
+deletion is in the app, as guideline 5.1.1(v) requires, and revokes the Sign in
+with Apple token.
 
 ## Before first submission
 
@@ -76,7 +104,8 @@ case declare app interactions and crash logs, not linked to identity.
       print or store-graphic use (see the design handoff README).
 - [ ] Configure a release signing key; the release build currently signs with
       the debug key (`android/app/build.gradle.kts`).
-- [ ] Set up Firebase if diagnostics are wanted — see `docs/firebase.md`.
+- [ ] Finish the Firebase console setup for accounts and feedback, and deploy
+      `firestore.rules` — see `docs/firebase.md`.
 - [ ] Deploy `share_site/` (`firebase deploy --only hosting`), then enter the
       policy URLs: App Store Connect → App Privacy, and Play Console → App
       content → Privacy policy.

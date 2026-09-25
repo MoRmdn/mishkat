@@ -11,8 +11,19 @@ you do not agree, please do not use the app.
 
 ## The service
 
-The app is free. It shows athkar and sets reminders on your device. It needs no
-account and works offline. How it handles data is set out in the Privacy Policy.
+The app is free. It shows athkar and sets reminders on your device. It works
+offline, and needs no account. How it handles data is set out in the Privacy
+Policy.
+
+## Account and feedback
+
+Signing in with Apple or Google is optional and only syncs your progress,
+favourites and settings between devices. You can sign out, or delete the
+account and everything synced to it, from Settings at any time.
+
+Feedback is read by the developer and answered in the app when possible; a
+reply is not guaranteed. Please keep messages respectful and about the app. A
+conversation may be closed, and abusive messages removed.
 
 ## Content
 

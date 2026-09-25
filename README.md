@@ -33,7 +33,9 @@ than into the reading UI.
   morning before you have opened the app.
 - **Share a thikr as an image** — aubergine or stone, 1080×1080, taller when
   the text needs it — with its تخريج always travelling with the text.
-- **Completely offline.** No account, no sign-in, nothing sent anywhere.
+- **Works fully offline.** Nothing leaves the device unless you choose to: an
+  optional Apple/Google account syncs progress, favourites and settings, and
+  feedback reaches the developer, whose replies appear in the app.
 
 ## Two decisions worth knowing up front
 

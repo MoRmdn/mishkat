@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy Policy — Mishkat Al-Wird</title>
-<meta name="description" content="Mishkat Al-Wird works on your device, with no account and no servers.">
+<meta name="description" content="Mishkat Al-Wird works on your device. An account and feedback are optional.">
 <link rel="icon" href="/icon.png">
 <link rel="stylesheet" href="/site.css">
 </head>
@@ -20,29 +20,71 @@
 <p class="updated">Last updated: 25 September 2026</p>
 
 <p>Mishkat Al-Wird is an athkar app with timed reminders. It is designed to work
-entirely on your device.</p>
+entirely on your device. An account is optional, and nothing in the app requires one.</p>
 
-<h2>What the app does not do</h2>
+<h2>By default: nothing leaves your device</h2>
 <ul>
-  <li><strong>No account.</strong> There is no sign-up, no sign-in and no user profile.</li>
-  <li><strong>No servers.</strong> The app has no backend. Your favourites, streaks,
-    reading progress and reminder settings are stored only on your device and are
-    deleted when you uninstall the app.</li>
-  <li><strong>No advertising</strong>, and no data sold or shared with third parties.</li>
+  <li><strong>No account needed.</strong> You can use every part of the app without
+    signing in.</li>
+  <li>Your athkar, favourites, streaks and reminder settings are stored on your device
+    and are deleted when you uninstall the app.</li>
+  <li><strong>No advertising</strong>, and no data sold or shared with anyone for their
+    own use.</li>
 </ul>
+<p>Two things change this, and both happen only if you choose them: signing in, and
+sending feedback.</p>
+
+<h2>If you sign in (optional)</h2>
+<p>You can sign in with Apple or Google so that your progress, favourites and settings
+follow you to other devices. The account is kept with Google Firebase (Authentication
+and Cloud Firestore), which processes it on our behalf. We store:</p>
+<ul>
+  <li>your account identifier, and the name and email address Apple or Google share
+    with us (Apple lets you hide your email);</li>
+  <li>the routines you completed: which routine and on which day;</li>
+  <li>your favourites: which athkar, and when you added or removed them;</li>
+  <li>your settings: appearance, language, text size, the Quranic-script choice,
+    reminder mode and times, and the prayer-time calculation method, Asr madhab,
+    whether device location is used, and the city you chose.</li>
+</ul>
+<p>We do <strong>not</strong> store your location coordinates or your unfinished
+reading sessions; those stay on the device. Your synced data is used only to keep your
+devices in step.</p>
+<p><strong>Signing out</strong> stops syncing and leaves everything on this device.
+<strong>Deleting your account</strong> (Settings → Account → Delete account)
+permanently removes the account, everything synced to it and your feedback messages.
+What is saved on the device stays there.</p>
+
+<h2>Feedback (optional)</h2>
+<p>You can send a suggestion, a bug report or a report of a mistake in a thikr. We
+store:</p>
+<ul>
+  <li>what you write, and the replies we send;</li>
+  <li>an email address, only if you give one;</li>
+  <li>if you leave “Attach device information” on: the app version, your system version
+    and device model, and the app language;</li>
+  <li>for a thikr report, which thikr it was and which edition of the text you were
+    reading.</li>
+</ul>
+<p>If you are not signed in, sending feedback creates an anonymous identifier so our
+reply can reach you in the app. Feedback is read only by the developer, is never used
+for marketing, and is deleted with your account or on request by email. Replies appear
+in the app only; we never send push notifications.</p>
+<p>To protect this service from abuse, Firebase App Check confirms that requests come
+from the genuine app, using Google Play Integrity or Apple App Attest.</p>
 
 <h2>Saved reading</h2>
 <p>An unfinished reading session is saved on your device: the texts selected, their
-repetition counts and your current position, so that you can resume it without an
-account or a network connection. Completing a session removes its saved checkpoint;
+repetition counts and your current position, so that you can resume it without a
+network connection. It is never synced. Completing a session removes its saved checkpoint;
 starting again replaces it.</p>
 
 <h2>Location</h2>
 <p>If you turn on prayer-time reminders, the app may ask for your approximate location.</p>
 <ul>
   <li>It is used <strong>only on your device</strong>, to calculate prayer times.</li>
-  <li>It is <strong>never transmitted anywhere</strong>. The calculation is astronomical
-    and runs offline.</li>
+  <li>It is <strong>never transmitted anywhere</strong>, even when you are signed in.
+    The calculation is astronomical and runs offline.</li>
   <li>Only coarse accuracy is requested: enough for a city, not for a street.</li>
   <li>You can refuse. The app then lets you pick a city from a list, or falls back to
     fixed clock times. Nothing stops working.</li>
@@ -82,10 +124,11 @@ devices?</strong> Some manufacturers stop background apps aggressively and silen
 cancel scheduled alarms, and comparing reminders scheduled against reminders opened is
 the only way to detect it.</p>
 <p>Diagnostics do <strong>not</strong> include the athkar you read, when you pray, your
-location, or any identifier that could single you out.</p>
+location, what you write in feedback, or any identifier that could single you out.</p>
 
 <h2>Children</h2>
-<p>The app collects no personal data and is suitable for all ages.</p>
+<p>The app needs no personal data to work and is suitable for all ages. Signing in and
+sending feedback are optional.</p>
 
 <h2>Changes</h2>
 <p>If this policy changes, the new version will be published on this page with a new
