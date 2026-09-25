@@ -6,6 +6,9 @@ import '../../services/diagnostics.dart';
 import '../../services/notification_service.dart';
 import '../../services/permission_service.dart';
 import '../../services/reminder_scheduler.dart';
+import '../../services/sync/settings_codec.dart';
+import '../../services/sync/sync_models.dart';
+import '../../services/sync/sync_service.dart';
 import '../settings/settings_controller.dart';
 import 'prayer_controller.dart';
 
@@ -27,6 +30,20 @@ class ReminderController extends Notifier<ReminderSettings> {
   ReminderSettings build() => ref.read(settingsStoreProvider).readReminders();
 
   void _update(ReminderSettings next) {
+    final synced = syncedValuesDiffer(
+      SettingsCodec.encodeReminders(state),
+      SettingsCodec.encodeReminders(next),
+    );
+    state = next;
+    ref.read(settingsStoreProvider).writeReminders(next);
+    if (synced) {
+      ref.read(syncProvider.notifier).settingsChanged(SyncGroup.reminders);
+    }
+  }
+
+  /// Adopts reminders pulled from the account. The schedule follows through
+  /// currentScheduleProvider like any other change.
+  void replaceFromSync(ReminderSettings next) {
     state = next;
     ref.read(settingsStoreProvider).writeReminders(next);
   }

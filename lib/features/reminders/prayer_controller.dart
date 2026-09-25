@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/models/prayer_settings.dart';
 import '../../services/prayer_time_service.dart';
+import '../../services/sync/settings_codec.dart';
+import '../../services/sync/sync_models.dart';
+import '../../services/sync/sync_service.dart';
 import '../settings/settings_controller.dart';
 
 final prayerTimeServiceProvider = Provider<PrayerTimeService>(
@@ -18,8 +21,25 @@ class PrayerController extends Notifier<PrayerSettings> {
   }
 
   void _update(PrayerSettings next) {
+    // A new GPS fix changes only the coordinates, which never sync.
+    final synced = syncedValuesDiffer(
+      SettingsCodec.encodePrayer(state),
+      SettingsCodec.encodePrayer(next),
+    );
     state = next;
     ref.read(settingsStoreProvider).writePrayer(next);
+    if (synced) {
+      ref.read(syncProvider.notifier).settingsChanged(SyncGroup.prayer);
+    }
+  }
+
+  /// Adopts prayer settings pulled from the account. Coordinates stay this
+  /// device's own; switching to device location fetches a fresh fix.
+  void replaceFromSync(PrayerSettings next) {
+    final wantsFix = next.useDeviceLocation && !state.useDeviceLocation;
+    state = next;
+    ref.read(settingsStoreProvider).writePrayer(next);
+    if (wantsFix) Future.microtask(refreshLocation);
   }
 
   void cycleMethod() => _update(state.copyWith(method: state.method.next));

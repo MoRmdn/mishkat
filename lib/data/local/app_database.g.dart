@@ -31,8 +31,19 @@ class $FavoritesTable extends Favorites
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [thikrId, addedAt];
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [thikrId, addedAt, deletedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -61,6 +72,12 @@ class $FavoritesTable extends Favorites
     } else if (isInserting) {
       context.missing(_addedAtMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -78,6 +95,10 @@ class $FavoritesTable extends Favorites
         DriftSqlType.dateTime,
         data['${effectivePrefix}added_at'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -90,17 +111,31 @@ class $FavoritesTable extends Favorites
 class Favorite extends DataClass implements Insertable<Favorite> {
   final String thikrId;
   final DateTime addedAt;
-  const Favorite({required this.thikrId, required this.addedAt});
+  final DateTime? deletedAt;
+  const Favorite({
+    required this.thikrId,
+    required this.addedAt,
+    this.deletedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['thikr_id'] = Variable<String>(thikrId);
     map['added_at'] = Variable<DateTime>(addedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
   FavoritesCompanion toCompanion(bool nullToAbsent) {
-    return FavoritesCompanion(thikrId: Value(thikrId), addedAt: Value(addedAt));
+    return FavoritesCompanion(
+      thikrId: Value(thikrId),
+      addedAt: Value(addedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
   }
 
   factory Favorite.fromJson(
@@ -111,6 +146,7 @@ class Favorite extends DataClass implements Insertable<Favorite> {
     return Favorite(
       thikrId: serializer.fromJson<String>(json['thikrId']),
       addedAt: serializer.fromJson<DateTime>(json['addedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -119,17 +155,24 @@ class Favorite extends DataClass implements Insertable<Favorite> {
     return <String, dynamic>{
       'thikrId': serializer.toJson<String>(thikrId),
       'addedAt': serializer.toJson<DateTime>(addedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
-  Favorite copyWith({String? thikrId, DateTime? addedAt}) => Favorite(
+  Favorite copyWith({
+    String? thikrId,
+    DateTime? addedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => Favorite(
     thikrId: thikrId ?? this.thikrId,
     addedAt: addedAt ?? this.addedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   Favorite copyWithCompanion(FavoritesCompanion data) {
     return Favorite(
       thikrId: data.thikrId.present ? data.thikrId.value : this.thikrId,
       addedAt: data.addedAt.present ? data.addedAt.value : this.addedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -137,44 +180,51 @@ class Favorite extends DataClass implements Insertable<Favorite> {
   String toString() {
     return (StringBuffer('Favorite(')
           ..write('thikrId: $thikrId, ')
-          ..write('addedAt: $addedAt')
+          ..write('addedAt: $addedAt, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(thikrId, addedAt);
+  int get hashCode => Object.hash(thikrId, addedAt, deletedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Favorite &&
           other.thikrId == this.thikrId &&
-          other.addedAt == this.addedAt);
+          other.addedAt == this.addedAt &&
+          other.deletedAt == this.deletedAt);
 }
 
 class FavoritesCompanion extends UpdateCompanion<Favorite> {
   final Value<String> thikrId;
   final Value<DateTime> addedAt;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const FavoritesCompanion({
     this.thikrId = const Value.absent(),
     this.addedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   FavoritesCompanion.insert({
     required String thikrId,
     required DateTime addedAt,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : thikrId = Value(thikrId),
        addedAt = Value(addedAt);
   static Insertable<Favorite> custom({
     Expression<String>? thikrId,
     Expression<DateTime>? addedAt,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (thikrId != null) 'thikr_id': thikrId,
       if (addedAt != null) 'added_at': addedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -182,11 +232,13 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
   FavoritesCompanion copyWith({
     Value<String>? thikrId,
     Value<DateTime>? addedAt,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return FavoritesCompanion(
       thikrId: thikrId ?? this.thikrId,
       addedAt: addedAt ?? this.addedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -200,6 +252,9 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
     if (addedAt.present) {
       map['added_at'] = Variable<DateTime>(addedAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -211,6 +266,7 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
     return (StringBuffer('FavoritesCompanion(')
           ..write('thikrId: $thikrId, ')
           ..write('addedAt: $addedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -771,12 +827,14 @@ typedef $$FavoritesTableCreateCompanionBuilder =
     FavoritesCompanion Function({
       required String thikrId,
       required DateTime addedAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$FavoritesTableUpdateCompanionBuilder =
     FavoritesCompanion Function({
       Value<String> thikrId,
       Value<DateTime> addedAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -796,6 +854,11 @@ class $$FavoritesTableFilterComposer
 
   ColumnFilters<DateTime> get addedAt => $composableBuilder(
     column: $table.addedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -818,6 +881,11 @@ class $$FavoritesTableOrderingComposer
     column: $table.addedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$FavoritesTableAnnotationComposer
@@ -834,6 +902,9 @@ class $$FavoritesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get addedAt =>
       $composableBuilder(column: $table.addedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$FavoritesTableTableManager
@@ -866,20 +937,24 @@ class $$FavoritesTableTableManager
               ({
                 Value<String> thikrId = const Value.absent(),
                 Value<DateTime> addedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FavoritesCompanion(
                 thikrId: thikrId,
                 addedAt: addedAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String thikrId,
                 required DateTime addedAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FavoritesCompanion.insert(
                 thikrId: thikrId,
                 addedAt: addedAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

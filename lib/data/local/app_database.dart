@@ -8,9 +8,14 @@ import 'package:path/path.dart' as p;
 part 'app_database.g.dart';
 
 /// Athkar the user has kept.
+///
+/// Removing one leaves a tombstone ([deletedAt] set) instead of deleting the
+/// row, so the removal can reach the user's other devices through sync. Every
+/// read the app makes filters tombstones out.
 class Favorites extends Table {
   TextColumn get thikrId => text()();
   DateTimeColumn get addedAt => dateTime()();
+  DateTimeColumn get deletedAt => dateTime().nullable()();
 
   @override
   Set<Column> get primaryKey => {thikrId};
@@ -58,13 +63,14 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.memory() : super(NativeDatabase.memory());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
       if (from < 2) await m.createTable(readerCheckpoints);
+      if (from < 3) await m.addColumn(favorites, favorites.deletedAt);
     },
   );
 
@@ -82,10 +88,14 @@ class AppDatabase extends _$AppDatabase {
 
   /// Completion and checkpoint removal either both commit or both survive
   /// for retry after a process interruption.
-  Future<void> finishReading(String key, String? category, DateTime now) =>
+  ///
+  /// Returns true when this recorded a new completion, as [recordCompletion].
+  Future<bool> finishReading(String key, String? category, DateTime now) =>
       transaction(() async {
-        if (category != null) await recordCompletion(category, now);
+        final recorded =
+            category != null && await recordCompletion(category, now);
         await deleteReaderCheckpoint(key);
+        return recorded;
       });
 
   static QueryExecutor _open() {
@@ -99,26 +109,50 @@ class AppDatabase extends _$AppDatabase {
 
   // ---- favourites ----
 
-  Stream<List<Favorite>> watchFavorites() => (select(
-    favorites,
-  )..orderBy([(f) => OrderingTerm.desc(f.addedAt)])).watch();
-
   Future<List<Favorite>> allFavorites() =>
-      (select(favorites)..orderBy([(f) => OrderingTerm.desc(f.addedAt)])).get();
+      (select(favorites)
+            ..where((f) => f.deletedAt.isNull())
+            ..orderBy([(f) => OrderingTerm.desc(f.addedAt)]))
+          .get();
+
+  /// Every row, tombstones included. For sync only.
+  Future<List<Favorite>> favoriteRows() => select(favorites).get();
+
+  Future<Favorite?> favoriteRow(String thikrId) => (select(
+    favorites,
+  )..where((f) => f.thikrId.equals(thikrId))).getSingleOrNull();
 
   Future<void> addFavorite(String thikrId, DateTime now) =>
       into(favorites).insertOnConflictUpdate(
-        FavoritesCompanion.insert(thikrId: thikrId, addedAt: now),
+        FavoritesCompanion.insert(
+          thikrId: thikrId,
+          addedAt: now,
+          deletedAt: const Value(null),
+        ),
       );
 
-  Future<bool> isFavorite(String thikrId) async =>
-      await (select(
-        favorites,
-      )..where((f) => f.thikrId.equals(thikrId))).getSingleOrNull() !=
-      null;
+  Future<bool> isFavorite(String thikrId) async {
+    final row = await favoriteRow(thikrId);
+    return row != null && row.deletedAt == null;
+  }
 
-  Future<void> removeFavorite(String thikrId) =>
-      (delete(favorites)..where((f) => f.thikrId.equals(thikrId))).go();
+  Future<void> removeFavorite(String thikrId, DateTime now) =>
+      (update(favorites)..where((f) => f.thikrId.equals(thikrId))).write(
+        FavoritesCompanion(deletedAt: Value(now)),
+      );
+
+  /// Writes a row exactly as another device left it. For sync only.
+  Future<void> putFavoriteRow(
+    String thikrId, {
+    required DateTime addedAt,
+    DateTime? deletedAt,
+  }) => into(favorites).insertOnConflictUpdate(
+    FavoritesCompanion.insert(
+      thikrId: thikrId,
+      addedAt: addedAt,
+      deletedAt: Value(deletedAt),
+    ),
+  );
 
   // ---- completions ----
 
@@ -152,5 +186,18 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<Completion>> allCompletions() => select(completions).get();
 
-  Stream<List<Completion>> watchCompletions() => select(completions).watch();
+  /// Adds a completion another device recorded, unless this device already
+  /// has one for that day and category. For sync only.
+  Future<void> putCompletion({
+    required String category,
+    required String day,
+    required DateTime completedAt,
+  }) => into(completions).insert(
+    CompletionsCompanion.insert(
+      category: category,
+      day: day,
+      completedAt: completedAt,
+    ),
+    mode: InsertMode.insertOrIgnore,
+  );
 }

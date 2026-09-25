@@ -16,6 +16,10 @@ import 'package:mishkat/data/repositories/progress_providers.dart';
 import 'package:mishkat/features/reminders/reminder_controller.dart';
 import 'package:mishkat/features/settings/settings_controller.dart';
 import 'package:mishkat/features/share/share_link_scope.dart';
+import 'package:mishkat/services/app_info.dart';
+import 'package:mishkat/services/auth/auth_service.dart';
+import 'package:mishkat/services/feedback/feedback_repository.dart';
+import 'package:mishkat/services/sync/sync_remote.dart';
 import 'package:mishkat/services/notification_service.dart';
 import 'package:mishkat/services/permission_service.dart';
 import 'package:mishkat/services/reminder_scheduler.dart';
@@ -23,6 +27,10 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:wakelock_plus_platform_interface/wakelock_plus_platform_interface.dart';
+
+import 'cloud_fakes.dart';
+
+export 'cloud_fakes.dart';
 
 /// Records what would have been scheduled, without touching the OS.
 class FakeNotificationService implements NotificationService {
@@ -123,11 +131,21 @@ class AppHarness {
   AppHarness({
     FakeNotificationService? notifications,
     FakePermissionService? permissions,
+    FakeAuthService? auth,
+    this.cloud = true,
   }) : notifications = notifications ?? FakeNotificationService(),
-       permissions = permissions ?? FakePermissionService();
+       permissions = permissions ?? FakePermissionService(),
+       auth = auth ?? FakeAuthService();
 
   final FakeNotificationService notifications;
   final FakePermissionService permissions;
+
+  /// Accounts and feedback, with no Firebase. [cloud] false is a build where
+  /// Firebase failed to start.
+  final FakeAuthService auth;
+  final FakeSyncRemote syncRemote = FakeSyncRemote();
+  final FakeFeedbackRepository feedback = FakeFeedbackRepository();
+  final bool cloud;
   final FakeWakelock wakelock = FakeWakelock();
 
   /// A fresh in-memory database per test; nothing touches the real file.
@@ -221,6 +239,16 @@ class AppHarness {
           ),
           clockProvider.overrideWithValue(
             () => now ?? DateTime(2026, 9, 7, 3, 18),
+          ),
+          cloudAvailableProvider.overrideWithValue(cloud),
+          authServiceProvider.overrideWithValue(auth),
+          syncRemoteProvider.overrideWithValue(syncRemote),
+          feedbackRepositoryProvider.overrideWithValue(feedback),
+          appInfoProvider.overrideWith(
+            (ref) => const AppInfo(
+              version: '1.2.0 (34)',
+              platform: 'Android 14 · Pixel 7',
+            ),
           ),
         ],
         child: const MishkatApp(),

@@ -33,9 +33,14 @@ dependencies:
   screenshot: ^3.0.0
   share_plus: ^13.3.0
   path: ^1.9.1
-  firebase_core: ^4.14.0
+  firebase_core: ^4.15.0
   app_links: ^7.2.1
   url_launcher: ^6.3.2
+  firebase_auth: ^6.7.0
+  cloud_firestore: ^6.10.0
+  firebase_app_check: ^0.4.8
+  google_sign_in: ^7.2.0
+  package_info_plus: ^10.2.1
 
 # permission_handler_android 13.x declares in its AAR metadata that consumers
 # must compile against Android API 37. That platform is not published yet, and
@@ -56,6 +61,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.8
   image: ^4.9.2
+  fake_cloud_firestore: ^4.3.0
 
 # Platform icons and launch screen, from the 2a handoff's exports in
 # assets/branding/png (source files only — not bundled into the app).

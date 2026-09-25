@@ -1,6 +1,7 @@
 {
   "_warning": "PLACEHOLDER CONTENT — source-checking draft. Initial corrections are documented in docs/athkar-content-review.md. Arabic text, meanings, counts, category placement and references still require qualified human approval before release.",
   "schemaVersion": 1,
+  "contentVersion": "2026-09-24-draft.1",
   "sources": {
     "muslim": {
       "ar": "رواه مسلم",

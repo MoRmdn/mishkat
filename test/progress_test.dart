@@ -176,7 +176,7 @@ void main() {
       await db.addFavorite('mo2', now);
       expect((await db.allFavorites()).map((f) => f.thikrId), ['mo2']);
 
-      await db.removeFavorite('mo2');
+      await db.removeFavorite('mo2', DateTime(2026, 9, 7));
       expect(await db.allFavorites(), isEmpty);
     });
 

@@ -111,6 +111,45 @@ class SettingsStore {
     }
   }
 
+  // ---- account sync ----
+  //
+  // Per-group "last changed" stamps for last-writer-wins, as milliseconds
+  // since the epoch. Absent until the user first changes that group, so a
+  // fresh install adopts an account's settings instead of overwriting them.
+
+  static String _stampKey(String group) => 'sync.updatedAt.$group';
+  static String _cursorKey(String uid) => 'sync.completionsCursor.$uid';
+  static const _kLastSync = 'sync.lastSyncAt';
+  static const _kNudgeDismissed = 'nudge.saveStreak.dismissedAt';
+
+  DateTime? syncStamp(String group) => _date(_prefs.getInt(_stampKey(group)));
+
+  Future<void> setSyncStamp(String group, DateTime at) =>
+      _prefs.setInt(_stampKey(group), at.millisecondsSinceEpoch);
+
+  /// Server time of the newest completion pulled for [uid].
+  DateTime? completionsCursor(String uid) =>
+      _date(_prefs.getInt(_cursorKey(uid)));
+
+  Future<void> setCompletionsCursor(String uid, DateTime at) =>
+      _prefs.setInt(_cursorKey(uid), at.millisecondsSinceEpoch);
+
+  DateTime? get lastSyncAt => _date(_prefs.getInt(_kLastSync));
+
+  Future<void> setLastSyncAt(DateTime? at) => at == null
+      ? _prefs.remove(_kLastSync)
+      : _prefs.setInt(_kLastSync, at.millisecondsSinceEpoch);
+
+  /// When the "save your streak" card on Progress was last dismissed.
+  DateTime? get streakNudgeDismissedAt =>
+      _date(_prefs.getInt(_kNudgeDismissed));
+
+  Future<void> dismissStreakNudge(DateTime at) =>
+      _prefs.setInt(_kNudgeDismissed, at.millisecondsSinceEpoch);
+
+  static DateTime? _date(int? ms) =>
+      ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
+
   Future<void> write(AppSettings s) async {
     await Future.wait([
       _prefs.setString(_kAppearance, s.appearance.name),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/l10n/app_localizations.dart';
 import 'core/theme/mishkat_tokens.dart';
+import 'features/account/cloud_scope.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/reminders/reminder_sync_scope.dart';
 import 'features/settings/settings_controller.dart';
@@ -34,7 +35,9 @@ class MishkatApp extends ConsumerWidget {
       // Onboarding runs the permission ladder before the shell appears.
       // Skipping it lands on a working home with reminders off.
       home: settings.onboardingComplete
-          ? const ReminderSyncScope(child: ShareLinkScope(child: AppShell()))
+          ? const ReminderSyncScope(
+              child: CloudScope(child: ShareLinkScope(child: AppShell())),
+            )
           : const OnboardingScreen(),
     );
   }

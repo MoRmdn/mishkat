@@ -209,6 +209,55 @@ void main() {
       expect((await db.allCompletions()).single.day, '2026-09-23');
       await db.saveReaderCheckpoint('routine:morning', 'snapshot');
       expect(await db.readerCheckpoint('routine:morning'), 'snapshot');
+      // Schema 3's tombstone column arrived with the upgrade.
+      await db.removeFavorite('a', now);
+      expect(await db.allFavorites(), isEmpty);
     }
+  });
+
+  test('schema 2 gains favourite tombstones and keeps every row', () async {
+    final legacyFile = File('${directory.path}/v2.sqlite');
+    await reader().flush();
+    container.dispose();
+    await db.close();
+    db = AppDatabase(
+      NativeDatabase(
+        legacyFile,
+        setup: (raw) {
+          raw.execute(
+            'CREATE TABLE favorites (thikr_id TEXT NOT NULL PRIMARY KEY, added_at INTEGER NOT NULL)',
+          );
+          raw.execute(
+            'CREATE TABLE completions (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, day TEXT NOT NULL, completed_at INTEGER NOT NULL, UNIQUE(day, category))',
+          );
+          raw.execute(
+            'CREATE TABLE reader_checkpoints (session_key TEXT NOT NULL PRIMARY KEY, snapshot TEXT NOT NULL)',
+          );
+          raw.execute("INSERT INTO favorites VALUES ('a', 1), ('b', 2)");
+          raw.execute(
+            "INSERT INTO reader_checkpoints VALUES ('routine:morning', 'kept')",
+          );
+          raw.execute('PRAGMA user_version = 2');
+        },
+      ),
+    );
+    container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        clockProvider.overrideWithValue(() => now),
+      ],
+    );
+    expect((await db.allFavorites()).map((f) => f.thikrId).toSet(), {'a', 'b'});
+    expect(await db.readerCheckpoint('routine:morning'), 'kept');
+
+    await db.removeFavorite('a', now);
+    expect((await db.allFavorites()).single.thikrId, 'b');
+    // The row stays, as a tombstone sync can carry to other devices.
+    final rows = await db.favoriteRows();
+    expect(rows.firstWhere((f) => f.thikrId == 'a').deletedAt, now);
+
+    // Adding it back clears the tombstone.
+    await db.addFavorite('a', now);
+    expect(await db.isFavorite('a'), isTrue);
   });
 }

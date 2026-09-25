@@ -9,6 +9,7 @@ import '../../core/theme/mishkat_tokens.dart' show Motion;
 import '../../data/models/thikr.dart';
 import '../../data/repositories/progress_providers.dart';
 import '../../services/diagnostics.dart';
+import '../../services/sync/sync_service.dart';
 
 /// Delay before a thikr whose count has reached zero advances to the next one.
 /// Long enough to register the completion, short enough not to feel like a wait.
@@ -303,10 +304,12 @@ class ReaderController extends Notifier<AthkarState> {
         ? s.category.key
         : null;
     final diagnostics = ref.read(diagnosticsProvider);
+    final sync = ref.read(syncProvider.notifier);
     _enqueue(() async {
-      await db.finishReading(key, category, now);
+      final recorded = await db.finishReading(key, category, now);
       if (ref.mounted) invalidateProgress(ref);
       if (category != null) diagnostics.sessionCompleted(category);
+      if (recorded) sync.completionRecorded(category!, now);
     });
   }
 
@@ -323,12 +326,14 @@ class ReaderController extends Notifier<AthkarState> {
     // a value while something is listening, so reading it here would silently
     // treat "not subscribed" as "not favourited".
     final db = ref.read(appDatabaseProvider);
+    final now = ref.read(clockProvider)();
     if (await db.isFavorite(thikrId)) {
-      await db.removeFavorite(thikrId);
+      await db.removeFavorite(thikrId, now);
     } else {
-      await db.addFavorite(thikrId, ref.read(clockProvider)());
+      await db.addFavorite(thikrId, now);
     }
     invalidateProgress(ref);
+    await ref.read(syncProvider.notifier).favoriteChanged(thikrId);
   }
 
   /// How many athkar in [items] are fully counted down.
