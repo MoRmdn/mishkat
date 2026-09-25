@@ -12,13 +12,15 @@ import 'feedback/feedback_repository.dart';
 import 'feedback/firestore_feedback_repository.dart';
 import 'sync/firestore_sync_remote.dart';
 import 'sync/sync_remote.dart';
+import 'update/remote_config_update_source.dart';
+import 'update/update_config.dart';
 
 /// `--dart-define=FIREBASE_EMULATOR=10.0.2.2` points Auth and Firestore at
 /// the local emulator suite (`firebase emulators:start`) for manual testing.
 const _emulatorHost = String.fromEnvironment('FIREBASE_EMULATOR');
 
-/// Starts Firebase for accounts and feedback, and returns the provider
-/// overrides that switch them on.
+/// Starts Firebase for accounts, feedback and the update gate, and returns
+/// the provider overrides that switch them on.
 ///
 /// Never fatal: when Firebase cannot start — no config, no Play services, a
 /// sideloaded build — the app runs exactly as it did before accounts
@@ -43,6 +45,7 @@ Future<List<Override>> startCloud() async {
       await FirebaseAuth.instance.useAuthEmulator(_emulatorHost, 9099);
     }
     return [
+      ...await _updateConfig(),
       cloudAvailableProvider.overrideWithValue(true),
       authServiceProvider.overrideWithValue(FirebaseAuthService()),
       syncRemoteProvider.overrideWithValue(FirestoreSyncRemote(firestore)),
@@ -52,6 +55,18 @@ Future<List<Override>> startCloud() async {
     ];
   } catch (e, st) {
     debugPrint('Firebase unavailable, accounts and feedback hidden: $e\n$st');
+    return const [];
+  }
+}
+
+/// Remote Config's update gate, or nothing if it cannot start — accounts and
+/// feedback do not depend on it.
+Future<List<Override>> _updateConfig() async {
+  try {
+    final source = await RemoteConfigUpdateSource.start();
+    return [updateConfigSourceProvider.overrideWithValue(source)];
+  } catch (e) {
+    debugPrint('Remote Config unavailable, no update checks: $e');
     return const [];
   }
 }

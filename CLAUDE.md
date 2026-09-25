@@ -14,6 +14,8 @@ Accounts, feedback, the owner inbox and the Settings page are on the extension
 board **AF** (`Mishkat AF Accounts Feedback.dc.html`, in the handoff's
 `design/`), same tokens and components; its flow PNGs are too large for the
 design API, so review against the board HTML.
+App updates are on the board **UP** (`Mishkat Update Required.dc.html`, also
+in the handoff's `design/`).
 `AthkarPhone.dc.html` is the earlier prototype: still the reference for the
 state machine and content, but its three themes and dark-only reader are
 superseded. `ios-frame.jsx` / `android-frame.jsx` are canvas device bezels,
@@ -72,6 +74,22 @@ pre-generated document id) before touching the network and removes it only
 when the server confirms, so a first message sent offline, before any
 anonymous user exists, is not lost. Submission is a transaction, which fails
 fast offline and is idempotent on retry.
+
+**Updates are gated by Remote Config and never block on it.**
+`recommended_version` offers the sheet, `min_supported_version` covers the
+app with the required screen (`UpdateGate`, in `MaterialApp.builder`, so it is
+over onboarding and every route). What to show is decided in the pure
+`lib/services/update/update_policy.dart` (`test/update_policy_test.dart`).
+Cached values apply before any fetch, so going offline does not skip a
+required update, and a failed fetch never blocks. Below the minimum, reading
+stays open behind «متابعة القراءة فقط», reminders already scheduled keep
+firing and prayer-window top-ups continue, but `SyncController` writes and
+pulls nothing (`sync()` waits for the cached decision first), sign-in and the
+account profile stop, and a reminder or prayer *choice* does not take — guard
+new server writes on `updateBlocksWritesProvider`. Android installs through
+Play In-App Updates and falls back to the store page; iOS always opens the App
+Store. Every release adds its entry to `assets/data/changelog.json` (both
+languages) — `test/changelog_test.dart` fails if the pubspec version has none.
 
 **Two scheduling strategies, and they are not interchangeable:**
 
@@ -196,6 +214,7 @@ catches an error here.
 | 2a | `feat/redesign-2a` | Dusk Grid redesign: tokens, fonts, icons, brand, every screen | ✅ done |
 | SL | `feat/share-links` | Share links: app_links, entitlements, App Links, store-redirect site | 🚧 app side done; store IDs + deploy pending |
 | AF | `feat/accounts-feedback` | Optional Apple/Google account and sync, feedback, owner inbox, Settings sheet (16b) + «عن التطبيق» page (16a) | 🚧 code done; console setup in `docs/firebase.md` |
+| UP | `feat/app-update` | Optional/required updates (Remote Config, Play In-App Updates), «ما الجديد» changelog | 🚧 code done; Remote Config parameters in `docs/firebase.md` |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.
@@ -215,9 +234,10 @@ cannot both be satisfied. Drop both once API 37 ships.
 lib/core/       theme (MishkatTokens, BrandColors), l10n (ARB ar/en, labels), format, widgets
 lib/data/       models, local (prefs, drift), repositories
 lib/services/   notification, scheduler, prayer times, permissions,
-                auth, sync (pure merge + controller), feedback (repository, outbox)
+                auth, sync (pure merge + controller), feedback (repository, outbox),
+                update (versions, pure policy, Remote Config, Play updater)
 lib/features/   onboarding home reader tasbih reminders favorites progress settings share shell
-                account feedback admin
+                account feedback admin update
 firestore.rules, firestore.indexes.json, firestore_rules_test/
 ```
 

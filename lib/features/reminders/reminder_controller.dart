@@ -10,6 +10,7 @@ import '../../services/sync/settings_codec.dart';
 import '../../services/sync/sync_models.dart';
 import '../../services/sync/sync_service.dart';
 import '../settings/settings_controller.dart';
+import '../update/update_controller.dart';
 import 'prayer_controller.dart';
 
 final notificationServiceProvider = Provider<NotificationService>(
@@ -34,6 +35,9 @@ class ReminderController extends Notifier<ReminderSettings> {
       SettingsCodec.encodeReminders(state),
       SettingsCodec.encodeReminders(next),
     );
+    // Below the minimum version the reminders the user already has keep
+    // firing, but they cannot be changed (the Reminders tab says so).
+    if (synced && ref.read(updateBlocksWritesProvider)) return;
     state = next;
     ref.read(settingsStoreProvider).writeReminders(next);
     if (synced) {

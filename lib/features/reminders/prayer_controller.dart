@@ -6,6 +6,7 @@ import '../../services/sync/settings_codec.dart';
 import '../../services/sync/sync_models.dart';
 import '../../services/sync/sync_service.dart';
 import '../settings/settings_controller.dart';
+import '../update/update_controller.dart';
 
 final prayerTimeServiceProvider = Provider<PrayerTimeService>(
   (ref) => const PrayerTimeService(),
@@ -26,6 +27,9 @@ class PrayerController extends Notifier<PrayerSettings> {
       SettingsCodec.encodePrayer(state),
       SettingsCodec.encodePrayer(next),
     );
+    // Below the minimum version the user's choices are frozen; a fresh GPS
+    // fix still lands, so prayer-mode reminders stay on time.
+    if (synced && ref.read(updateBlocksWritesProvider)) return;
     state = next;
     ref.read(settingsStoreProvider).writePrayer(next);
     if (synced) {

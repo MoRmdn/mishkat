@@ -10,6 +10,7 @@ import 'features/reminders/reminder_sync_scope.dart';
 import 'features/settings/settings_controller.dart';
 import 'features/share/share_link_scope.dart';
 import 'features/shell/app_shell.dart';
+import 'features/update/update_scope.dart';
 
 class MishkatApp extends ConsumerWidget {
   const MishkatApp({super.key});
@@ -32,11 +33,15 @@ class MishkatApp extends ConsumerWidget {
       theme: buildMishkatTheme(Brightness.light),
       darkTheme: buildMishkatTheme(Brightness.dark),
       themeMode: settings.appearance.themeMode,
+      // The required-update screen covers every route, onboarding included.
+      builder: (context, child) => UpdateGate(child: child!),
       // Onboarding runs the permission ladder before the shell appears.
       // Skipping it lands on a working home with reminders off.
       home: settings.onboardingComplete
           ? const ReminderSyncScope(
-              child: CloudScope(child: ShareLinkScope(child: AppShell())),
+              child: CloudScope(
+                child: UpdatePrompts(child: ShareLinkScope(child: AppShell())),
+              ),
             )
           : const OnboardingScreen(),
     );

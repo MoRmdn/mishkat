@@ -1320,4 +1320,105 @@ class LEn extends L {
 
   @override
   String get justNow => 'just now';
+
+  @override
+  String get updateAvailableTitle => 'A new update is available';
+
+  @override
+  String get updateAvailableBody =>
+      'Small improvements that make your wird easier.';
+
+  @override
+  String updateVersionChip(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get updateNow => 'Update now';
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String get updateFromAppStore => 'Update on the App Store';
+
+  @override
+  String get updateFromPlay => 'Update on Google Play';
+
+  @override
+  String get updateMetaInApp => 'Downloads in the background';
+
+  @override
+  String get updateMetaStore => 'Opens the app\'s store page';
+
+  @override
+  String get updateDownloading => 'Downloading the update';
+
+  @override
+  String get updateDownloadingHint =>
+      'You can keep reading while it downloads.';
+
+  @override
+  String get updateReady => 'The update is ready';
+
+  @override
+  String get updateReadyHint => 'It takes seconds, and your progress is kept.';
+
+  @override
+  String get updateRestart => 'Restart';
+
+  @override
+  String get updateApplying => 'Applying the update…';
+
+  @override
+  String updatedTo(String version) {
+    return 'Updated to $version';
+  }
+
+  @override
+  String get whatsNew => 'What\'s new';
+
+  @override
+  String whatsNewVersion(String version) {
+    return 'What\'s new in $version';
+  }
+
+  @override
+  String get updateRequiredTitle => 'Mishkat needs an update';
+
+  @override
+  String get updateRequiredBody =>
+      'This version no longer supports sync and the new reminders. Your progress and favourites stay safe on this device.';
+
+  @override
+  String updateVersions(String from, String to) {
+    return 'From version $from to $to';
+  }
+
+  @override
+  String get keepReadingOnly => 'Keep reading only';
+
+  @override
+  String get updateUpdating => 'Updating…';
+
+  @override
+  String get updateAutoRestart =>
+      'The app restarts on its own when it\'s done.';
+
+  @override
+  String get updateOfflineTitle => 'No connection';
+
+  @override
+  String get updateOfflineBody =>
+      'Connect to the internet to download the update.';
+
+  @override
+  String get updateLockedTitle => 'Mishkat needs an update';
+
+  @override
+  String get updateLockedBody =>
+      'Update Mishkat to change reminders or sync. Your current reminders still arrive.';
+
+  @override
+  String get updateAction => 'Update';
 }

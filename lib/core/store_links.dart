@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-/// The app's store listings, for «قيّم التطبيق».
+/// The app's store listings, for «قيّم التطبيق» and updates.
 ///
 /// The App Store ID exists only once the listing is created in App Store
 /// Connect; the same ID goes in `share_site/public/t/index.html`. Until then
@@ -30,3 +30,13 @@ Uri rateAppUri(TargetPlatform platform) {
     ),
   };
 }
+
+/// The listing an update is installed from. Until the App Store ID exists,
+/// iOS goes to the site, which sends a phone on to its store.
+Uri storePageUri(TargetPlatform platform) => switch (platform) {
+  TargetPlatform.iOS || TargetPlatform.macOS =>
+    kStoreLinksReady
+        ? Uri.parse('https://apps.apple.com/app/id$kAppStoreId')
+        : Uri.parse('https://mishkatalwird.com/'),
+  _ => Uri.parse('https://play.google.com/store/apps/details?id=$kPlayPackage'),
+};

@@ -1,12 +1,13 @@
 # Firebase
 
-Project `mishkat-al-wird`. Firebase does four jobs here, and reminders are none
+Project `mishkat-al-wird`. Firebase does five jobs here, and reminders are none
 of them — they stay local notifications, with no Cloud Messaging:
 
 | Service | Used for | State |
 |---|---|---|
 | Hosting | `share_site/`: share links, privacy and terms | live |
 | Auth + Firestore + App Check | the optional account (sync) and feedback | code done; console setup below |
+| Remote Config | optional and required app updates | code done; parameters below |
 | Crashlytics + Analytics | `lib/services/diagnostics.dart` | not wired |
 
 The app starts Firebase in `lib/services/cloud_bootstrap.dart`. If that fails —
@@ -71,6 +72,44 @@ Apple and Google accounts.
    the first run logs a debug token, which you add under *Manage debug tokens*.
 7. Watch the App Check metrics for a week of real traffic, then **enforce** for
    Firestore and Authentication.
+
+## Remote Config: app updates
+
+The update gate (board "Mishkat Update Required",
+`lib/features/update/`, rules in `lib/services/update/update_policy.dart`)
+reads four parameters. Create them in **Remote Config → Parameters**; until
+they exist the defaults apply and nothing is ever suggested or required.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `recommended_version` | string | `0.0.0` | Below it, the «تحديث جديد متاح» sheet is offered — once per version, then at most every 3 days. |
+| `min_supported_version` | string | `0.0.0` | Below it, «يلزم تحديث مشكاة» covers the app; sync, the account and reminder changes stop. |
+| `release_notes` | JSON string | empty | What the sheet lists for `recommended_version` (below). Shown only when its `version` matches. |
+| `update_allow_reading` | boolean | `true` | Offers «متابعة القراءة فقط» behind the required screen. |
+
+`release_notes` has the same shape as a release in the bundled
+`assets/data/changelog.json`; `icon` is an `MIcon` name, and a name this
+build does not know shows ⓘ:
+
+```json
+{"version": "1.3.0", "notes": [
+  {"icon": "bell", "ar": "تذكيرات أدق على أجهزة شاومي وهواوي", "en": "More accurate reminders on Xiaomi and Huawei"}
+]}
+```
+
+- **Per platform**: iOS review lags Android, so give each parameter a
+  *Platform* condition (Android / iOS) rather than inventing separate keys.
+- **Raise `min_supported_version` only once the store build is live** on that
+  platform; otherwise the button leads to a store that cannot install it.
+- A version is `major.minor.patch`; a mistyped value switches the gate off
+  rather than blocking anyone.
+- Fetches time out after 10 s and are throttled to one an hour in release.
+  The last activated values persist, so a required update holds offline; a
+  failed fetch never blocks a launch.
+- Android installs through Play In-App Updates, which only works for a build
+  installed from Play — test it from an internal-testing track. Everywhere
+  else the buttons open the store page (`storePageUri` in
+  `lib/core/store_links.dart`; iOS needs `kAppStoreId`).
 
 ## Rules tests
 

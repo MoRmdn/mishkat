@@ -9,6 +9,7 @@ import '../../services/sync/sync_remote.dart';
 import '../../services/sync/sync_service.dart';
 import '../../services/sync/user_profile.dart';
 import '../settings/settings_controller.dart';
+import '../update/update_controller.dart';
 
 /// Signing in, out, and deleting the account — each a few steps across auth,
 /// sync and feedback that the screens should not have to sequence.
@@ -41,6 +42,7 @@ class AccountActions {
   Future<void> saveProfile([AppUser? user]) async {
     final who = user ?? _auth.currentUser;
     if (who == null || who.isAnonymous) return;
+    if (_ref.read(updateBlocksWritesProvider)) return;
     AppInfo? info;
     try {
       info = await _ref.read(appInfoProvider.future);

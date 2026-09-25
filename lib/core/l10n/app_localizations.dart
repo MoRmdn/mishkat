@@ -2172,6 +2172,180 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'الآن'**
   String get justNow;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث جديد متاح'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحسينات صغيرة تجعل وِردك أيسر.'**
+  String get updateAvailableBody;
+
+  /// No description provided for @updateVersionChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار {version}'**
+  String updateVersionChip(String version);
+
+  /// No description provided for @updateNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث الآن'**
+  String get updateNow;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'لاحقاً'**
+  String get updateLater;
+
+  /// No description provided for @updateFromAppStore.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحديث من App Store'**
+  String get updateFromAppStore;
+
+  /// No description provided for @updateFromPlay.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحديث من Google Play'**
+  String get updateFromPlay;
+
+  /// No description provided for @updateMetaInApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُنزَّل في الخلفية'**
+  String get updateMetaInApp;
+
+  /// No description provided for @updateMetaStore.
+  ///
+  /// In ar, this message translates to:
+  /// **'يفتح صفحة التطبيق في المتجر'**
+  String get updateMetaStore;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ تنزيل التحديث'**
+  String get updateDownloading;
+
+  /// No description provided for @updateDownloadingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك متابعة وِردك أثناء التنزيل.'**
+  String get updateDownloadingHint;
+
+  /// No description provided for @updateReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحديث جاهز'**
+  String get updateReady;
+
+  /// No description provided for @updateReadyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يستغرق ثوانيَ، وتقدّمك محفوظ.'**
+  String get updateReadyHint;
+
+  /// No description provided for @updateRestart.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعد التشغيل'**
+  String get updateRestart;
+
+  /// No description provided for @updateApplying.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ تطبيق التحديث…'**
+  String get updateApplying;
+
+  /// No description provided for @updatedTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحديث إلى {version}'**
+  String updatedTo(String version);
+
+  /// No description provided for @whatsNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما الجديد'**
+  String get whatsNew;
+
+  /// No description provided for @whatsNewVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما الجديد في {version}'**
+  String whatsNewVersion(String version);
+
+  /// No description provided for @updateRequiredTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يلزم تحديث مشكاة'**
+  String get updateRequiredTitle;
+
+  /// No description provided for @updateRequiredBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الإصدار لم يعد يدعم المزامنة والتذكيرات الجديدة. تقدّمك ومفضلتك محفوظة على جهازك ولن تتأثر.'**
+  String get updateRequiredBody;
+
+  /// No description provided for @updateVersions.
+  ///
+  /// In ar, this message translates to:
+  /// **'من الإصدار {from} إلى {to}'**
+  String updateVersions(String from, String to);
+
+  /// No description provided for @keepReadingOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة القراءة فقط'**
+  String get keepReadingOnly;
+
+  /// No description provided for @updateUpdating.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ التحديث…'**
+  String get updateUpdating;
+
+  /// No description provided for @updateAutoRestart.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُعاد تشغيل التطبيق تلقائياً عند الانتهاء.'**
+  String get updateAutoRestart;
+
+  /// No description provided for @updateOfflineTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد اتصال'**
+  String get updateOfflineTitle;
+
+  /// No description provided for @updateOfflineBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل بالإنترنت لتنزيل التحديث.'**
+  String get updateOfflineBody;
+
+  /// No description provided for @updateLockedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يلزم تحديث التطبيق'**
+  String get updateLockedTitle;
+
+  /// No description provided for @updateLockedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث مشكاة لتعديل التذكيرات أو المزامنة. تذكيراتك الحالية تصل كما هي.'**
+  String get updateLockedBody;
+
+  /// No description provided for @updateAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث'**
+  String get updateAction;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

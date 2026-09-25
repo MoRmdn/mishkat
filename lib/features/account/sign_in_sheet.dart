@@ -19,11 +19,20 @@ import '../../data/repositories/progress_providers.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/sync/merge.dart';
 import '../settings/settings_controller.dart';
+import '../update/update_controller.dart';
 import 'account_actions.dart';
 
 /// Board AF 2 → 3: the sign-in sheet, then either the merge result (when
 /// this device brought anything to the account) or a "signed in" toast.
+///
+/// Below `min_supported_version` it brings back the required screen instead:
+/// an old build must not start syncing.
 Future<void> showSignInFlow(BuildContext context) async {
+  final container = ProviderScope.containerOf(context, listen: false);
+  if (container.read(updateBlocksWritesProvider)) {
+    container.read(updateProvider.notifier).showRequired();
+    return;
+  }
   final result = await showAppSheet<_SignedIn>(
     context,
     (_) => const SignInSheet(),

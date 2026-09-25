@@ -6,6 +6,8 @@ import 'package:mishkat/services/feedback/feedback_repository.dart';
 import 'package:mishkat/services/sync/sync_models.dart';
 import 'package:mishkat/services/sync/sync_remote.dart';
 import 'package:mishkat/services/sync/user_profile.dart';
+import 'package:mishkat/services/update/app_updater.dart';
+import 'package:mishkat/services/update/update_config.dart';
 
 /// Sign-in without Firebase. [nextUser] is who the provider sheet "returns".
 class FakeAuthService implements AuthService {
@@ -354,4 +356,69 @@ class FakeFeedbackRepository implements FeedbackRepository {
         ? updatedAt ?? t.updatedAt
         : t.closedAt,
   );
+}
+
+/// Published versions without Remote Config. [cachedConfig] is what the
+/// device last activated; [fetched] is what a refresh brings, or null for a
+/// fetch that fails (offline) and leaves the cached values.
+class FakeUpdateConfigSource implements UpdateConfigSource {
+  FakeUpdateConfigSource([this.cachedConfig = UpdateConfig.none]);
+
+  UpdateConfig cachedConfig;
+  UpdateConfig? fetched;
+  int refreshes = 0;
+
+  @override
+  UpdateConfig cached() => cachedConfig;
+
+  @override
+  Future<UpdateConfig> refresh() async {
+    refreshes++;
+    if (fetched != null) cachedConfig = fetched!;
+    return cachedConfig;
+  }
+}
+
+/// Play and the store, recorded. [inApp] false is an iOS device or a build
+/// not installed from Play.
+class FakeAppUpdater implements AppUpdater {
+  bool online = true;
+  bool inApp = true;
+
+  /// What the flexible download reports before it completes.
+  List<double?> progress = [0.4];
+
+  /// Completes the download; left open, it stays at the last [progress].
+  bool finishDownload = true;
+  ImmediateResult immediateResult = ImmediateResult.declined;
+
+  int downloads = 0;
+  int installs = 0;
+  int immediateUpdates = 0;
+  int storeOpens = 0;
+
+  @override
+  Future<bool> isOnline() async => online;
+
+  @override
+  Future<bool> canUpdateInApp() async => inApp;
+
+  @override
+  Stream<double?> downloadInBackground() async* {
+    downloads++;
+    yield* Stream.fromIterable(progress);
+    if (!finishDownload) await Completer<void>().future;
+  }
+
+  @override
+  Future<void> installDownloaded() async => installs++;
+
+  @override
+  Future<ImmediateResult> updateImmediately() async {
+    immediateUpdates++;
+    return immediateResult;
+  }
+
+  @override
+  Future<void> openStorePage() async => storeOpens++;
 }

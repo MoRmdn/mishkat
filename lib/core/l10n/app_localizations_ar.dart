@@ -1351,4 +1351,101 @@ class LAr extends L {
 
   @override
   String get justNow => 'الآن';
+
+  @override
+  String get updateAvailableTitle => 'تحديث جديد متاح';
+
+  @override
+  String get updateAvailableBody => 'تحسينات صغيرة تجعل وِردك أيسر.';
+
+  @override
+  String updateVersionChip(String version) {
+    return 'الإصدار $version';
+  }
+
+  @override
+  String get updateNow => 'حدّث الآن';
+
+  @override
+  String get updateLater => 'لاحقاً';
+
+  @override
+  String get updateFromAppStore => 'التحديث من App Store';
+
+  @override
+  String get updateFromPlay => 'التحديث من Google Play';
+
+  @override
+  String get updateMetaInApp => 'يُنزَّل في الخلفية';
+
+  @override
+  String get updateMetaStore => 'يفتح صفحة التطبيق في المتجر';
+
+  @override
+  String get updateDownloading => 'جارٍ تنزيل التحديث';
+
+  @override
+  String get updateDownloadingHint => 'يمكنك متابعة وِردك أثناء التنزيل.';
+
+  @override
+  String get updateReady => 'التحديث جاهز';
+
+  @override
+  String get updateReadyHint => 'يستغرق ثوانيَ، وتقدّمك محفوظ.';
+
+  @override
+  String get updateRestart => 'أعد التشغيل';
+
+  @override
+  String get updateApplying => 'جارٍ تطبيق التحديث…';
+
+  @override
+  String updatedTo(String version) {
+    return 'تم التحديث إلى $version';
+  }
+
+  @override
+  String get whatsNew => 'ما الجديد';
+
+  @override
+  String whatsNewVersion(String version) {
+    return 'ما الجديد في $version';
+  }
+
+  @override
+  String get updateRequiredTitle => 'يلزم تحديث مشكاة';
+
+  @override
+  String get updateRequiredBody =>
+      'هذا الإصدار لم يعد يدعم المزامنة والتذكيرات الجديدة. تقدّمك ومفضلتك محفوظة على جهازك ولن تتأثر.';
+
+  @override
+  String updateVersions(String from, String to) {
+    return 'من الإصدار $from إلى $to';
+  }
+
+  @override
+  String get keepReadingOnly => 'متابعة القراءة فقط';
+
+  @override
+  String get updateUpdating => 'جارٍ التحديث…';
+
+  @override
+  String get updateAutoRestart => 'يُعاد تشغيل التطبيق تلقائياً عند الانتهاء.';
+
+  @override
+  String get updateOfflineTitle => 'لا يوجد اتصال';
+
+  @override
+  String get updateOfflineBody => 'اتصل بالإنترنت لتنزيل التحديث.';
+
+  @override
+  String get updateLockedTitle => 'يلزم تحديث التطبيق';
+
+  @override
+  String get updateLockedBody =>
+      'حدّث مشكاة لتعديل التذكيرات أو المزامنة. تذكيراتك الحالية تصل كما هي.';
+
+  @override
+  String get updateAction => 'حدّث';
 }

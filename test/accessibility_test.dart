@@ -4,6 +4,7 @@ import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/features/feedback/feedback_widgets.dart';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_models.dart';
+import 'package:mishkat/services/update/update_config.dart';
 
 import 'golden/font_loader.dart';
 import 'support/app_harness.dart';
@@ -11,6 +12,16 @@ import 'support/app_harness.dart';
 /// Flutter's own accessibility guidelines, on the main screens in both
 /// appearances: every tap target at least 48px, every tap target labelled,
 /// and text contrast measured from the rendered pixels.
+UpdateConfig _updateConfig({required bool required}) => UpdateConfig.fromValues(
+  recommended: '1.3.0',
+  minSupported: required ? '1.3.0' : '0.0.0',
+  releaseNotes:
+      '{"version":"1.3.0","notes":['
+      '{"icon":"bell","ar":"تذكيرات أدق على أجهزة شاومي وهواوي","en":"More accurate reminders on Xiaomi and Huawei"},'
+      '{"icon":"moon","ar":"قراءة أريح في الوضع الليلي","en":"Easier reading in dark mode"}]}',
+  allowReading: true,
+);
+
 void main() {
   setUpAll(() async {
     await loadAppFonts();
@@ -51,6 +62,36 @@ void main() {
       testWidgets('home in English', (tester) async {
         final handle = tester.ensureSemantics();
         await start(tester, lang: 'en');
+        await check(tester);
+        handle.dispose();
+      });
+
+      testWidgets('required update', (tester) async {
+        final handle = tester.ensureSemantics();
+        await start(
+          tester,
+          harness: AppHarness(
+            updateConfig: FakeUpdateConfigSource(_updateConfig(required: true)),
+          ),
+        );
+        await check(tester);
+        handle.dispose();
+      });
+
+      testWidgets('optional update sheet, then the ready card', (tester) async {
+        final handle = tester.ensureSemantics();
+        await start(
+          tester,
+          harness: AppHarness(
+            updateConfig: FakeUpdateConfigSource(
+              _updateConfig(required: false),
+            ),
+          ),
+        );
+        await check(tester);
+        await tester.tap(find.text('حدّث الآن'));
+        await tester.pumpAndSettle();
+        expect(find.text('التحديث جاهز'), findsOneWidget);
         await check(tester);
         handle.dispose();
       });

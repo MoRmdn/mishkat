@@ -14,6 +14,7 @@ import '../../core/widgets/page_scaffold.dart';
 import '../../core/widgets/surfaces.dart';
 import '../../services/app_info.dart';
 import '../../services/auth/auth_service.dart';
+import '../update/whats_new.dart';
 import 'settings_controller.dart';
 import 'settings_parts.dart';
 import 'sources_page.dart';
@@ -77,6 +78,10 @@ class AboutPage extends ConsumerWidget {
                       NavRow(
                         label: l.thikrSources,
                         onTap: () => openSources(context),
+                      ),
+                      NavRow(
+                        label: l.whatsNew,
+                        onTap: () => openWhatsNew(context),
                       ),
                     ],
                   ),

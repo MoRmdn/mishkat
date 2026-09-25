@@ -10,6 +10,7 @@ import '../../data/repositories/progress_providers.dart';
 import '../../features/reminders/prayer_controller.dart';
 import '../../features/reminders/reminder_controller.dart';
 import '../../features/settings/settings_controller.dart';
+import '../../features/update/update_controller.dart';
 import '../auth/auth_service.dart';
 import '../diagnostics.dart';
 import 'merge.dart';
@@ -47,7 +48,10 @@ class SyncController extends Notifier<SyncStatus> {
     lastSyncAt: ref.read(settingsStoreProvider).lastSyncAt,
   );
 
+  /// Null when there is nothing to sync with — signed out, or this build is
+  /// below `min_supported_version` and must not write in an old format.
   String? get _uid {
+    if (ref.read(updateBlocksWritesProvider)) return null;
     final account = ref.read(accountProvider);
     return account.canSync ? account.uid : null;
   }
@@ -106,9 +110,11 @@ class SyncController extends Notifier<SyncStatus> {
   ///
   /// [uid] is passed right after sign-in, before [accountProvider] has seen
   /// the new user.
-  Future<MergeSummary?> sync({bool full = false, String? uid}) {
+  Future<MergeSummary?> sync({bool full = false, String? uid}) async {
+    await ref.read(updateProvider.notifier).ensureChecked();
+    if (ref.read(updateBlocksWritesProvider)) return null;
     final target = uid ?? _uid;
-    if (target == null) return Future.value();
+    if (target == null) return null;
     return _running ??= _sync(target, full).whenComplete(() => _running = null);
   }
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,6 +21,9 @@ import 'package:mishkat/services/app_info.dart';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_repository.dart';
 import 'package:mishkat/services/sync/sync_remote.dart';
+import 'package:mishkat/services/update/app_updater.dart';
+import 'package:mishkat/services/update/release_notes.dart';
+import 'package:mishkat/services/update/update_config.dart';
 import 'package:mishkat/services/notification_service.dart';
 import 'package:mishkat/services/permission_service.dart';
 import 'package:mishkat/services/reminder_scheduler.dart';
@@ -133,9 +137,11 @@ class AppHarness {
     FakePermissionService? permissions,
     FakeAuthService? auth,
     this.cloud = true,
+    FakeUpdateConfigSource? updateConfig,
   }) : notifications = notifications ?? FakeNotificationService(),
        permissions = permissions ?? FakePermissionService(),
-       auth = auth ?? FakeAuthService();
+       auth = auth ?? FakeAuthService(),
+       updateConfig = updateConfig ?? FakeUpdateConfigSource();
 
   final FakeNotificationService notifications;
   final FakePermissionService permissions;
@@ -146,6 +152,11 @@ class AppHarness {
   final FakeSyncRemote syncRemote = FakeSyncRemote();
   final FakeFeedbackRepository feedback = FakeFeedbackRepository();
   final bool cloud;
+
+  /// Published versions, and Play / the store. Nothing is published unless
+  /// a test says so.
+  final FakeUpdateConfigSource updateConfig;
+  final FakeAppUpdater updater = FakeAppUpdater();
   final FakeWakelock wakelock = FakeWakelock();
 
   /// A fresh in-memory database per test; nothing touches the real file.
@@ -167,11 +178,15 @@ class AppHarness {
   }
 
   static late AthkarLibrary library;
+  static late Changelog changelog;
 
-  /// Loads the athkar corpus once for the whole test file.
+  /// Loads the athkar corpus and the changelog once for the whole test file.
   static Future<void> loadLibrary() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     library = await AthkarRepository().load();
+    changelog = Changelog.decode(
+      await rootBundle.loadString(Changelog.assetPath),
+    );
   }
 
   Future<void> pump(
@@ -230,6 +245,7 @@ class AppHarness {
                 ? library
                 : Future<AthkarLibrary>.error(libraryError),
           ),
+          changelogProvider.overrideWith((ref) => changelog),
           appDatabaseProvider.overrideWithValue(db),
           notificationServiceProvider.overrideWithValue(notifications),
           permissionServiceProvider.overrideWithValue(permissions),
@@ -244,6 +260,8 @@ class AppHarness {
           authServiceProvider.overrideWithValue(auth),
           syncRemoteProvider.overrideWithValue(syncRemote),
           feedbackRepositoryProvider.overrideWithValue(feedback),
+          updateConfigSourceProvider.overrideWithValue(updateConfig),
+          appUpdaterProvider.overrideWithValue(updater),
           appInfoProvider.overrideWith(
             (ref) => const AppInfo(
               version: '1.2.0 (34)',

@@ -23,6 +23,7 @@ import '../../services/feedback/feedback_providers.dart';
 import '../settings/settings_sheet.dart';
 import '../shell/app_shell.dart';
 import '../tasbih/tasbih_screen.dart';
+import '../update/update_banners.dart';
 import 'home_now.dart';
 
 /// Home's "now" state from the real schedule inputs, completions and clock.
@@ -85,6 +86,7 @@ class _HomeBody extends ConsumerWidget {
       children: [
         const _Header(),
         const SizedBox(height: 14),
+        const UpdateHomeCard(),
         if (notificationsOff) ...[
           const _NotificationsOffBanner(),
           const SizedBox(height: 14),

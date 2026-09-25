@@ -10,6 +10,7 @@ import 'package:mishkat/data/models/thikr.dart';
 import 'package:mishkat/features/share/share_card.dart';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_models.dart';
+import 'package:mishkat/services/update/update_config.dart';
 
 import '../support/app_harness.dart';
 import 'font_loader.dart';
@@ -781,6 +782,92 @@ void main() {
       await tester.tap(find.text('New'));
       await AppHarness.settleWithDatabase(tester);
       await shot('af_13b_inbox_empty_dark_en');
+    });
+  });
+
+  group('UP app update', () {
+    final optional = UpdateConfig.fromValues(
+      recommended: '1.3.0',
+      minSupported: '0.0.0',
+      releaseNotes:
+          '{"version":"1.3.0","notes":['
+          '{"icon":"bell","ar":"تذكيرات أدق على أجهزة شاومي وهواوي","en":"More accurate reminders on Xiaomi and Huawei"},'
+          '{"icon":"moon","ar":"قراءة أريح في الوضع الليلي","en":"Easier reading in dark mode"},'
+          '{"icon":"clock","ar":"إصلاح عدّاد السبحة بعد الصلاة","en":"Tasbih counter fixed after prayer"}]}',
+      allowReading: true,
+    );
+    final required = UpdateConfig.fromValues(
+      recommended: '1.3.0',
+      minSupported: '1.3.0',
+      releaseNotes: '',
+      allowReading: true,
+    );
+
+    testWidgets('optional sheet', (tester) async {
+      await AppHarness(
+        updateConfig: FakeUpdateConfigSource(optional),
+      ).pump(tester, size: board, now: today);
+      await shot('up_1_optional_ar');
+    });
+
+    testWidgets('downloading, on home', (tester) async {
+      final h = AppHarness(updateConfig: FakeUpdateConfigSource(optional));
+      h.updater
+        ..progress = [0.42]
+        ..finishDownload = false;
+      await h.pump(tester, size: board, now: today);
+      await tester.tap(find.text('حدّث الآن'));
+      await tester.pumpAndSettle();
+      await shot('up_2_downloading_ar');
+    });
+
+    testWidgets('ready, on home', (tester) async {
+      await AppHarness(
+        updateConfig: FakeUpdateConfigSource(optional),
+      ).pump(tester, size: board, now: today);
+      await tester.tap(find.text('حدّث الآن'));
+      await tester.pumpAndSettle();
+      await shot('up_3_ready_ar');
+    });
+
+    testWidgets('required', (tester) async {
+      await AppHarness(
+        updateConfig: FakeUpdateConfigSource(required),
+      ).pump(tester, size: board, now: today);
+      await shot('up_4_required_ar');
+    });
+
+    testWidgets('required, English dark', (tester) async {
+      await AppHarness(updateConfig: FakeUpdateConfigSource(required)).pump(
+        tester,
+        size: board,
+        now: today,
+        language: 'en',
+        appearance: 'dark',
+      );
+      await shot('up_5_required_en_dark');
+    });
+
+    testWidgets('required, offline', (tester) async {
+      final h = AppHarness(updateConfig: FakeUpdateConfigSource(required));
+      h.updater.online = false;
+      await h.pump(tester, size: board, now: today);
+      await tester.tap(find.text('التحديث من Google Play'));
+      await tester.pumpAndSettle();
+      await shot('up_6_required_offline_ar');
+    });
+
+    testWidgets('updated toast', (tester) async {
+      await AppHarness().pump(
+        tester,
+        size: board,
+        now: today,
+        extraPrefs: {'update.lastSeenVersion': '0.9.0'},
+      );
+      await shot('up_7_updated_toast_ar');
+      await tester.tap(find.text('ما الجديد'));
+      await tester.pumpAndSettle();
+      await shot('up_8_whats_new_ar');
     });
   });
 }

@@ -10,6 +10,11 @@ import 'package:mishkat/services/feedback/feedback_models.dart';
 import 'package:mishkat/data/models/thikr.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
 import 'package:mishkat/features/share/share_card.dart';
+import 'package:mishkat/features/update/required_update_screen.dart';
+import 'package:mishkat/features/update/update_controller.dart';
+import 'package:mishkat/features/update/whats_new.dart';
+import 'package:mishkat/services/update/update_config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'golden/font_loader.dart';
 import 'support/app_harness.dart';
@@ -21,6 +26,16 @@ import 'support/app_harness.dart';
 ///
 /// Uses the real fonts: Arabic in the test fallback font has different
 /// metrics and would prove nothing.
+UpdateConfig _updateConfig({required bool required}) => UpdateConfig.fromValues(
+  recommended: '1.3.0',
+  minSupported: required ? '1.3.0' : '0.0.0',
+  releaseNotes:
+      '{"version":"1.3.0","notes":['
+      '{"icon":"bell","ar":"تذكيرات أدق على أجهزة شاومي وهواوي","en":"More accurate reminders on Xiaomi and Huawei"},'
+      '{"icon":"moon","ar":"قراءة أريح في الوضع الليلي","en":"Easier reading in dark mode"}]}',
+  allowReading: true,
+);
+
 void main() {
   const small = Size(320, 640);
 
@@ -69,6 +84,59 @@ void main() {
         v,
         permissions: FakePermissionService(notifications: false),
       );
+    });
+
+    testWidgets('the required update and its states fit — $name', (
+      tester,
+    ) async {
+      final h = AppHarness(
+        updateConfig: FakeUpdateConfigSource(_updateConfig(required: true)),
+      );
+      h.updater.online = false;
+      await start(tester, v, harness: h);
+      final button = find.descendant(
+        of: find.byType(RequiredUpdateScreen),
+        matching: find.byType(PrimaryButton),
+      );
+      await tester.ensureVisible(button);
+      await tester.pumpAndSettle();
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      // The offline card and its retry.
+      expect(button, findsOneWidget);
+    });
+
+    testWidgets('the optional update, download and «ما الجديد» fit — $name', (
+      tester,
+    ) async {
+      final h = AppHarness(
+        updateConfig: FakeUpdateConfigSource(_updateConfig(required: false)),
+      );
+      h.updater.finishDownload = false;
+      await start(
+        tester,
+        v,
+        harness: h,
+        prefs: {'update.lastSeenVersion': '0.9.0'},
+      );
+      await tester.ensureVisible(find.byType(PrimaryButton).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(PrimaryButton).last);
+      await tester.pumpAndSettle();
+
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(Scaffold).first),
+      );
+      container.read(updateProvider.notifier).restartToUpdate();
+      await tester.pumpAndSettle();
+
+      final context = tester.element(find.byType(Scaffold).first);
+      showWhatsNewSheet(context, AppHarness.changelog.releases);
+      await tester.pumpAndSettle();
+      Navigator.of(context).pop();
+      await tester.pumpAndSettle();
+      openWhatsNew(context);
+      await tester.pumpAndSettle();
     });
 
     testWidgets('the reader fits the longest thikr at large text — $name', (

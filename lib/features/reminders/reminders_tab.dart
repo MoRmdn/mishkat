@@ -15,6 +15,8 @@ import '../../core/widgets/surfaces.dart';
 import '../../data/models/reminder_settings.dart';
 import '../home/home_now.dart' show slotTimeOn;
 import '../settings/settings_controller.dart';
+import '../update/update_banners.dart';
+import '../update/update_controller.dart';
 import 'oem_sheet.dart';
 import 'prayer_panel.dart';
 import 'reminder_controller.dart';
@@ -30,12 +32,15 @@ class RemindersTab extends ConsumerWidget {
     final settings = ref.watch(reminderSettingsProvider);
     final permissions = ref.watch(permissionsProvider);
     final prayer = settings.mode == ReminderMode.prayer;
+    // Below the minimum version reminder changes do not take; say why.
+    final locked = ref.watch(updateBlocksWritesProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
       children: [
         PageTitle(l.titleReminders),
         const SizedBox(height: 12),
+        if (locked) ...[const UpdateLockedBanner(), const SizedBox(height: 12)],
         SegmentedControl<ReminderMode>(
           value: settings.mode,
           onChanged: ref.read(reminderSettingsProvider.notifier).setMode,

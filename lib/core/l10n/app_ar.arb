@@ -761,5 +761,65 @@
     }
   },
   "yesterday": "أمس",
-  "justNow": "الآن"
+  "justNow": "الآن",
+  "updateAvailableTitle": "تحديث جديد متاح",
+  "updateAvailableBody": "تحسينات صغيرة تجعل وِردك أيسر.",
+  "updateVersionChip": "الإصدار {version}",
+  "@updateVersionChip": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "حدّث الآن",
+  "updateLater": "لاحقاً",
+  "updateFromAppStore": "التحديث من App Store",
+  "updateFromPlay": "التحديث من Google Play",
+  "updateMetaInApp": "يُنزَّل في الخلفية",
+  "updateMetaStore": "يفتح صفحة التطبيق في المتجر",
+  "updateDownloading": "جارٍ تنزيل التحديث",
+  "updateDownloadingHint": "يمكنك متابعة وِردك أثناء التنزيل.",
+  "updateReady": "التحديث جاهز",
+  "updateReadyHint": "يستغرق ثوانيَ، وتقدّمك محفوظ.",
+  "updateRestart": "أعد التشغيل",
+  "updateApplying": "جارٍ تطبيق التحديث…",
+  "updatedTo": "تم التحديث إلى {version}",
+  "@updatedTo": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "whatsNew": "ما الجديد",
+  "whatsNewVersion": "ما الجديد في {version}",
+  "@whatsNewVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateRequiredTitle": "يلزم تحديث مشكاة",
+  "updateRequiredBody": "هذا الإصدار لم يعد يدعم المزامنة والتذكيرات الجديدة. تقدّمك ومفضلتك محفوظة على جهازك ولن تتأثر.",
+  "updateVersions": "من الإصدار {from} إلى {to}",
+  "@updateVersions": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "keepReadingOnly": "متابعة القراءة فقط",
+  "updateUpdating": "جارٍ التحديث…",
+  "updateAutoRestart": "يُعاد تشغيل التطبيق تلقائياً عند الانتهاء.",
+  "updateOfflineTitle": "لا يوجد اتصال",
+  "updateOfflineBody": "اتصل بالإنترنت لتنزيل التحديث.",
+  "updateLockedTitle": "يلزم تحديث التطبيق",
+  "updateLockedBody": "حدّث مشكاة لتعديل التذكيرات أو المزامنة. تذكيراتك الحالية تصل كما هي.",
+  "updateAction": "حدّث"
 }

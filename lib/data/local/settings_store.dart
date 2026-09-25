@@ -147,6 +147,28 @@ class SettingsStore {
   Future<void> dismissStreakNudge(DateTime at) =>
       _prefs.setInt(_kNudgeDismissed, at.millisecondsSinceEpoch);
 
+  // ---- app updates ----
+
+  static const _kUpdatePromptedVersion = 'update.prompted.version';
+  static const _kUpdatePromptedAt = 'update.prompted.at';
+  static const _kLastSeenVersion = 'update.lastSeenVersion';
+
+  /// The version the optional-update sheet last offered, and when.
+  String? get updatePromptedVersion =>
+      _prefs.getString(_kUpdatePromptedVersion);
+  DateTime? get updatePromptedAt => _date(_prefs.getInt(_kUpdatePromptedAt));
+
+  Future<void> setUpdatePrompted(String version, DateTime at) async {
+    await _prefs.setString(_kUpdatePromptedVersion, version);
+    await _prefs.setInt(_kUpdatePromptedAt, at.millisecondsSinceEpoch);
+  }
+
+  /// The version that last ran, for «تم التحديث إلى…» after an update.
+  String? get lastSeenVersion => _prefs.getString(_kLastSeenVersion);
+
+  Future<void> setLastSeenVersion(String version) =>
+      _prefs.setString(_kLastSeenVersion, version);
+
   static DateTime? _date(int? ms) =>
       ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
 
