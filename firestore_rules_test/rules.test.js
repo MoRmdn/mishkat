@@ -152,12 +152,22 @@ describe('sending feedback', () => {
   });
 
   test('nobody sends in someone else\'s name', async () => {
+    const db = as('mallory');
     await assertFails(
-      runTransaction(as('mallory'), async (tx) => {
-        tx.set(doc(as('mallory'), 'feedback/f1'), { uid: 'alice' });
+      runTransaction(db, async (tx) => {
+        tx.set(doc(db, 'feedback/f1'), { uid: 'alice' });
       }),
     );
-    await assertFails(submit(as('mallory'), 'mallory', 'f1', { uid: 'alice' }));
+    await assertFails(submit(db, 'mallory', 'f1', { uid: 'alice' }));
+  });
+
+  test('the rate limit cannot be reset through users/{uid}', async () => {
+    const db = as('alice');
+    await submit(db, 'alice', 'f1');
+    await assertFails(
+      setDoc(doc(db, 'users/alice'), { lastFeedbackAt: new Date(2020, 0, 1) }, { merge: true }),
+    );
+    await assertFails(submit(db, 'alice', 'f2'));
   });
 
   test('a new conversation cannot set its own status or unread flags', async () => {

@@ -227,7 +227,7 @@ flutter analyze
 flutter test
 flutter test test/golden --update-goldens   # after an intended visual change
 flutter run -d <device>
-cd firestore_rules_test && npm install && npm test   # rules vs the emulator; needs a JDK
+cd firestore_rules_test && npm install && npm test   # rules vs the emulator; JAVA_HOME = Android Studio's jbr
 ```
 
 Golden files in `test/golden/images/` are one per 2a board screen, rendered at

@@ -48,7 +48,10 @@ service cloud.firestore {
         && (!('lastFeedbackAt' in changed())
             || request.resource.data.lastFeedbackAt == request.time);
 
-      match /{rest=**} {
+      // Exactly one level down (completions, favorites, settings). A
+      // recursive {rest=**} would also match users/{uid} itself and undo the
+      // rate-limit rule above.
+      match /{collection}/{docId} {
         allow read, write: if isSelf(uid);
       }
     }

@@ -69,10 +69,12 @@ Apple and Google accounts.
 ## Rules tests
 
 `firestore_rules_test/` runs `firestore.rules` against the emulator, with one
-case per write the app makes. The emulator needs a JDK 21 and `firebase-tools`.
+case per write the app makes. The emulator needs a JDK and `firebase-tools`;
+Android Studio's bundled one works:
 
 ```bash
-brew install openjdk@21        # once
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
 cd firestore_rules_test && npm install && npm test
 ```
 
