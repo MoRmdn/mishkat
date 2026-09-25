@@ -1,0 +1,60 @@
+{
+  "conditions": [
+    {
+      "name": "Android",
+      "expression": "device.os == 'android'",
+      "tagColor": "GREEN"
+    },
+    {
+      "name": "iOS",
+      "expression": "device.os == 'ios'",
+      "tagColor": "BLUE"
+    }
+  ],
+  "parameters": {
+    "recommended_version": {
+      "defaultValue": {
+        "value": "1.0.0"
+      },
+      "conditionalValues": {
+        "Android": {
+          "value": "1.0.0"
+        },
+        "iOS": {
+          "value": "1.0.0"
+        }
+      },
+      "description": "Below this version the optional «تحديث جديد متاح» sheet is offered (once per version, then every 3 days). Raise it only once the build is live on that store.",
+      "valueType": "STRING"
+    },
+    "min_supported_version": {
+      "defaultValue": {
+        "value": "0.0.0"
+      },
+      "conditionalValues": {
+        "Android": {
+          "value": "0.0.0"
+        },
+        "iOS": {
+          "value": "0.0.0"
+        }
+      },
+      "description": "Below this version «يلزم تحديث مشكاة» covers the app: sync, the account and reminder changes stop. 0.0.0 = never. Raise it only once the build is live on that store.",
+      "valueType": "STRING"
+    },
+    "release_notes": {
+      "defaultValue": {
+        "value": "{}"
+      },
+      "description": "Notes for the update sheet: {\"version\": \"1.1.0\", \"notes\": [{\"icon\": \"bell\", \"ar\": \"…\", \"en\": \"…\"}]}. Shown only when version equals recommended_version. icon is an MIcon name.",
+      "valueType": "JSON"
+    },
+    "update_allow_reading": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "description": "Offers «متابعة القراءة فقط» behind the required-update screen.",
+      "valueType": "BOOLEAN"
+    }
+  }
+}

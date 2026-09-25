@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "share_site/public"],
       "port": 8765
+    },
+    {
+      "name": "site-landing",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/private/tmp/claude-501/-Users-dark-Dev-mishkat/542c6ca2-7e40-4bd2-b793-c2a94727599c/scratchpad/site_server.py", "../mishkat-site/share_site/public", "5055"],
+      "port": 5055
     }
   ]
 }
