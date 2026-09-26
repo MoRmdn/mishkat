@@ -31,8 +31,19 @@ class $FavoritesTable extends Favorites
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
   @override
-  List<GeneratedColumn> get $columns => [thikrId, addedAt];
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [thikrId, addedAt, deletedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -61,6 +72,12 @@ class $FavoritesTable extends Favorites
     } else if (isInserting) {
       context.missing(_addedAtMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -78,6 +95,10 @@ class $FavoritesTable extends Favorites
         DriftSqlType.dateTime,
         data['${effectivePrefix}added_at'],
       )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -90,17 +111,31 @@ class $FavoritesTable extends Favorites
 class Favorite extends DataClass implements Insertable<Favorite> {
   final String thikrId;
   final DateTime addedAt;
-  const Favorite({required this.thikrId, required this.addedAt});
+  final DateTime? deletedAt;
+  const Favorite({
+    required this.thikrId,
+    required this.addedAt,
+    this.deletedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['thikr_id'] = Variable<String>(thikrId);
     map['added_at'] = Variable<DateTime>(addedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
   FavoritesCompanion toCompanion(bool nullToAbsent) {
-    return FavoritesCompanion(thikrId: Value(thikrId), addedAt: Value(addedAt));
+    return FavoritesCompanion(
+      thikrId: Value(thikrId),
+      addedAt: Value(addedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
   }
 
   factory Favorite.fromJson(
@@ -111,6 +146,7 @@ class Favorite extends DataClass implements Insertable<Favorite> {
     return Favorite(
       thikrId: serializer.fromJson<String>(json['thikrId']),
       addedAt: serializer.fromJson<DateTime>(json['addedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -119,17 +155,24 @@ class Favorite extends DataClass implements Insertable<Favorite> {
     return <String, dynamic>{
       'thikrId': serializer.toJson<String>(thikrId),
       'addedAt': serializer.toJson<DateTime>(addedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
-  Favorite copyWith({String? thikrId, DateTime? addedAt}) => Favorite(
+  Favorite copyWith({
+    String? thikrId,
+    DateTime? addedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => Favorite(
     thikrId: thikrId ?? this.thikrId,
     addedAt: addedAt ?? this.addedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   Favorite copyWithCompanion(FavoritesCompanion data) {
     return Favorite(
       thikrId: data.thikrId.present ? data.thikrId.value : this.thikrId,
       addedAt: data.addedAt.present ? data.addedAt.value : this.addedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -137,44 +180,51 @@ class Favorite extends DataClass implements Insertable<Favorite> {
   String toString() {
     return (StringBuffer('Favorite(')
           ..write('thikrId: $thikrId, ')
-          ..write('addedAt: $addedAt')
+          ..write('addedAt: $addedAt, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(thikrId, addedAt);
+  int get hashCode => Object.hash(thikrId, addedAt, deletedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Favorite &&
           other.thikrId == this.thikrId &&
-          other.addedAt == this.addedAt);
+          other.addedAt == this.addedAt &&
+          other.deletedAt == this.deletedAt);
 }
 
 class FavoritesCompanion extends UpdateCompanion<Favorite> {
   final Value<String> thikrId;
   final Value<DateTime> addedAt;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const FavoritesCompanion({
     this.thikrId = const Value.absent(),
     this.addedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   FavoritesCompanion.insert({
     required String thikrId,
     required DateTime addedAt,
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : thikrId = Value(thikrId),
        addedAt = Value(addedAt);
   static Insertable<Favorite> custom({
     Expression<String>? thikrId,
     Expression<DateTime>? addedAt,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (thikrId != null) 'thikr_id': thikrId,
       if (addedAt != null) 'added_at': addedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -182,11 +232,13 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
   FavoritesCompanion copyWith({
     Value<String>? thikrId,
     Value<DateTime>? addedAt,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return FavoritesCompanion(
       thikrId: thikrId ?? this.thikrId,
       addedAt: addedAt ?? this.addedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -200,6 +252,9 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
     if (addedAt.present) {
       map['added_at'] = Variable<DateTime>(addedAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -211,6 +266,7 @@ class FavoritesCompanion extends UpdateCompanion<Favorite> {
     return (StringBuffer('FavoritesCompanion(')
           ..write('thikrId: $thikrId, ')
           ..write('addedAt: $addedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -528,28 +584,257 @@ class CompletionsCompanion extends UpdateCompanion<Completion> {
   }
 }
 
+class $ReaderCheckpointsTable extends ReaderCheckpoints
+    with TableInfo<$ReaderCheckpointsTable, ReaderCheckpoint> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReaderCheckpointsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _sessionKeyMeta = const VerificationMeta(
+    'sessionKey',
+  );
+  @override
+  late final GeneratedColumn<String> sessionKey = GeneratedColumn<String>(
+    'session_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _snapshotMeta = const VerificationMeta(
+    'snapshot',
+  );
+  @override
+  late final GeneratedColumn<String> snapshot = GeneratedColumn<String>(
+    'snapshot',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [sessionKey, snapshot];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reader_checkpoints';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ReaderCheckpoint> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('session_key')) {
+      context.handle(
+        _sessionKeyMeta,
+        sessionKey.isAcceptableOrUnknown(data['session_key']!, _sessionKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionKeyMeta);
+    }
+    if (data.containsKey('snapshot')) {
+      context.handle(
+        _snapshotMeta,
+        snapshot.isAcceptableOrUnknown(data['snapshot']!, _snapshotMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_snapshotMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {sessionKey};
+  @override
+  ReaderCheckpoint map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReaderCheckpoint(
+      sessionKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_key'],
+      )!,
+      snapshot: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}snapshot'],
+      )!,
+    );
+  }
+
+  @override
+  $ReaderCheckpointsTable createAlias(String alias) {
+    return $ReaderCheckpointsTable(attachedDatabase, alias);
+  }
+}
+
+class ReaderCheckpoint extends DataClass
+    implements Insertable<ReaderCheckpoint> {
+  final String sessionKey;
+  final String snapshot;
+  const ReaderCheckpoint({required this.sessionKey, required this.snapshot});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['session_key'] = Variable<String>(sessionKey);
+    map['snapshot'] = Variable<String>(snapshot);
+    return map;
+  }
+
+  ReaderCheckpointsCompanion toCompanion(bool nullToAbsent) {
+    return ReaderCheckpointsCompanion(
+      sessionKey: Value(sessionKey),
+      snapshot: Value(snapshot),
+    );
+  }
+
+  factory ReaderCheckpoint.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReaderCheckpoint(
+      sessionKey: serializer.fromJson<String>(json['sessionKey']),
+      snapshot: serializer.fromJson<String>(json['snapshot']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'sessionKey': serializer.toJson<String>(sessionKey),
+      'snapshot': serializer.toJson<String>(snapshot),
+    };
+  }
+
+  ReaderCheckpoint copyWith({String? sessionKey, String? snapshot}) =>
+      ReaderCheckpoint(
+        sessionKey: sessionKey ?? this.sessionKey,
+        snapshot: snapshot ?? this.snapshot,
+      );
+  ReaderCheckpoint copyWithCompanion(ReaderCheckpointsCompanion data) {
+    return ReaderCheckpoint(
+      sessionKey: data.sessionKey.present
+          ? data.sessionKey.value
+          : this.sessionKey,
+      snapshot: data.snapshot.present ? data.snapshot.value : this.snapshot,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReaderCheckpoint(')
+          ..write('sessionKey: $sessionKey, ')
+          ..write('snapshot: $snapshot')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(sessionKey, snapshot);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReaderCheckpoint &&
+          other.sessionKey == this.sessionKey &&
+          other.snapshot == this.snapshot);
+}
+
+class ReaderCheckpointsCompanion extends UpdateCompanion<ReaderCheckpoint> {
+  final Value<String> sessionKey;
+  final Value<String> snapshot;
+  final Value<int> rowid;
+  const ReaderCheckpointsCompanion({
+    this.sessionKey = const Value.absent(),
+    this.snapshot = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ReaderCheckpointsCompanion.insert({
+    required String sessionKey,
+    required String snapshot,
+    this.rowid = const Value.absent(),
+  }) : sessionKey = Value(sessionKey),
+       snapshot = Value(snapshot);
+  static Insertable<ReaderCheckpoint> custom({
+    Expression<String>? sessionKey,
+    Expression<String>? snapshot,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (sessionKey != null) 'session_key': sessionKey,
+      if (snapshot != null) 'snapshot': snapshot,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ReaderCheckpointsCompanion copyWith({
+    Value<String>? sessionKey,
+    Value<String>? snapshot,
+    Value<int>? rowid,
+  }) {
+    return ReaderCheckpointsCompanion(
+      sessionKey: sessionKey ?? this.sessionKey,
+      snapshot: snapshot ?? this.snapshot,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (sessionKey.present) {
+      map['session_key'] = Variable<String>(sessionKey.value);
+    }
+    if (snapshot.present) {
+      map['snapshot'] = Variable<String>(snapshot.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReaderCheckpointsCompanion(')
+          ..write('sessionKey: $sessionKey, ')
+          ..write('snapshot: $snapshot, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $FavoritesTable favorites = $FavoritesTable(this);
   late final $CompletionsTable completions = $CompletionsTable(this);
+  late final $ReaderCheckpointsTable readerCheckpoints =
+      $ReaderCheckpointsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [favorites, completions];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    favorites,
+    completions,
+    readerCheckpoints,
+  ];
 }
 
 typedef $$FavoritesTableCreateCompanionBuilder =
     FavoritesCompanion Function({
       required String thikrId,
       required DateTime addedAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$FavoritesTableUpdateCompanionBuilder =
     FavoritesCompanion Function({
       Value<String> thikrId,
       Value<DateTime> addedAt,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -569,6 +854,11 @@ class $$FavoritesTableFilterComposer
 
   ColumnFilters<DateTime> get addedAt => $composableBuilder(
     column: $table.addedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -591,6 +881,11 @@ class $$FavoritesTableOrderingComposer
     column: $table.addedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$FavoritesTableAnnotationComposer
@@ -607,6 +902,9 @@ class $$FavoritesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get addedAt =>
       $composableBuilder(column: $table.addedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$FavoritesTableTableManager
@@ -639,20 +937,24 @@ class $$FavoritesTableTableManager
               ({
                 Value<String> thikrId = const Value.absent(),
                 Value<DateTime> addedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FavoritesCompanion(
                 thikrId: thikrId,
                 addedAt: addedAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String thikrId,
                 required DateTime addedAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FavoritesCompanion.insert(
                 thikrId: thikrId,
                 addedAt: addedAt,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -872,6 +1174,173 @@ typedef $$CompletionsTableProcessedTableManager =
       Completion,
       PrefetchHooks Function()
     >;
+typedef $$ReaderCheckpointsTableCreateCompanionBuilder =
+    ReaderCheckpointsCompanion Function({
+      required String sessionKey,
+      required String snapshot,
+      Value<int> rowid,
+    });
+typedef $$ReaderCheckpointsTableUpdateCompanionBuilder =
+    ReaderCheckpointsCompanion Function({
+      Value<String> sessionKey,
+      Value<String> snapshot,
+      Value<int> rowid,
+    });
+
+class $$ReaderCheckpointsTableFilterComposer
+    extends Composer<_$AppDatabase, $ReaderCheckpointsTable> {
+  $$ReaderCheckpointsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get sessionKey => $composableBuilder(
+    column: $table.sessionKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get snapshot => $composableBuilder(
+    column: $table.snapshot,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ReaderCheckpointsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReaderCheckpointsTable> {
+  $$ReaderCheckpointsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get sessionKey => $composableBuilder(
+    column: $table.sessionKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get snapshot => $composableBuilder(
+    column: $table.snapshot,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ReaderCheckpointsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReaderCheckpointsTable> {
+  $$ReaderCheckpointsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get sessionKey => $composableBuilder(
+    column: $table.sessionKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get snapshot =>
+      $composableBuilder(column: $table.snapshot, builder: (column) => column);
+}
+
+class $$ReaderCheckpointsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ReaderCheckpointsTable,
+          ReaderCheckpoint,
+          $$ReaderCheckpointsTableFilterComposer,
+          $$ReaderCheckpointsTableOrderingComposer,
+          $$ReaderCheckpointsTableAnnotationComposer,
+          $$ReaderCheckpointsTableCreateCompanionBuilder,
+          $$ReaderCheckpointsTableUpdateCompanionBuilder,
+          (
+            ReaderCheckpoint,
+            BaseReferences<
+              _$AppDatabase,
+              $ReaderCheckpointsTable,
+              ReaderCheckpoint
+            >,
+          ),
+          ReaderCheckpoint,
+          PrefetchHooks Function()
+        > {
+  $$ReaderCheckpointsTableTableManager(
+    _$AppDatabase db,
+    $ReaderCheckpointsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ReaderCheckpointsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ReaderCheckpointsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ReaderCheckpointsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> sessionKey = const Value.absent(),
+                Value<String> snapshot = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ReaderCheckpointsCompanion(
+                sessionKey: sessionKey,
+                snapshot: snapshot,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String sessionKey,
+                required String snapshot,
+                Value<int> rowid = const Value.absent(),
+              }) => ReaderCheckpointsCompanion.insert(
+                sessionKey: sessionKey,
+                snapshot: snapshot,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ReaderCheckpointsTable, ReaderCheckpoint>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ReaderCheckpointsTable,
+                    ReaderCheckpoint
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ReaderCheckpointsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ReaderCheckpointsTable,
+      ReaderCheckpoint,
+      $$ReaderCheckpointsTableFilterComposer,
+      $$ReaderCheckpointsTableOrderingComposer,
+      $$ReaderCheckpointsTableAnnotationComposer,
+      $$ReaderCheckpointsTableCreateCompanionBuilder,
+      $$ReaderCheckpointsTableUpdateCompanionBuilder,
+      (
+        ReaderCheckpoint,
+        BaseReferences<
+          _$AppDatabase,
+          $ReaderCheckpointsTable,
+          ReaderCheckpoint
+        >,
+      ),
+      ReaderCheckpoint,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -880,4 +1349,6 @@ class $AppDatabaseManager {
       $$FavoritesTableTableManager(_db, _db.favorites);
   $$CompletionsTableTableManager get completions =>
       $$CompletionsTableTableManager(_db, _db.completions);
+  $$ReaderCheckpointsTableTableManager get readerCheckpoints =>
+      $$ReaderCheckpointsTableTableManager(_db, _db.readerCheckpoints);
 }

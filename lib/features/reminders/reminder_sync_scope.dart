@@ -72,6 +72,9 @@ class _ReminderSyncScopeState extends ConsumerState<ReminderSyncScope>
     if (library == null) return;
 
     ref.read(diagnosticsProvider).reminderOpened(slot);
+    // Back to the shell first, as a share link does: a second reader stacked
+    // on an open one would leave it blank when closed.
+    Navigator.of(context).popUntil((route) => route.isFirst);
     openReader(context, ref, slot.category, library[slot.category]);
     unawaitedSync();
   }

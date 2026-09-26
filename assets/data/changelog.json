@@ -1,0 +1,24 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "notes": [
+        {
+          "icon": "bell",
+          "ar": "تذكيرات تصل في وقتها: الصباح والمساء والنوم والاستيقاظ",
+          "en": "Reminders that arrive on time: morning, evening, sleep and waking"
+        },
+        {
+          "icon": "clock",
+          "ar": "تذكيرات مرتبطة بأوقات الصلاة، محسوبة على جهازك",
+          "en": "Reminders tied to prayer times, calculated on your device"
+        },
+        {
+          "icon": "cloudSync",
+          "ar": "حساب اختياري يزامن تقدّمك ومفضلتك بين أجهزتك",
+          "en": "An optional account that syncs your progress and favourites"
+        }
+      ]
+    }
+  ]
+}

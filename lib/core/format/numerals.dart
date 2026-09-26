@@ -54,3 +54,19 @@ String formatClock(
   return '${localizeDigits(h12, languageCode)}:'
       '${localizeDigits(mm, languageCode)} $suffix';
 }
+
+/// The clock without its AM/PM suffix, for the compact day band where the
+/// routine's name already says which half of the day it is.
+String formatClockShort(int hour24, int minute, String languageCode) {
+  final h12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
+  final mm = minute.toString().padLeft(2, '0');
+  return '${localizeDigits(h12, languageCode)}:${localizeDigits(mm, languageCode)}';
+}
+
+/// [formatClock] for a [DateTime].
+String formatTime(
+  DateTime at,
+  String languageCode, {
+  required String am,
+  required String pm,
+}) => formatClock(at.hour, at.minute, languageCode, am: am, pm: pm);

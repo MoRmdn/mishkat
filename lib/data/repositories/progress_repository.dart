@@ -10,6 +10,14 @@ import '../models/thikr.dart';
 int weeklyTarget(ThikrCategory category) =>
     category == ThikrCategory.afterPrayer ? 35 : 7;
 
+/// The four routines with a daily slot; a day with all four is a full day.
+const List<ThikrCategory> kDailyRoutines = [
+  ThikrCategory.wake,
+  ThikrCategory.morning,
+  ThikrCategory.evening,
+  ThikrCategory.sleep,
+];
+
 @immutable
 class CategoryProgress {
   const CategoryProgress({
@@ -31,6 +39,7 @@ class ProgressStats {
     required this.longestStreak,
     required this.totalSessions,
     required this.last14Days,
+    this.last14Routines = const [],
     required this.byCategory,
   });
 
@@ -38,6 +47,10 @@ class ProgressStats {
 
   /// Oldest first, one entry per day, true when something was completed.
   final List<bool> last14Days;
+
+  /// Oldest first: how many of the four daily routines (waking, morning,
+  /// evening, sleep) were completed each day — 0 is none, 4 is a full day.
+  final List<int> last14Routines;
 
   final List<CategoryProgress> byCategory;
 
@@ -98,6 +111,20 @@ ProgressStats computeStats(List<Completion> completions, DateTime now) {
   final days = completions.map((c) => c.day).toSet();
   final today = _startOfDay(now);
 
+  final routinesByDay = <String, Set<String>>{};
+  final daily = {for (final c in kDailyRoutines) c.key};
+  for (final c in completions) {
+    if (daily.contains(c.category)) {
+      (routinesByDay[c.day] ??= {}).add(c.category);
+    }
+  }
+  final last14Routines = <int>[
+    for (var i = 13; i >= 0; i--)
+      routinesByDay[dayKey(DateTime(now.year, now.month, now.day - i))]
+              ?.length ??
+          0,
+  ];
+
   final last14 = <bool>[
     for (var i = 13; i >= 0; i--)
       days.contains(dayKey(DateTime(now.year, now.month, now.day - i))),
@@ -120,6 +147,7 @@ ProgressStats computeStats(List<Completion> completions, DateTime now) {
     longestStreak: longestStreakFrom(days),
     totalSessions: completions.length,
     last14Days: last14,
+    last14Routines: last14Routines,
     byCategory: [
       for (final category in ThikrCategory.homeGrid)
         CategoryProgress(

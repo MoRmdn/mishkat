@@ -1,0 +1,2 @@
+/* The Arabic home-screen label. Other languages use CFBundleDisplayName in Info.plist. */
+"CFBundleDisplayName" = "مِشْكَاة";

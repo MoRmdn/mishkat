@@ -3,11 +3,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/l10n/app_localizations.dart';
-import 'core/theme/app_theme.dart';
+import 'core/theme/mishkat_tokens.dart';
+import 'features/account/cloud_scope.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/reminders/reminder_sync_scope.dart';
 import 'features/settings/settings_controller.dart';
+import 'features/share/share_link_scope.dart';
 import 'features/shell/app_shell.dart';
+import 'features/update/update_scope.dart';
 
 class MishkatApp extends ConsumerWidget {
   const MishkatApp({super.key});
@@ -27,13 +30,19 @@ class MishkatApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: buildAppTheme(settings.palette, Brightness.light),
-      darkTheme: buildAppTheme(settings.palette, Brightness.dark),
+      theme: buildMishkatTheme(Brightness.light),
+      darkTheme: buildMishkatTheme(Brightness.dark),
       themeMode: settings.appearance.themeMode,
+      // The required-update screen covers every route, onboarding included.
+      builder: (context, child) => UpdateGate(child: child!),
       // Onboarding runs the permission ladder before the shell appears.
       // Skipping it lands on a working home with reminders off.
       home: settings.onboardingComplete
-          ? const ReminderSyncScope(child: AppShell())
+          ? const ReminderSyncScope(
+              child: CloudScope(
+                child: UpdatePrompts(child: ShareLinkScope(child: AppShell())),
+              ),
+            )
           : const OnboardingScreen(),
     );
   }

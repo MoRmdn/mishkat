@@ -17,11 +17,14 @@ Future<void> loadAppFonts() async {
     await loader.load();
   }
 
-  await load('IBMPlexSansArabic', [
-    'assets/fonts/IBMPlexSansArabic-Regular.ttf',
-    'assets/fonts/IBMPlexSansArabic-Medium.ttf',
-    'assets/fonts/IBMPlexSansArabic-SemiBold.ttf',
-    'assets/fonts/IBMPlexSansArabic-Bold.ttf',
+  await load('Alexandria', [
+    'assets/fonts/Alexandria-Light.ttf',
+    'assets/fonts/Alexandria-Regular.ttf',
+    'assets/fonts/Alexandria-Medium.ttf',
   ]);
-  await load('AmiriQuran', ['assets/fonts/AmiriQuran-Regular.ttf']);
+  await load('Scheherazade New', [
+    'assets/fonts/ScheherazadeNew-Regular.ttf',
+    'assets/fonts/ScheherazadeNew-Medium.ttf',
+  ]);
+  await load('Amiri Quran', ['assets/fonts/AmiriQuran-Regular.ttf']);
 }

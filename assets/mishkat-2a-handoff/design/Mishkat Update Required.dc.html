@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200;300;400;500;600&amp;display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#E6E2DE}
+  a{color:#8E4E5A;text-decoration:none}
+  a:hover{color:#4A2A4D}
+  @keyframes mkGlow{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+  @keyframes mkHalo{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.12;transform:scale(1.25)}}
+  @keyframes mkIn{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes mkFade{from{opacity:0}to{opacity:1}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="padding:56px 56px 120px;background:#E6E2DE;font-family:'Alexandria',sans-serif;color:#2A1B2C;display:flex;flex-direction:column;gap:48px">
+
+  <div style="max-width:980px;display:flex;flex-direction:column;gap:12px">
+    <div style="font-size:12.5px;font-weight:500;letter-spacing:1.8px;color:#8E4E5A">MISHKAT AL-WIRD · 2a DUSK GRID · APP UPDATE</div>
+    <div style="font-size:40px;font-weight:500;line-height:1.25">App updates: optional and required</div>
+    <div style="font-size:15px;font-weight:300;line-height:1.85;color:#55474F">Remote Config holds two values: <span style="font-family:ui-monospace,monospace;font-size:13px">recommended_version</span> gently suggests an update, and <span style="font-family:ui-monospace,monospace;font-size:13px">min_supported_version</span> requires one. The phone below is interactive: tap its buttons, or jump to any state from the panel.</div>
+  </div>
+
+  <section data-screen-label="Update prototype" style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+
+    <div dir="rtl" data-screen-label="Interactive phone" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;position:relative;box-shadow:0 24px 60px rgba(42,27,44,0.18);flex:none">
+
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column">
+        <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤١</div>
+        <div style="padding:14px 20px 0;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px"><svg width="28" height="28" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#4A2A4D" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#EFEBE7" /><circle cx="60" cy="84" r="9" fill="#C9939A" /></svg><span style="font-size:18px;font-weight:500">مشكاة</span></div>
+          <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10" /><circle cx="16" cy="8" r="2" /><circle cx="8" cy="16" r="2" /></svg></div>
+        </div>
+
+        <div style="flex:1;padding:16px 20px 0;display:flex;flex-direction:column;gap:12px;min-height:0">
+          <sc-if value="{{ isDownloading }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#F9F7F4;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;animation:mkFade .3s ease">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="display:flex;align-items:center;gap:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg><span style="font-size:13.5px;font-weight:500">جارٍ تنزيل التحديث</span></div><span style="font-size:13px;font-weight:500;color:#8E4E5A">{{ pctTxt }}</span></div>
+              <div style="height:6px;border-radius:3px;background:#E7E0DA;overflow:hidden"><div style="height:100%;border-radius:3px;background:#4A2A4D;width:{{ pctW }};transition:width .12s linear"></div></div>
+              <div style="font-size:11.5px;font-weight:300;color:#6E5F6B">يمكنك متابعة وِردك أثناء التنزيل.</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isReady }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#F2E1DF;border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;animation:mkFade .3s ease">
+              <div style="width:40px;height:40px;border-radius:20px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7" /></svg></div>
+              <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500">التحديث جاهز</div><div style="font-size:11.5px;font-weight:300;color:#55474F">يستغرق ثوانيَ، وتقدّمك محفوظ.</div></div>
+              <div onClick="{{ restart }}" style="height:44px;padding:0 16px;border-radius:22px;background:#4A2A4D;color:#fff;display:flex;align-items:center;font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;flex:none" style-hover="background:#5A3A5D">أعد التشغيل</div>
+            </div>
+          </sc-if>
+
+          <div style="background:#4A2A4D;color:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:12px;color:#E5B3B9">حان الآن</div><div style="margin-top:4px;font-size:22px;font-weight:500">أذكار المساء</div></div><div style="font-size:12px;font-weight:300;color:#E3D2DC">٦ أذكار · ٥ د</div></div>
+            <div style="height:48px;border-radius:24px;background:#E5B3B9;color:#2A1B2C;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:500">ابدأ</div>
+          </div>
+          <div style="background:#F9F7F4;border-radius:18px;padding:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;text-align:center">
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:10px;height:10px;border-radius:5px;background:#4A2A4D"></div><div style="font-size:11.5px">الاستيقاظ</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:10px;height:10px;border-radius:5px;background:#4A2A4D"></div><div style="font-size:11.5px">الصباح</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:10px;height:10px;border-radius:5px;background:#C9939A"></div><div style="font-size:11.5px;font-weight:500">المساء</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:10px;height:10px;border-radius:5px;border:1.5px solid #4A2A4D"></div><div style="font-size:11.5px">النوم</div></div>
+          </div>
+          <div style="background:#F9F7F4;border-radius:18px;overflow:hidden">
+            <div style="height:52px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E7E0DA;font-size:14px"><span>أذكار بعد الصلاة</span><span style="font-size:12px;color:#6E5F6B">١٢</span></div>
+            <div style="height:52px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;font-size:14px"><span>أذكار متفرقة</span><span style="font-size:12px;color:#6E5F6B">٢٤</span></div>
+          </div>
+        </div>
+
+        <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+          <div style="margin:0 16px 10px;background:#2A1B2C;color:#fff;border-radius:18px;padding:12px 12px 12px 8px;display:flex;align-items:center;gap:10px;animation:mkIn .35s cubic-bezier(.2,.8,.2,1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E5B3B9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12.5l4.5 4.5L19 7" /></svg>
+            <div style="flex:1;font-size:13px">تم التحديث إلى ١٫٣٫٠</div>
+            <div onClick="{{ openOptional }}" style="height:36px;padding:0 10px;display:flex;align-items:center;font-size:12.5px;font-weight:500;color:#E5B3B9;cursor:pointer">ما الجديد</div>
+            <div onClick="{{ dismiss }}" style="width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#BBA9B6" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;justify-content:space-around;padding:8px 10px 22px;font-size:10.5px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:56px"><div style="width:56px;height:30px;border-radius:15px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z" /></svg></div>الرئيسية</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4" /></svg></div>التذكيرات</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>المفضلة</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 19v-6M12 19V6M19 19v-9" /></svg></div>التقدّم</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ isOptional }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end">
+          <div onClick="{{ later }}" style="position:absolute;inset:0;background:rgba(42,27,44,0.6);animation:mkFade .25s ease"></div>
+          <div style="position:relative;background:#F9F7F4;border-radius:28px 28px 0 0;padding:10px 22px 24px;display:flex;flex-direction:column;gap:16px;animation:mkIn .4s cubic-bezier(.2,.8,.2,1)">
+            <div style="width:40px;height:4px;border-radius:2px;background:#DDD5CE;margin:0 auto"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+              <div style="position:relative;width:84px;height:84px;display:flex;align-items:center;justify-content:center">{{ symSheet }}</div>
+              <div style="height:26px;padding:0 12px;border-radius:13px;background:#F2E1DF;color:#8E4E5A;display:flex;align-items:center;font-size:11.5px;font-weight:500">الإصدار ١٫٣٫٠</div>
+              <div style="font-size:20px;font-weight:500">تحديث جديد متاح</div>
+              <div style="font-size:13px;font-weight:300;line-height:1.7;color:#6E5F6B">تحسينات صغيرة تجعل وِردك أيسر.</div>
+            </div>
+            <div style="background:#EFEBE7;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:16px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4" /></svg></div><div style="font-size:13px;line-height:1.6">تذكيرات أدق على أجهزة شاومي وهواوي</div></div>
+              <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:16px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" /></svg></div><div style="font-size:13px;line-height:1.6">قراءة أريح في الوضع الليلي</div></div>
+              <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:16px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8" /><path d="M12 8v4l2.5 2" /></svg></div><div style="font-size:13px;line-height:1.6">إصلاح عدّاد السبحة بعد الصلاة</div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div onClick="{{ updateNow }}" style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15.5px;font-weight:500;cursor:pointer" style-hover="background:#5A3A5D" style-active="transform:scale(.98)">{{ optCta }}</div>
+              <div onClick="{{ later }}" style="height:48px;display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:500;color:#8E4E5A;cursor:pointer">لاحقاً</div>
+            </div>
+            <div style="margin-top:-6px;font-size:11px;font-weight:300;color:#6E5F6B;text-align:center">{{ optMeta }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRequiredAny }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:#EFEBE7;display:flex;flex-direction:column;animation:mkFade .3s ease">
+          <div style="position:relative;height:340px;background:#4A2A4D;overflow:hidden;flex:none">
+            <svg style="position:absolute;left:50%;bottom:-2px;margin-left:-130px" width="260" height="300" viewBox="0 0 260 300"><path d="M0 300V130a130 130 0 0 1 260 0v170z" fill="#573659" /><path d="M40 300V134a90 90 0 0 1 180 0v166z" fill="#5E3D60" /></svg>
+            <div style="position:absolute;top:14px;right:26px;font-size:13px;font-weight:500;color:#fff">٩:٤١</div>
+            <div style="position:absolute;left:0;right:0;top:118px;display:flex;justify-content:center"><div style="position:relative;width:132px;height:132px;display:flex;align-items:center;justify-content:center">{{ symHero }}</div></div>
+            <svg style="position:absolute;left:0;bottom:-1px" width="340" height="40" viewBox="0 0 340 40" preserveAspectRatio="none"><path d="M0 40V28C60 8 120 0 170 0s110 8 170 28v12z" fill="#EFEBE7" /></svg>
+          </div>
+          <div style="flex:1;padding:6px 26px 26px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;min-height:0">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500"><span style="height:26px;padding:0 10px;border-radius:13px;background:#E7E0DA;color:#6E5F6B;display:flex;align-items:center">١٫٢٫٠</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6E5F6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6" /></svg><span style="height:26px;padding:0 10px;border-radius:13px;background:#F2E1DF;color:#8E4E5A;display:flex;align-items:center">١٫٣٫٠</span></div>
+            <div style="font-size:23px;font-weight:500;line-height:1.4">يلزم تحديث مشكاة</div>
+            <div style="font-size:13.5px;font-weight:300;line-height:1.85;color:#55474F;text-wrap:pretty">هذا الإصدار لم يعد يدعم المزامنة والتذكيرات الجديدة. تقدّمك ومفضلتك محفوظة على جهازك ولن تتأثر.</div>
+            <div style="flex:1"></div>
+            <sc-if value="{{ isRequired }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:stretch;display:flex;flex-direction:column;gap:8px">
+                <div onClick="{{ reqUpdate }}" style="height:54px;border-radius:27px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-size:15.5px;font-weight:500;cursor:pointer" style-hover="background:#5A3A5D" style-active="transform:scale(.98)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>{{ reqCta }}</div>
+                <sc-if value="{{ allowReading }}" hint-placeholder-val="{{ true }}">
+                  <div style="height:48px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#8E4E5A">متابعة القراءة فقط</div>
+                </sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isRequiredUpdating }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:stretch;background:#F9F7F4;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;animation:mkFade .25s ease">
+                <div style="display:flex;justify-content:space-between;font-size:13.5px;font-weight:500"><span>جارٍ التحديث…</span><span style="color:#8E4E5A">{{ pctTxt }}</span></div>
+                <div style="height:8px;border-radius:4px;background:#E7E0DA;overflow:hidden"><div style="height:100%;border-radius:4px;background:#4A2A4D;width:{{ pctW }};transition:width .12s linear"></div></div>
+                <div style="font-size:11.5px;font-weight:300;color:#6E5F6B;text-align:start">يُعاد تشغيل التطبيق تلقائياً عند الانتهاء.</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isRequiredOffline }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:stretch;display:flex;flex-direction:column;gap:10px;animation:mkFade .25s ease">
+                <div style="background:#F7E3E1;border-radius:20px;padding:14px;display:flex;align-items:center;gap:12px;text-align:start"><div style="width:40px;height:40px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A13A3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9z" /><path d="M4 4l16 16" /></svg></div><div><div style="font-size:14px;font-weight:500">لا يوجد اتصال</div><div style="font-size:12px;font-weight:300;color:#55474F">اتصل بالإنترنت لتنزيل التحديث.</div></div></div>
+                <div onClick="{{ reqUpdate }}" style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;cursor:pointer" style-hover="background:#5A3A5D">إعادة المحاولة</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRestarting }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:#4A2A4D;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:mkFade .3s ease">
+          <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center">{{ symSplash }}</div>
+          <div style="font-size:22px;font-weight:500;color:#fff">مشكاة</div>
+          <div style="font-size:12.5px;font-weight:300;color:#E3D2DC">جارٍ تطبيق التحديث…</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="width:380px;display:flex;flex-direction:column;gap:22px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:12px;font-weight:500;letter-spacing:1.2px;color:#6E5F6B">OPTIONAL · recommended_version</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ optChips }}" as="c" hint-placeholder-count="5">
+            <div onClick="{{ c.go }}" style="height:40px;padding:0 16px;border-radius:20px;background:{{ c.bg }};color:{{ c.ink }};border:1px solid #DDD5CE;display:flex;align-items:center;font-size:13px;font-weight:500;cursor:pointer">{{ c.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:12px;font-weight:500;letter-spacing:1.2px;color:#6E5F6B">REQUIRED · min_supported_version</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ reqChips }}" as="c" hint-placeholder-count="3">
+            <div onClick="{{ c.go }}" style="height:40px;padding:0 16px;border-radius:20px;background:{{ c.bg }};color:{{ c.ink }};border:1px solid #DDD5CE;display:flex;align-items:center;font-size:13px;font-weight:500;cursor:pointer">{{ c.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:14px;font-size:13px;font-weight:300;line-height:1.75;color:#55474F">
+        <div style="font-size:16px;font-weight:500;color:#2A1B2C">Rules</div>
+        <div><span style="font-weight:500;color:#2A1B2C">Optional.</span> Show the sheet at most once per version, then no more often than every 3 days. Never show it mid-session in the reader or while a reminder notification is being opened. Choosing Later keeps it quiet for that version until the next launch after 3 days.</div>
+        <div><span style="font-weight:500;color:#2A1B2C">Android.</span> Use Play In-App Updates: <span style="font-family:ui-monospace,monospace;font-size:12px">FLEXIBLE</span> for optional updates (a download banner, then "Restart"), and <span style="font-family:ui-monospace,monospace;font-size:12px">IMMEDIATE</span> for required ones.</div>
+        <div><span style="font-weight:500;color:#2A1B2C">iOS.</span> Apps can't install updates themselves, so both buttons open the App Store page. The flexible-download states only exist on Android.</div>
+        <div><span style="font-weight:500;color:#2A1B2C">Required.</span> This blocks sync, account and reminder scheduling changes. Reading the bundled athkar can stay open behind "متابعة القراءة فقط" (the allowReading tweak), because reading never touches the server. Existing scheduled reminders keep firing.</div>
+        <div><span style="font-weight:500;color:#2A1B2C">Offline.</span> If Remote Config can't be fetched, use the last cached values and never block on a failed fetch.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:12px;font-weight:500;color:#55474F">Required · EN dark</div>
+      <div dir="ltr" data-screen-label="Required EN dark" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#1B1320;color:#F1E9EE;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,0.25);flex:none">
+        <div style="position:relative;height:340px;background:#261B2C;overflow:hidden;flex:none">
+          <svg style="position:absolute;left:50%;bottom:-2px;margin-left:-130px" width="260" height="300" viewBox="0 0 260 300"><path d="M0 300V130a130 130 0 0 1 260 0v170z" fill="#2F2235" /><path d="M40 300V134a90 90 0 0 1 180 0v166z" fill="#36283C" /></svg>
+          <div style="position:absolute;top:14px;left:26px;font-size:13px;font-weight:500">9:41</div>
+          <div style="position:absolute;left:0;right:0;top:118px;display:flex;justify-content:center"><div style="position:relative;width:132px;height:132px;display:flex;align-items:center;justify-content:center">{{ symDark }}</div></div>
+          <svg style="position:absolute;left:0;bottom:-1px" width="340" height="40" viewBox="0 0 340 40" preserveAspectRatio="none"><path d="M0 40V28C60 8 120 0 170 0s110 8 170 28v12z" fill="#1B1320" /></svg>
+        </div>
+        <div style="flex:1;padding:6px 26px 26px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500"><span style="height:26px;padding:0 10px;border-radius:13px;background:#332539;color:#BBA9B6;display:flex;align-items:center">1.2.0</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBA9B6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg><span style="height:26px;padding:0 10px;border-radius:13px;background:#3A2C40;color:#E5B3B9;display:flex;align-items:center">1.3.0</span></div>
+          <div style="font-size:23px;font-weight:500;line-height:1.4">Mishkat needs an update</div>
+          <div style="font-size:13.5px;font-weight:300;line-height:1.8;color:#BBA9B6;text-wrap:pretty">This version no longer supports sync and the new reminders. Your progress and favourites stay safe on this device.</div>
+          <div style="flex:1"></div>
+          <div style="align-self:stretch;height:54px;border-radius:27px;background:#E5B3B9;color:#1B1320;display:flex;align-items:center;justify-content:center;gap:10px;font-size:15.5px;font-weight:500"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1320" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>Update on Google Play</div>
+          <div style="height:44px;display:flex;align-items:center;font-size:14px;font-weight:500;color:#E5B3B9">Keep reading only</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;platform&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;android&quot;,&quot;ios&quot;],&quot;default&quot;:&quot;android&quot;,&quot;tsType&quot;:&quot;'android'|'ios'&quot;},&quot;allowReading&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { s: 'optional', p: 0 };
+  componentWillUnmount() { this.stop(); }
+  stop() { clearInterval(this.t); clearTimeout(this.to); }
+  ar(n) { return String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
+  run(next) {
+    this.stop(); this.setState({ p: 0 });
+    this.t = setInterval(() => {
+      const p = Math.min(100, this.state.p + 2 + Math.round(Math.random() * 3));
+      this.setState({ p });
+      if (p >= 100) { clearInterval(this.t); this.to = setTimeout(next, 350); }
+    }, 90);
+  }
+  go(s) {
+    this.stop();
+    this.setState({ s, p: s === 'ready' ? 100 : 0 });
+    if (s === 'downloading') this.run(() => this.setState({ s: 'ready' }));
+    if (s === 'requiredUpdating') this.run(() => this.go('restarting'));
+    if (s === 'restarting') this.to = setTimeout(() => this.setState({ s: 'done' }), 1600);
+  }
+  sym(size, body, cut, dot, halo) {
+    const h = React.createElement;
+    return h(React.Fragment, null,
+      h('div', { key: 'h', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: halo, animation: 'mkHalo 2.8s ease-in-out infinite' } }),
+      h('svg', { key: 's', width: size, height: size, viewBox: '0 0 120 120', style: { position: 'relative' } },
+        h('path', { d: 'M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z', fill: body }),
+        h('path', { fillRule: 'evenodd', d: 'M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z', fill: cut }),
+        h('circle', { cx: 60, cy: 84, r: 9, fill: dot, style: { transformOrigin: '60px 84px', animation: 'mkGlow 2.8s ease-in-out infinite' } })));
+  }
+  renderVals() {
+    const { s, p } = this.state;
+    const ios = (this.props.platform ?? 'android') === 'ios';
+    const chip = (id, label) => ({ label, go: () => this.go(id), bg: s === id ? '#4A2A4D' : '#fff', ink: s === id ? '#fff' : '#2A1B2C' });
+    return {
+      isOptional: s === 'optional', isDownloading: s === 'downloading', isReady: s === 'ready',
+      isRestarting: s === 'restarting', isDone: s === 'done',
+      isRequired: s === 'required', isRequiredUpdating: s === 'requiredUpdating', isRequiredOffline: s === 'requiredOffline',
+      isRequiredAny: s.startsWith('required'),
+      allowReading: this.props.allowReading ?? true,
+      pctW: p + '%', pctTxt: this.ar(p) + '٪',
+      optCta: ios ? 'التحديث من App Store' : 'حدّث الآن',
+      reqCta: ios ? 'التحديث من App Store' : 'التحديث من Google Play',
+      optMeta: ios ? 'يفتح صفحة التطبيق في المتجر' : '١٨ م.ب · يُنزَّل في الخلفية',
+      updateNow: () => this.go(ios ? 'restarting' : 'downloading'),
+      later: () => this.go('later'), dismiss: () => this.go('later'),
+      openOptional: () => this.go('optional'), restart: () => this.go('restarting'),
+      reqUpdate: () => this.go('requiredUpdating'),
+      optChips: [chip('optional', 'Prompt'), chip('downloading', 'Downloading'), chip('ready', 'Ready'), chip('restarting', 'Restarting'), chip('done', 'Updated'), chip('later', 'Later')],
+      reqChips: [chip('required', 'Blocked'), chip('requiredUpdating', 'Updating'), chip('requiredOffline', 'Offline')],
+      symSheet: this.sym(64, '#4A2A4D', '#F9F7F4', '#C9939A', '#F2E1DF'),
+      symHero: this.sym(96, '#F1E9EE', '#4A2A4D', '#C9939A', 'rgba(229,179,185,0.35)'),
+      symSplash: this.sym(88, '#F1E9EE', '#4A2A4D', '#C9939A', 'rgba(229,179,185,0.3)'),
+      symDark: this.sym(96, '#3A2C40', '#F1E9EE', '#E5B3B9', 'rgba(229,179,185,0.22)'),
+    };
+  }
+}
+</script>
+</body>
+</html>

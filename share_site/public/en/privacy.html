@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Mishkat Al-Wird</title>
+<meta name="description" content="Mishkat Al-Wird works on your device. An account and feedback are optional.">
+<link rel="icon" href="/icon.png">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<div class="doc">
+<header>
+  <img src="/icon.png" alt="">
+  <a class="brand" href="/">Mishkat Al-Wird</a>
+  <a class="lang" href="/privacy" lang="ar">العربية</a>
+</header>
+
+<h1>Privacy Policy</h1>
+<p class="updated">Last updated: 25 September 2026</p>
+
+<p>Mishkat Al-Wird is an athkar app with timed reminders. It is designed to work
+entirely on your device. An account is optional, and nothing in the app requires one.</p>
+
+<h2>By default: nothing leaves your device</h2>
+<ul>
+  <li><strong>No account needed.</strong> You can use every part of the app without
+    signing in.</li>
+  <li>Your athkar, favourites, streaks and reminder settings are stored on your device
+    and are deleted when you uninstall the app.</li>
+  <li><strong>No advertising</strong>, and no data sold or shared with anyone for their
+    own use.</li>
+</ul>
+<p>Two things change this, and both happen only if you choose them: signing in, and
+sending feedback.</p>
+
+<h2>If you sign in (optional)</h2>
+<p>You can sign in with Apple or Google so that your progress, favourites and settings
+follow you to other devices. The account is kept with Google Firebase (Authentication
+and Cloud Firestore), which processes it on our behalf. We store:</p>
+<ul>
+  <li>your account identifier, and what Apple or Google share with us when you sign
+    in: your name (and first and last name), email address and whether it is
+    verified, and from Google your profile picture link, account language and, for a
+    work or school account, its domain. Apple lets you hide your email, and we note
+    when you did;</li>
+  <li>which sign-in methods the account uses, when it was created and when you last
+    signed in;</li>
+  <li>the app version, phone system and model, and app language you last used it
+    with, and when;</li>
+  <li>the routines you completed: which routine and on which day;</li>
+  <li>your favourites: which athkar, and when you added or removed them;</li>
+  <li>your settings: appearance, language, text size, the Quranic-script choice,
+    reminder mode and times, and the prayer-time calculation method, Asr madhab,
+    whether device location is used, and the city you chose.</li>
+</ul>
+<p>We do <strong>not</strong> store your location coordinates, your time zone or your unfinished
+reading sessions; those stay on the device. Your synced data is used only to keep your
+devices in step.</p>
+<p><strong>Signing out</strong> stops syncing and leaves everything on this device.
+<strong>Deleting your account</strong> (Settings → Account → Delete account)
+permanently removes the account, everything synced to it and your feedback messages.
+What is saved on the device stays there.</p>
+
+<h2>Feedback (optional)</h2>
+<p>You can send a suggestion, a bug report or a report of a mistake in a thikr. We
+store:</p>
+<ul>
+  <li>what you write, and the replies we send;</li>
+  <li>an email address, only if you give one;</li>
+  <li>if you leave “Attach device information” on: the app version, your system version
+    and device model, and the app language;</li>
+  <li>for a thikr report, which thikr it was and which edition of the text you were
+    reading.</li>
+</ul>
+<p>If you are not signed in, sending feedback creates an anonymous identifier so our
+reply can reach you in the app. Feedback is read only by the developer, is never used
+for marketing, and is deleted with your account or on request by email. Replies appear
+in the app only; we never send push notifications.</p>
+<p>To protect this service from abuse, Firebase App Check confirms that requests come
+from the genuine app, using Google Play Integrity or Apple App Attest.</p>
+
+<h2>Saved reading</h2>
+<p>An unfinished reading session is saved on your device: the texts selected, their
+repetition counts and your current position, so that you can resume it without a
+network connection. It is never synced. Completing a session removes its saved checkpoint;
+starting again replaces it.</p>
+
+<h2>Location</h2>
+<p>If you turn on prayer-time reminders, the app may ask for your approximate location.</p>
+<ul>
+  <li>It is used <strong>only on your device</strong>, to calculate prayer times.</li>
+  <li>It is <strong>never transmitted anywhere</strong>, even when you are signed in.
+    The calculation is astronomical and runs offline.</li>
+  <li>Only coarse accuracy is requested: enough for a city, not for a street.</li>
+  <li>You can refuse. The app then lets you pick a city from a list, or falls back to
+    fixed clock times. Nothing stops working.</li>
+</ul>
+
+<h2>Notifications</h2>
+<p>Reminders are scheduled by your device's own operating system. They are local
+notifications: nothing is sent through a push service, and no internet connection is
+needed for a reminder to arrive.</p>
+<p>To deliver them the app may ask for permission to post notifications, to schedule
+exact alarms and to be exempt from battery optimisation. Each is optional; refusing
+any of them may make reminders less punctual but does not disable the app.</p>
+
+<h2>Shared links</h2>
+<p>When you share a thikr, the app adds a link such as
+<code>https://mishkatalwird.com/t/mo1</code>, naming only which thikr it is. If the
+recipient has the app, their phone opens the thikr in it directly. If not, this
+website sends them to the App Store or Google Play.</p>
+<p>This website is static. It sets no cookies and runs no analytics or tracking. It is
+hosted on Firebase Hosting (Google), which, like any web host, keeps standard request
+logs, such as IP address, browser type and the page requested, to operate and secure
+the service. We do not use those logs to identify anyone.</p>
+
+<h2>Diagnostics</h2>
+<p>If crash reporting and analytics are enabled in a published build, the app collects
+a deliberately narrow set of events:</p>
+<ul>
+  <li>that a reminder schedule was written to the operating system, with how many are
+    pending and whether exact alarms were permitted;</li>
+  <li>that a reminder was opened;</li>
+  <li>that a reading session was completed, and its category;</li>
+  <li>whether a permission was granted or refused;</li>
+  <li>crash reports.</li>
+</ul>
+<p>These exist to answer one question: <strong>do reminders actually arrive on real
+devices?</strong> Some manufacturers stop background apps aggressively and silently
+cancel scheduled alarms, and comparing reminders scheduled against reminders opened is
+the only way to detect it.</p>
+<p>Diagnostics do <strong>not</strong> include the athkar you read, when you pray, your
+location, what you write in feedback, or any identifier that could single you out.</p>
+
+<h2>Children</h2>
+<p>The app needs no personal data to work and is suitable for all ages. Signing in and
+sending feedback are optional.</p>
+
+<h2>Changes</h2>
+<p>If this policy changes, the new version will be published on this page with a new
+date.</p>
+
+<h2>Contact</h2>
+<p>Questions about this policy: <a href="mailto:morm9n@gmail.com">morm9n@gmail.com</a></p>
+</div>
+<footer class="site">
+  <a href="/en/privacy">Privacy</a>·<a href="/en/terms">Terms</a>
+</footer>
+</body>
+</html>

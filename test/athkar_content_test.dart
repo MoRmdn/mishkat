@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +19,14 @@ void main() {
     for (final c in ThikrCategory.values) {
       expect(library[c], isNotEmpty, reason: c.key);
     }
+  });
+
+  test('the content version is the edition the review document describes', () {
+    // A wrong-thikr report carries this, so the reviewer can tell which text
+    // the reporter was reading.
+    final review = File('docs/athkar-content-review.md').readAsStringSync();
+    expect(library.contentVersion, isNotNull);
+    expect(review, contains('Draft version: `${library.contentVersion}`'));
   });
 
   test('thikr ids are unique across the whole corpus', () {

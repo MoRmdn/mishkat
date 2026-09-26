@@ -6,11 +6,19 @@ import '../../services/diagnostics.dart';
 import '../../services/notification_service.dart';
 import '../../services/permission_service.dart';
 import '../../services/reminder_scheduler.dart';
+import '../../services/sync/settings_codec.dart';
+import '../../services/sync/sync_models.dart';
+import '../../services/sync/sync_service.dart';
 import '../settings/settings_controller.dart';
+import '../update/update_controller.dart';
 import 'prayer_controller.dart';
 
 final notificationServiceProvider = Provider<NotificationService>(
-  (ref) => NotificationService(),
+  (ref) => NotificationService(
+    clock: ref.read(clockProvider),
+    onError: (error, stack) =>
+        ref.read(diagnosticsProvider).recordError(error, stack),
+  ),
 );
 
 final permissionServiceProvider = Provider<PermissionService>(
@@ -23,6 +31,23 @@ class ReminderController extends Notifier<ReminderSettings> {
   ReminderSettings build() => ref.read(settingsStoreProvider).readReminders();
 
   void _update(ReminderSettings next) {
+    final synced = syncedValuesDiffer(
+      SettingsCodec.encodeReminders(state),
+      SettingsCodec.encodeReminders(next),
+    );
+    // Below the minimum version the reminders the user already has keep
+    // firing, but they cannot be changed (the Reminders tab says so).
+    if (synced && ref.read(updateBlocksWritesProvider)) return;
+    state = next;
+    ref.read(settingsStoreProvider).writeReminders(next);
+    if (synced) {
+      ref.read(syncProvider.notifier).settingsChanged(SyncGroup.reminders);
+    }
+  }
+
+  /// Adopts reminders pulled from the account. The schedule follows through
+  /// currentScheduleProvider like any other change.
+  void replaceFromSync(ReminderSettings next) {
     state = next;
     ref.read(settingsStoreProvider).writeReminders(next);
   }
@@ -106,6 +131,14 @@ class PermissionController extends Notifier<PermissionState> {
         .permissionResolved(permission: 'battery_exemption', granted: granted);
     await refresh();
     return granted;
+  }
+
+  /// «فتح إعدادات البطارية»: the exemption dialog while it can still help,
+  /// otherwise the app's settings page for the vendor steps. Never a no-op.
+  /// Coming back refreshes [state] through `ReminderSyncScope`'s resume hook.
+  Future<void> openBatterySettings() async {
+    if (!state.batteryExempt && await requestBatteryExemption()) return;
+    await ref.read(permissionServiceProvider).openBatterySettings();
   }
 }
 

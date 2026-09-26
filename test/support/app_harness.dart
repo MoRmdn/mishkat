@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/app.dart';
+import 'package:mishkat/core/widgets/mishkat_icon.dart';
 import 'package:mishkat/core/clock.dart';
+import 'package:mishkat/core/external_links.dart';
 import 'package:mishkat/data/models/reminder_settings.dart';
 import 'package:mishkat/data/models/thikr.dart';
 import 'package:mishkat/data/local/app_database.dart';
@@ -10,6 +16,14 @@ import 'package:mishkat/data/repositories/athkar_repository.dart';
 import 'package:mishkat/data/repositories/progress_providers.dart';
 import 'package:mishkat/features/reminders/reminder_controller.dart';
 import 'package:mishkat/features/settings/settings_controller.dart';
+import 'package:mishkat/features/share/share_link_scope.dart';
+import 'package:mishkat/services/app_info.dart';
+import 'package:mishkat/services/auth/auth_service.dart';
+import 'package:mishkat/services/feedback/feedback_repository.dart';
+import 'package:mishkat/services/sync/sync_remote.dart';
+import 'package:mishkat/services/update/app_updater.dart';
+import 'package:mishkat/services/update/release_notes.dart';
+import 'package:mishkat/services/update/update_config.dart';
 import 'package:mishkat/services/notification_service.dart';
 import 'package:mishkat/services/permission_service.dart';
 import 'package:mishkat/services/reminder_scheduler.dart';
@@ -18,8 +32,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:wakelock_plus_platform_interface/wakelock_plus_platform_interface.dart';
 
+import 'cloud_fakes.dart';
+
+export 'cloud_fakes.dart';
+
 /// Records what would have been scheduled, without touching the OS.
 class FakeNotificationService implements NotificationService {
+  @override
+  Future<void> handleResponse(NotificationResponse response) async {}
+
   final List<ReminderSchedule> applied = [];
   bool cancelled = false;
   ReminderSlotId? launchedFrom;
@@ -71,10 +92,15 @@ class FakePermissionService implements PermissionService {
     this.exactAlarms = true,
     this.batteryExempt = true,
     this.vendor = 'Xiaomi',
+    this.grantBattery = true,
   });
 
   bool notifications, exactAlarms, batteryExempt;
   String vendor;
+
+  /// Whether the exemption dialog is accepted when shown.
+  bool grantBattery;
+  int openedBatterySettings = 0;
 
   @override
   Future<PermissionState> read() async => PermissionState(
@@ -91,7 +117,11 @@ class FakePermissionService implements PermissionService {
   Future<bool> requestExactAlarms() async => exactAlarms = true;
 
   @override
-  Future<bool> requestBatteryExemption() async => batteryExempt = true;
+  Future<bool> requestBatteryExemption() async =>
+      batteryExempt = batteryExempt || grantBattery;
+
+  @override
+  Future<void> openBatterySettings() async => openedBatterySettings++;
 
   @override
   Future<String> manufacturer() async => vendor;
@@ -114,11 +144,28 @@ class AppHarness {
   AppHarness({
     FakeNotificationService? notifications,
     FakePermissionService? permissions,
+    FakeAuthService? auth,
+    this.cloud = true,
+    FakeUpdateConfigSource? updateConfig,
   }) : notifications = notifications ?? FakeNotificationService(),
-       permissions = permissions ?? FakePermissionService();
+       permissions = permissions ?? FakePermissionService(),
+       auth = auth ?? FakeAuthService(),
+       updateConfig = updateConfig ?? FakeUpdateConfigSource();
 
   final FakeNotificationService notifications;
   final FakePermissionService permissions;
+
+  /// Accounts and feedback, with no Firebase. [cloud] false is a build where
+  /// Firebase failed to start.
+  final FakeAuthService auth;
+  final FakeSyncRemote syncRemote = FakeSyncRemote();
+  final FakeFeedbackRepository feedback = FakeFeedbackRepository();
+  final bool cloud;
+
+  /// Published versions, and Play / the store. Nothing is published unless
+  /// a test says so.
+  final FakeUpdateConfigSource updateConfig;
+  final FakeAppUpdater updater = FakeAppUpdater();
   final FakeWakelock wakelock = FakeWakelock();
 
   /// A fresh in-memory database per test; nothing touches the real file.
@@ -126,28 +173,51 @@ class AppHarness {
 
   bool get screenAwake => wakelock.isOn;
 
-  static late AthkarLibrary library;
+  /// Share links the OS delivers: [launchLinks] as though one launched the
+  /// app, then anything added to [links] while it runs.
+  List<Uri> launchLinks = [];
+  final StreamController<Uri> links = StreamController<Uri>.broadcast();
 
-  /// Loads the athkar corpus once for the whole test file.
+  /// Web pages the app asked the platform to open.
+  final List<Uri> openedPages = [];
+
+  Stream<Uri> _incomingLinks() async* {
+    yield* Stream.fromIterable(launchLinks);
+    yield* links.stream;
+  }
+
+  static late AthkarLibrary library;
+  static late Changelog changelog;
+
+  /// Loads the athkar corpus and the changelog once for the whole test file.
   static Future<void> loadLibrary() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     library = await AthkarRepository().load();
+    changelog = Changelog.decode(
+      await rootBundle.loadString(Changelog.assetPath),
+    );
   }
 
   Future<void> pump(
     WidgetTester tester, {
     String language = 'ar',
-    String palette = 'teal',
     String appearance = 'light',
     bool onboardingComplete = true,
     DateTime? now,
     Map<String, Object> extraPrefs = const {},
 
+    /// Logical screen size. Defaults to a 390×844 phone; goldens compared
+    /// against the design board pass its 340×720 frame.
+    Size size = const Size(390, 844),
+
+    /// Makes the athkar corpus fail to load, for the error screen.
+    Object? libraryError,
+
     /// Pass false to relaunch against whatever the previous pump left in the
     /// store — that is what makes a persistence test meaningful.
     bool resetPrefs = true,
   }) async {
-    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.physicalSize = size * 3;
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
     // One teardown so the order is explicit rather than LIFO-dependent:
@@ -167,7 +237,6 @@ class AppHarness {
 
     SharedPreferences.setMockInitialValues({
       'flutter.settings.language': language,
-      'flutter.settings.palette': palette,
       'flutter.settings.appearance': appearance,
       'flutter.settings.onboardingComplete': onboardingComplete,
       for (final e in extraPrefs.entries) 'flutter.${e.key}': e.value,
@@ -180,12 +249,33 @@ class AppHarness {
           sharedPreferencesProvider.overrideWithValue(prefs),
           // Preloaded: otherwise pumpAndSettle races the asset read and
           // settles on an empty screen.
-          athkarLibraryProvider.overrideWith((ref) => library),
+          athkarLibraryProvider.overrideWith(
+            (ref) => libraryError == null
+                ? library
+                : Future<AthkarLibrary>.error(libraryError),
+          ),
+          changelogProvider.overrideWith((ref) => changelog),
           appDatabaseProvider.overrideWithValue(db),
           notificationServiceProvider.overrideWithValue(notifications),
           permissionServiceProvider.overrideWithValue(permissions),
+          incomingLinksProvider.overrideWithValue(_incomingLinks()),
+          externalLinkLauncherProvider.overrideWithValue(
+            (uri) async => openedPages.add(uri),
+          ),
           clockProvider.overrideWithValue(
             () => now ?? DateTime(2026, 9, 7, 3, 18),
+          ),
+          cloudAvailableProvider.overrideWithValue(cloud),
+          authServiceProvider.overrideWithValue(auth),
+          syncRemoteProvider.overrideWithValue(syncRemote),
+          feedbackRepositoryProvider.overrideWithValue(feedback),
+          updateConfigSourceProvider.overrideWithValue(updateConfig),
+          appUpdaterProvider.overrideWithValue(updater),
+          appInfoProvider.overrideWith(
+            (ref) => const AppInfo(
+              version: '1.2.0 (34)',
+              platform: 'Android 14 · Pixel 7',
+            ),
           ),
         ],
         child: const MishkatApp(),
@@ -209,5 +299,26 @@ class AppHarness {
   }
 }
 
+/// Finds an icon by glyph — icons carry no text to search for.
+Finder findIcon(MIcon icon) =>
+    find.byWidgetPredicate((w) => w is MishkatIcon && w.icon == icon);
+
 TextDirection shellDirection(WidgetTester tester) =>
     Directionality.of(tester.element(find.byType(Scaffold).first));
+
+/// Home ⚙ opens the settings sheet (board AF 16b); its «عن التطبيق» row
+/// opens the full page with the account card, feedback, the owner's inbox
+/// and the legal links (board AF 16a). Language-independent: finds the row
+/// by its ⓘ glyph.
+Future<void> openAboutPage(WidgetTester tester) async {
+  await tester.tap(findIcon(MIcon.settings));
+  await AppHarness.settleWithDatabase(tester);
+  final about = find.ancestor(
+    of: findIcon(MIcon.info),
+    matching: find.byType(InkWell),
+  );
+  await tester.ensureVisible(about.first);
+  await tester.pumpAndSettle();
+  await tester.tap(about.first);
+  await AppHarness.settleWithDatabase(tester);
+}

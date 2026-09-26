@@ -105,7 +105,11 @@ class Thikr {
 /// The whole bundled corpus, held in memory — it is a few dozen short records.
 @immutable
 class AthkarLibrary {
-  const AthkarLibrary({required this.sources, required this.byCategory});
+  const AthkarLibrary({
+    required this.sources,
+    required this.byCategory,
+    this.contentVersion,
+  });
 
   factory AthkarLibrary.fromJson(Map<String, dynamic> json) {
     final sources = (json['sources'] as Map<String, dynamic>).map(
@@ -122,10 +126,18 @@ class AthkarLibrary {
       ];
     });
 
-    return AthkarLibrary(sources: sources, byCategory: byCategory);
+    return AthkarLibrary(
+      sources: sources,
+      byCategory: byCategory,
+      contentVersion: json['contentVersion'] as String?,
+    );
   }
 
   final Map<String, ThikrSource> sources;
+
+  /// The edition of athkar.json, attached to a wrong-thikr report so the
+  /// reviewer knows which text the reporter was reading.
+  final String? contentVersion;
   final Map<ThikrCategory, List<Thikr>> byCategory;
 
   List<Thikr> operator [](ThikrCategory c) => byCategory[c] ?? const [];

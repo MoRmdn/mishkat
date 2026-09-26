@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -121,6 +122,14 @@ class PermissionService {
     if (!_isMobile || !Platform.isAndroid) return true;
     final status = await Permission.ignoreBatteryOptimizations.request();
     return status.isGranted;
+  }
+
+  /// Opens the app's own settings page, where Android's per-app battery mode
+  /// and the vendors' autostart switches live. The exemption dialog cannot
+  /// reach either, and says nothing at all once the app is already exempt.
+  Future<void> openBatterySettings() async {
+    if (!_isMobile || !Platform.isAndroid) return;
+    await AppSettings.openAppSettings(type: AppSettingsType.settings);
   }
 
   Future<String> manufacturer() async {

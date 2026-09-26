@@ -1,0 +1,24 @@
+# Merge into pubspec.yaml under flutter:
+flutter:
+  assets:
+    - assets/icons/
+    - assets/branding/svg/
+    - assets/branding/png/
+  fonts:
+    - family: Alexandria
+      fonts:
+        - asset: assets/fonts/Alexandria-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Alexandria-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Alexandria-Medium.ttf
+          weight: 500
+    - family: Scheherazade New
+      fonts:
+        - asset: assets/fonts/ScheherazadeNew-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ScheherazadeNew-Medium.ttf
+          weight: 500
+    - family: Amiri Quran
+      fonts:
+        - asset: assets/fonts/AmiriQuran-Regular.ttf

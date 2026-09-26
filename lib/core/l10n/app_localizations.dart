@@ -100,7 +100,7 @@ abstract class L {
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:
-  /// **'تطبيق الأذكار'**
+  /// **'مِشْكَاةُ الوِرْدِ'**
   String get appName;
 
   /// No description provided for @navHome.
@@ -126,12 +126,6 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'التقدّم'**
   String get navProgress;
-
-  /// No description provided for @titleHome.
-  ///
-  /// In ar, this message translates to:
-  /// **'الأذكار'**
-  String get titleHome;
 
   /// No description provided for @titleReminders.
   ///
@@ -193,77 +187,11 @@ abstract class L {
   /// **'السبحة'**
   String get catTasbih;
 
-  /// No description provided for @nextReminder.
-  ///
-  /// In ar, this message translates to:
-  /// **'التذكير القادم'**
-  String get nextReminder;
-
-  /// No description provided for @edit.
-  ///
-  /// In ar, this message translates to:
-  /// **'تعديل'**
-  String get edit;
-
-  /// No description provided for @minutesLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'{minutesCount, plural, =1{دقيقة} =2{دقيقتين} few{{minutes} دقائق} other{{minutes} دقيقة}}'**
-  String minutesLabel(num minutesCount, String minutes);
-
-  /// No description provided for @inHours.
-  ///
-  /// In ar, this message translates to:
-  /// **'{hoursCount, plural, =0{بعد {minutesText}} =1{بعد ساعة و{minutesText}} =2{بعد ساعتين و{minutesText}} few{بعد {hours} ساعات و{minutesText}} other{بعد {hours} ساعة و{minutesText}}}'**
-  String inHours(num hoursCount, String hours, String minutesText);
-
-  /// No description provided for @prayerBased.
-  ///
-  /// In ar, this message translates to:
-  /// **'محسوب على مواقيت اليوم'**
-  String get prayerBased;
-
   /// No description provided for @schedFixed.
   ///
   /// In ar, this message translates to:
   /// **'مجدولة يومياً — لا تحتاج فتح التطبيق'**
   String get schedFixed;
-
-  /// No description provided for @schedPrayer.
-  ///
-  /// In ar, this message translates to:
-  /// **'مجدولة حتى {date} ({days} يوماً)'**
-  String schedPrayer(String date, String days);
-
-  /// No description provided for @tasbihTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'السبحة'**
-  String get tasbihTitle;
-
-  /// No description provided for @tasbihSub.
-  ///
-  /// In ar, this message translates to:
-  /// **'عدّاد حر — انقر على الشاشة للتسبيح'**
-  String get tasbihSub;
-
-  /// No description provided for @dayUnit.
-  ///
-  /// In ar, this message translates to:
-  /// **'يوم'**
-  String get dayUnit;
-
-  /// No description provided for @dayUnitPl.
-  ///
-  /// In ar, this message translates to:
-  /// **'يوماً'**
-  String get dayUnitPl;
-
-  /// No description provided for @sessions.
-  ///
-  /// In ar, this message translates to:
-  /// **'جلسة'**
-  String get sessions;
 
   /// No description provided for @fixedMode.
   ///
@@ -274,32 +202,8 @@ abstract class L {
   /// No description provided for @prayerMode.
   ///
   /// In ar, this message translates to:
-  /// **'حسب مواقيت الصلاة'**
+  /// **'حسب الصلاة'**
   String get prayerMode;
-
-  /// No description provided for @exactTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'التنبيهات الدقيقة غير مسموحة'**
-  String get exactTitle;
-
-  /// No description provided for @exactBody.
-  ///
-  /// In ar, this message translates to:
-  /// **'قد تتأخر التذكيرات بضع دقائق. يمكنك السماح بها من إعدادات النظام.'**
-  String get exactBody;
-
-  /// No description provided for @exactAllow.
-  ///
-  /// In ar, this message translates to:
-  /// **'السماح بالتنبيهات الدقيقة'**
-  String get exactAllow;
-
-  /// No description provided for @daily.
-  ///
-  /// In ar, this message translates to:
-  /// **'يومياً · يتكرر تلقائياً'**
-  String get daily;
 
   /// No description provided for @off.
   ///
@@ -334,19 +238,19 @@ abstract class L {
   /// No description provided for @slotPrayerWake.
   ///
   /// In ar, this message translates to:
-  /// **'قبل الفجر بـ ١٥ دقيقة'**
+  /// **'قبل الفجر بـ ١٥ د'**
   String get slotPrayerWake;
 
   /// No description provided for @slotPrayerMorning.
   ///
   /// In ar, this message translates to:
-  /// **'بعد الفجر بـ ٣٠ دقيقة'**
+  /// **'بعد الفجر بـ ٣٠ د'**
   String get slotPrayerMorning;
 
   /// No description provided for @slotPrayerEvening.
   ///
   /// In ar, this message translates to:
-  /// **'بعد العصر بـ ٤٥ دقيقة'**
+  /// **'بعد العصر بـ ٤٥ د'**
   String get slotPrayerEvening;
 
   /// No description provided for @slotPrayerSleep.
@@ -385,12 +289,6 @@ abstract class L {
   /// **'استخدام موقع الجهاز'**
   String get useMyLocation;
 
-  /// No description provided for @todayTimesFor.
-  ///
-  /// In ar, this message translates to:
-  /// **'مواقيت اليوم — {city}'**
-  String todayTimesFor(String city);
-
   /// No description provided for @todayTimes.
   ///
   /// In ar, this message translates to:
@@ -415,18 +313,6 @@ abstract class L {
   /// **'المغرب'**
   String get maghrib;
 
-  /// No description provided for @windowLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'النافذة المجدولة'**
-  String get windowLabel;
-
-  /// No description provided for @windowText.
-  ///
-  /// In ar, this message translates to:
-  /// **'الأيام المجدولة: {days} · التنبيهات المعلّقة: {pending} من {cap}'**
-  String windowText(String days, String pending, String cap);
-
   /// No description provided for @method.
   ///
   /// In ar, this message translates to:
@@ -436,7 +322,7 @@ abstract class L {
   /// No description provided for @madhab.
   ///
   /// In ar, this message translates to:
-  /// **'المذهب في العصر'**
+  /// **'مذهب العصر'**
   String get madhab;
 
   /// No description provided for @location.
@@ -481,22 +367,10 @@ abstract class L {
   /// **'التذكيرات لا تصل؟'**
   String get oemTitle;
 
-  /// No description provided for @oemHintOn.
-  ///
-  /// In ar, this message translates to:
-  /// **'الجهاز مستثنى من موفّر البطارية ✓'**
-  String get oemHintOn;
-
-  /// No description provided for @oemHintOff.
-  ///
-  /// In ar, this message translates to:
-  /// **'دليل خاص بجهازك — {vendor}'**
-  String oemHintOff(String vendor);
-
   /// No description provided for @oemBody.
   ///
   /// In ar, this message translates to:
-  /// **'أنظمة بعض الشركات توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات التالية مرة واحدة.'**
+  /// **'بعض الأجهزة توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات مرة واحدة.'**
   String get oemBody;
 
   /// No description provided for @oemHeading.
@@ -508,26 +382,20 @@ abstract class L {
   /// No description provided for @oemStep1.
   ///
   /// In ar, this message translates to:
-  /// **'الإعدادات ← التطبيقات ← إدارة التطبيقات ← مشكاة'**
+  /// **'الإعدادات ← التطبيقات ← مِشْكَاة'**
   String get oemStep1;
 
   /// No description provided for @oemStep2.
   ///
   /// In ar, this message translates to:
-  /// **'فعّل «التشغيل التلقائي» إن كان متاحاً على جهازك'**
+  /// **'فعّل «التشغيل التلقائي»'**
   String get oemStep2;
 
   /// No description provided for @oemStep3.
   ///
   /// In ar, this message translates to:
-  /// **'من «موفّر البطارية» اختر «بدون قيود»'**
+  /// **'موفّر البطارية ← «لا قيود»'**
   String get oemStep3;
-
-  /// No description provided for @oemStep4.
-  ///
-  /// In ar, this message translates to:
-  /// **'ثبّت التطبيق من شاشة التطبيقات الحديثة'**
-  String get oemStep4;
 
   /// No description provided for @oemGenericHint.
   ///
@@ -544,43 +412,43 @@ abstract class L {
   /// No description provided for @batteryOn.
   ///
   /// In ar, this message translates to:
-  /// **'التطبيق مستثنى حالياً ✓'**
+  /// **'التطبيق مستثنى حالياً'**
   String get batteryOn;
 
   /// No description provided for @batteryOff.
   ///
   /// In ar, this message translates to:
-  /// **'التطبيق غير مستثنى'**
+  /// **'التطبيق غير مستثنى حالياً'**
   String get batteryOff;
 
   /// No description provided for @favEmptyTitle.
   ///
   /// In ar, this message translates to:
-  /// **'لا توجد أذكار محفوظة بعد'**
+  /// **'لا شيء محفوظ بعد'**
   String get favEmptyTitle;
 
   /// No description provided for @favEmptyBody.
   ///
   /// In ar, this message translates to:
-  /// **'اضغط على القلب أثناء القراءة لحفظ الذكر هنا.'**
+  /// **'اضغط على القلب أثناء القراءة ليُحفظ الذكر هنا.'**
   String get favEmptyBody;
 
   /// No description provided for @currentStreak.
   ///
   /// In ar, this message translates to:
-  /// **'تتابع مستمر'**
+  /// **'التتابع الحالي'**
   String get currentStreak;
 
   /// No description provided for @longest.
   ///
   /// In ar, this message translates to:
-  /// **'أطول تتابع'**
+  /// **'الأطول'**
   String get longest;
 
   /// No description provided for @totalSessions.
   ///
   /// In ar, this message translates to:
-  /// **'إجمالي الجلسات'**
+  /// **'الجلسات'**
   String get totalSessions;
 
   /// No description provided for @last14.
@@ -592,38 +460,14 @@ abstract class L {
   /// No description provided for @byCategory.
   ///
   /// In ar, this message translates to:
-  /// **'حسب الفئة — هذا الأسبوع'**
+  /// **'هذا الأسبوع'**
   String get byCategory;
-
-  /// No description provided for @countOf.
-  ///
-  /// In ar, this message translates to:
-  /// **'من'**
-  String get countOf;
 
   /// No description provided for @once.
   ///
   /// In ar, this message translates to:
   /// **'مرة واحدة'**
   String get once;
-
-  /// No description provided for @tapHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'انقر في أي مكان للعد · الشاشة تبقى مضاءة'**
-  String get tapHint;
-
-  /// No description provided for @completedToday.
-  ///
-  /// In ar, this message translates to:
-  /// **'أُكملت اليوم'**
-  String get completedToday;
-
-  /// No description provided for @athkarCount.
-  ///
-  /// In ar, this message translates to:
-  /// **'{count} أذكار'**
-  String athkarCount(String count);
 
   /// No description provided for @prev.
   ///
@@ -643,24 +487,6 @@ abstract class L {
   /// **'التالي'**
   String get next;
 
-  /// No description provided for @donePrefix.
-  ///
-  /// In ar, this message translates to:
-  /// **'تمّت'**
-  String get donePrefix;
-
-  /// No description provided for @doneTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'تمّت — {category}'**
-  String doneTitle(String category);
-
-  /// No description provided for @doneStreak.
-  ///
-  /// In ar, this message translates to:
-  /// **'تتابعك الآن {days} يوماً. التذكير القادم {time}.'**
-  String doneStreak(String days, String time);
-
   /// No description provided for @shareAsImage.
   ///
   /// In ar, this message translates to:
@@ -673,23 +499,11 @@ abstract class L {
   /// **'العودة للرئيسية'**
   String get backHome;
 
-  /// No description provided for @shareCardLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'ذِكْر'**
-  String get shareCardLabel;
-
   /// No description provided for @shareTitle.
   ///
   /// In ar, this message translates to:
   /// **'مشاركة الذكر'**
   String get shareTitle;
-
-  /// No description provided for @saveImage.
-  ///
-  /// In ar, this message translates to:
-  /// **'حفظ كصورة'**
-  String get saveImage;
 
   /// No description provided for @share.
   ///
@@ -733,34 +547,10 @@ abstract class L {
   /// **'النظام'**
   String get system;
 
-  /// No description provided for @themeLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'لون التطبيق'**
-  String get themeLabel;
-
-  /// No description provided for @themeTeal.
-  ///
-  /// In ar, this message translates to:
-  /// **'أخضر حجري'**
-  String get themeTeal;
-
-  /// No description provided for @themeIndigo.
-  ///
-  /// In ar, this message translates to:
-  /// **'نيلي'**
-  String get themeIndigo;
-
-  /// No description provided for @themeOlive.
-  ///
-  /// In ar, this message translates to:
-  /// **'زيتوني'**
-  String get themeOlive;
-
   /// No description provided for @fontSize.
   ///
   /// In ar, this message translates to:
-  /// **'حجم الخط'**
+  /// **'حجم نص الذكر'**
   String get fontSize;
 
   /// No description provided for @fontSizeSmall.
@@ -832,20 +622,8 @@ abstract class L {
   /// No description provided for @onb1Body.
   ///
   /// In ar, this message translates to:
-  /// **'تذكيرات لطيفة لأذكار الصباح والمساء والنوم والاستيقاظ — تعمل بالكامل دون إنترنت.'**
+  /// **'تذكيرات لأذكار الصباح والمساء والنوم والاستيقاظ، تُجدول على جهازك وتعمل دون إنترنت. بلا حساب.'**
   String get onb1Body;
-
-  /// No description provided for @onb1NoteLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'بدون حساب'**
-  String get onb1NoteLabel;
-
-  /// No description provided for @onb1Note.
-  ///
-  /// In ar, this message translates to:
-  /// **'لا تسجيل دخول ولا بيانات تُرسل. كل شيء محفوظ على جهازك.'**
-  String get onb1Note;
 
   /// No description provided for @onb1Primary.
   ///
@@ -856,7 +634,7 @@ abstract class L {
   /// No description provided for @onb1Secondary.
   ///
   /// In ar, this message translates to:
-  /// **'تخطي التهيئة'**
+  /// **'تخطي'**
   String get onb1Secondary;
 
   /// No description provided for @onb2Title.
@@ -868,19 +646,13 @@ abstract class L {
   /// No description provided for @onb2Body.
   ///
   /// In ar, this message translates to:
-  /// **'التذكيرات تُجدول على جهازك مباشرة، لذلك لا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.'**
+  /// **'التذكيرات تُجدول على جهازك مباشرة، فلا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.'**
   String get onb2Body;
-
-  /// No description provided for @onb2NoteLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'لماذا الآن'**
-  String get onb2NoteLabel;
 
   /// No description provided for @onb2Note.
   ///
   /// In ar, this message translates to:
-  /// **'يمكنك السماح لاحقاً من الإعدادات، ولكن التذكيرات ستبقى معطلة حتى ذلك الحين.'**
+  /// **'يمكنك السماح لاحقاً من الإعدادات، لكن التذكيرات ستبقى معطّلة حتى ذلك الحين.'**
   String get onb2Note;
 
   /// No description provided for @onb2Primary.
@@ -904,19 +676,13 @@ abstract class L {
   /// No description provided for @onb3Body.
   ///
   /// In ar, this message translates to:
-  /// **'ليصل التذكير في وقته بالضبط، يحتاج التطبيق إذن «التنبيهات الدقيقة» من نظام أندرويد.'**
+  /// **'ليصل التذكير في دقيقته، يحتاج التطبيق إذن «التنبيهات الدقيقة» من أندرويد.'**
   String get onb3Body;
-
-  /// No description provided for @onb3NoteLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'إن رفضت'**
-  String get onb3NoteLabel;
 
   /// No description provided for @onb3Note.
   ///
   /// In ar, this message translates to:
-  /// **'سيستمر التطبيق في العمل، لكن قد يتأخر التذكير بضع دقائق، وسنخبرك بذلك في الإعدادات.'**
+  /// **'إن رفضت، يستمر التطبيق في العمل لكن قد يتأخر التذكير بضع دقائق — وسنوضح ذلك في التذكيرات.'**
   String get onb3Note;
 
   /// No description provided for @onb3Primary.
@@ -934,25 +700,19 @@ abstract class L {
   /// No description provided for @onb4Title.
   ///
   /// In ar, this message translates to:
-  /// **'حرّر التطبيق من موفّر البطارية'**
+  /// **'استثناء من موفّر البطارية'**
   String get onb4Title;
 
   /// No description provided for @onb4Body.
   ///
   /// In ar, this message translates to:
-  /// **'أنظمة بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات المجدولة. استثناء واحد يحل المشكلة نهائياً.'**
+  /// **'بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات. استثناء واحد يكفي.'**
   String get onb4Body;
-
-  /// No description provided for @onb4NoteLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'خطوة واحدة'**
-  String get onb4NoteLabel;
 
   /// No description provided for @onb4Note.
   ///
   /// In ar, this message translates to:
-  /// **'سنفتح لك شاشة الإعدادات الصحيحة لجهازك، ثم ننتهي.'**
+  /// **'سنفتح الشاشة الصحيحة لجهازك.'**
   String get onb4Note;
 
   /// No description provided for @onb4Primary.
@@ -984,18 +744,6 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'تعذّر حساب المواقيت — تُستخدم الأوقات الثابتة مؤقتاً'**
   String get prayerFallbackNotice;
-
-  /// No description provided for @notificationsBlocked.
-  ///
-  /// In ar, this message translates to:
-  /// **'التنبيهات غير مسموحة — لن تصل التذكيرات'**
-  String get notificationsBlocked;
-
-  /// No description provided for @enableNotifications.
-  ///
-  /// In ar, this message translates to:
-  /// **'تفعيل التنبيهات'**
-  String get enableNotifications;
 
   /// No description provided for @notifTitleMorning.
   ///
@@ -1038,6 +786,1566 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'تذكيرات الأذكار'**
   String get notifChannelName;
+
+  /// No description provided for @brandShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مِشْكَاة'**
+  String get brandShort;
+
+  /// No description provided for @brandName.
+  ///
+  /// In ar, this message translates to:
+  /// **'مِشْكَاةُ'**
+  String get brandName;
+
+  /// No description provided for @brandWird.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوِرْدِ'**
+  String get brandWird;
+
+  /// No description provided for @about.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن التطبيق'**
+  String get about;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشروط والأحكام'**
+  String get termsOfUse;
+
+  /// No description provided for @shareStyleAubergine.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنفسجي'**
+  String get shareStyleAubergine;
+
+  /// No description provided for @shareStyleStone.
+  ///
+  /// In ar, this message translates to:
+  /// **'حجري'**
+  String get shareStyleStone;
+
+  /// No description provided for @nowLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الآن'**
+  String get nowLabel;
+
+  /// No description provided for @nextLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get nextLabel;
+
+  /// No description provided for @begin.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ'**
+  String get begin;
+
+  /// No description provided for @editTimes.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الأوقات'**
+  String get editTimes;
+
+  /// No description provided for @athkarCountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{ذكر واحد} =2{ذكران} few{{digits} أذكار} many{{digits} ذكراً} other{{digits} ذكر}}'**
+  String athkarCountLabel(num count, String digits);
+
+  /// No description provided for @aboutMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{نحو دقيقة} =2{نحو دقيقتين} few{نحو {digits} دقائق} other{نحو {digits} دقيقة}}'**
+  String aboutMinutes(num count, String digits);
+
+  /// No description provided for @streakDays.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{يوم واحد متتالٍ} =2{يومان متتاليان} few{{digits} أيام متتالية} many{{digits} يوماً متتالياً} other{{digits} يوم متتالٍ}}'**
+  String streakDays(num count, String digits);
+
+  /// No description provided for @streakStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ تتابعك اليوم'**
+  String get streakStart;
+
+  /// No description provided for @daysCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{يوم واحد} =2{يومان} few{{digits} أيام} many{{digits} يوماً} other{{digits} يوم}}'**
+  String daysCount(num count, String digits);
+
+  /// No description provided for @daysUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{يوم} =2{يومان} few{أيام} many{يوماً} other{يوم}}'**
+  String daysUnit(num count);
+
+  /// No description provided for @bandWake.
+  ///
+  /// In ar, this message translates to:
+  /// **'استيقاظ'**
+  String get bandWake;
+
+  /// No description provided for @bandMorning.
+  ///
+  /// In ar, this message translates to:
+  /// **'صباح'**
+  String get bandMorning;
+
+  /// No description provided for @bandEvening.
+  ///
+  /// In ar, this message translates to:
+  /// **'مساء'**
+  String get bandEvening;
+
+  /// No description provided for @bandSleep.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوم'**
+  String get bandSleep;
+
+  /// No description provided for @bandSemantics.
+  ///
+  /// In ar, this message translates to:
+  /// **'{routine}، {time}، {state}'**
+  String bandSemantics(String routine, String time, String state);
+
+  /// No description provided for @stateDone.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمّت'**
+  String get stateDone;
+
+  /// No description provided for @stateNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'الآن'**
+  String get stateNow;
+
+  /// No description provided for @stateLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'لاحقاً'**
+  String get stateLater;
+
+  /// No description provided for @allDoneTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أتممت أذكار اليوم'**
+  String get allDoneTitle;
+
+  /// No description provided for @tomorrowAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'{routine} غداً {time}'**
+  String tomorrowAt(String routine, String time);
+
+  /// No description provided for @notifOffTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات معطّلة'**
+  String get notifOffTitle;
+
+  /// No description provided for @notifOffBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن تصل أي تذكيرات حتى تسمح بها.'**
+  String get notifOffBody;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح الإعدادات'**
+  String get openSettings;
+
+  /// No description provided for @remindersAllOff.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل التذكيرات متوقفة — الأوقات للعرض فقط'**
+  String get remindersAllOff;
+
+  /// No description provided for @libAfterPrayer.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد الصلاة'**
+  String get libAfterPrayer;
+
+  /// No description provided for @libMisc.
+  ///
+  /// In ar, this message translates to:
+  /// **'متفرقة'**
+  String get libMisc;
+
+  /// No description provided for @close.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get close;
+
+  /// No description provided for @tasbihRound.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدورة {round} · من {target}'**
+  String tasbihRound(String round, String target);
+
+  /// No description provided for @tasbihFree.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدّ حر'**
+  String get tasbihFree;
+
+  /// No description provided for @tasbihNoLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلا حد'**
+  String get tasbihNoLimit;
+
+  /// No description provided for @tasbihHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'المس أي مكان للعد · اهتزاز خفيف عند كل ٣٣'**
+  String get tasbihHint;
+
+  /// No description provided for @favoriteAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ في المفضلة'**
+  String get favoriteAdd;
+
+  /// No description provided for @favoriteRemove.
+  ///
+  /// In ar, this message translates to:
+  /// **'إزالة من المفضلة'**
+  String get favoriteRemove;
+
+  /// No description provided for @scrollToContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرّر للمتابعة'**
+  String get scrollToContinue;
+
+  /// No description provided for @counterOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'من {total}'**
+  String counterOf(String total);
+
+  /// No description provided for @counterRemaining.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتبقي {remaining} من {total}'**
+  String counterRemaining(String remaining, String total);
+
+  /// No description provided for @positionOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'{index} من {total}'**
+  String positionOf(String index, String total);
+
+  /// No description provided for @doneRoutine.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمّت {routine}'**
+  String doneRoutine(String routine);
+
+  /// No description provided for @streakNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{ابدأ تتابعك اليوم.} =1{تتابعك الآن يوم واحد.} =2{تتابعك الآن يومان.} few{تتابعك الآن {digits} أيام.} many{تتابعك الآن {digits} يوماً.} other{تتابعك الآن {digits} يوم.}}'**
+  String streakNow(num count, String digits);
+
+  /// No description provided for @nextReminderLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'التذكير القادم {routine} {time}.'**
+  String nextReminderLine(String routine, String time);
+
+  /// No description provided for @shareChooseTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر ذكراً للمشاركة'**
+  String get shareChooseTitle;
+
+  /// No description provided for @exactBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'قد تتأخر التذكيرات بضع دقائق — التنبيهات الدقيقة غير مسموحة.'**
+  String get exactBanner;
+
+  /// No description provided for @allow.
+  ///
+  /// In ar, this message translates to:
+  /// **'السماح'**
+  String get allow;
+
+  /// No description provided for @slotDaily.
+  ///
+  /// In ar, this message translates to:
+  /// **'يومياً'**
+  String get slotDaily;
+
+  /// No description provided for @pendingShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} معلّقة'**
+  String pendingShort(String count);
+
+  /// No description provided for @windowShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجدولة حتى {date} · {pending} من {cap} معلّقة'**
+  String windowShort(String date, String pending, String cap);
+
+  /// No description provided for @timeSheetHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتكرر يومياً · خطوات ٥ دقائق'**
+  String get timeSheetHint;
+
+  /// No description provided for @favHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط على الذكر لقراءته · اسحب لإزالته'**
+  String get favHint;
+
+  /// No description provided for @browseAthkar.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفّح الأذكار'**
+  String get browseAthkar;
+
+  /// No description provided for @legendFull.
+  ///
+  /// In ar, this message translates to:
+  /// **'كامل'**
+  String get legendFull;
+
+  /// No description provided for @legendPartial.
+  ///
+  /// In ar, this message translates to:
+  /// **'جزئي'**
+  String get legendPartial;
+
+  /// No description provided for @legendNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا شيء'**
+  String get legendNone;
+
+  /// No description provided for @weekRatio.
+  ///
+  /// In ar, this message translates to:
+  /// **'{done} / {target}'**
+  String weekRatio(String done, String target);
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل الأذكار'**
+  String get errorTitle;
+
+  /// No description provided for @errorBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ غير متوقع. تذكيراتك المجدولة لم تتأثر.'**
+  String get errorBody;
+
+  /// No description provided for @retry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get retry;
+
+  /// No description provided for @onb4NoteVendor.
+  ///
+  /// In ar, this message translates to:
+  /// **'جهازك: {vendor} · سنفتح الشاشة الصحيحة'**
+  String onb4NoteVendor(String vendor);
+
+  /// No description provided for @languageArabic.
+  ///
+  /// In ar, this message translates to:
+  /// **'العربية'**
+  String get languageArabic;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In ar, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @onbStep.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة {index} من {total}'**
+  String onbStep(String index, String total);
+
+  /// No description provided for @slotWakeShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاستيقاظ'**
+  String get slotWakeShort;
+
+  /// No description provided for @slotMorningShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصباح'**
+  String get slotMorningShort;
+
+  /// No description provided for @slotEveningShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساء'**
+  String get slotEveningShort;
+
+  /// No description provided for @slotSleepShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوم'**
+  String get slotSleepShort;
+
+  /// No description provided for @hourUp.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيادة الساعة'**
+  String get hourUp;
+
+  /// No description provided for @hourDown.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنقاص الساعة'**
+  String get hourDown;
+
+  /// No description provided for @minuteUp.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيادة الدقائق'**
+  String get minuteUp;
+
+  /// No description provided for @minuteDown.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنقاص الدقائق'**
+  String get minuteDown;
+
+  /// No description provided for @timesCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{مرة واحدة} =2{مرتان} few{{digits} مرات} other{{digits} مرة}}'**
+  String timesCount(num count, String digits);
+
+  /// No description provided for @textSmaller.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصغير نص الذكر'**
+  String get textSmaller;
+
+  /// No description provided for @textLarger.
+  ///
+  /// In ar, this message translates to:
+  /// **'تكبير نص الذكر'**
+  String get textLarger;
+
+  /// No description provided for @readerStartAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'البدء من جديد'**
+  String get readerStartAgain;
+
+  /// No description provided for @readerRestartQuestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد بدء هذه الجلسة من جديد؟'**
+  String get readerRestartQuestion;
+
+  /// No description provided for @readerRestoreError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر استعادة القراءة المحفوظة. يمكنك الإغلاق أو البدء من جديد.'**
+  String get readerRestoreError;
+
+  /// No description provided for @readerSaveError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حفظ التقدّم. أبقِ التطبيق مفتوحًا وحاول مجددًا.'**
+  String get readerSaveError;
+
+  /// No description provided for @back.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get back;
+
+  /// No description provided for @settingsReading.
+  ///
+  /// In ar, this message translates to:
+  /// **'القراءة'**
+  String get settingsReading;
+
+  /// No description provided for @settingsLanguageAppearance.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة والمظهر'**
+  String get settingsLanguageAppearance;
+
+  /// No description provided for @settingsSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم'**
+  String get settingsSupport;
+
+  /// No description provided for @versionLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'نور الذكر اليومي · الإصدار {version}'**
+  String versionLine(String version);
+
+  /// No description provided for @account.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get account;
+
+  /// No description provided for @accountCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ تقدّمك على كل أجهزتك'**
+  String get accountCardTitle;
+
+  /// No description provided for @accountCardBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختياري · التطبيق يعمل كاملاً بدونه'**
+  String get accountCardBody;
+
+  /// No description provided for @signInShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخول'**
+  String get signInShort;
+
+  /// No description provided for @signInToSync.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول لمزامنة تقدّمك'**
+  String get signInToSync;
+
+  /// No description provided for @syncedAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر مزامنة {ago}'**
+  String syncedAgo(String ago);
+
+  /// No description provided for @notSyncedYet.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تتم المزامنة بعد'**
+  String get notSyncedYet;
+
+  /// No description provided for @feedback.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات واقتراحات'**
+  String get feedback;
+
+  /// No description provided for @inbox.
+  ///
+  /// In ar, this message translates to:
+  /// **'صندوق الوارد'**
+  String get inbox;
+
+  /// No description provided for @unreadReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'رد جديد'**
+  String get unreadReply;
+
+  /// No description provided for @withUnread.
+  ///
+  /// In ar, this message translates to:
+  /// **'{label}، {state}'**
+  String withUnread(String label, String state);
+
+  /// No description provided for @unreadCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{واحدة غير مقروءة} =2{اثنتان غير مقروءتين} few{{digits} غير مقروءة} many{{digits} غير مقروءة} other{{digits} غير مقروءة}}'**
+  String unreadCount(num count, String digits);
+
+  /// No description provided for @signInTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ وِردك على كل أجهزتك'**
+  String get signInTitle;
+
+  /// No description provided for @signInSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب اختياري، والتطبيق يعمل كاملاً بدونه.'**
+  String get signInSubtitle;
+
+  /// No description provided for @signInStreak.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتابعك وجلساتك'**
+  String get signInStreak;
+
+  /// No description provided for @signInStreakBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا تضيع عند تغيير الجهاز'**
+  String get signInStreakBody;
+
+  /// No description provided for @signInFavorites.
+  ///
+  /// In ar, this message translates to:
+  /// **'المفضلة'**
+  String get signInFavorites;
+
+  /// No description provided for @signInFavoritesBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أذكارك المحفوظة معك على كل جهاز'**
+  String get signInFavoritesBody;
+
+  /// No description provided for @signInSettingsBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوقات التذكير والمظهر تنتقل معك'**
+  String get signInSettingsBody;
+
+  /// No description provided for @signInApple.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول باستخدام Apple'**
+  String get signInApple;
+
+  /// No description provided for @signInGoogle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول باستخدام Google'**
+  String get signInGoogle;
+
+  /// No description provided for @notNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'ليس الآن'**
+  String get notNow;
+
+  /// No description provided for @signInPrivacy.
+  ///
+  /// In ar, this message translates to:
+  /// **'نستخدم حسابك لمزامنة تقدّمك ومفضلتك وإعداداتك.'**
+  String get signInPrivacy;
+
+  /// No description provided for @signInFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تسجيل الدخول. حاول مرة أخرى.'**
+  String get signInFailed;
+
+  /// No description provided for @signedInToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل الدخول'**
+  String get signedInToast;
+
+  /// No description provided for @mergeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم ربط حسابك'**
+  String get mergeTitle;
+
+  /// No description provided for @mergeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'دمجنا {items} من هذا الجهاز مع حسابك.'**
+  String mergeBody(String items);
+
+  /// No description provided for @mergeAnd.
+  ///
+  /// In ar, this message translates to:
+  /// **'{a} و{b}'**
+  String mergeAnd(String a, String b);
+
+  /// No description provided for @mergeSettingsOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'دمجنا إعداداتك من هذا الجهاز مع حسابك.'**
+  String get mergeSettingsOnly;
+
+  /// No description provided for @mergeSessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{جلسة واحدة} =2{جلستين} few{{digits} جلسات} many{{digits} جلسة} other{{digits} جلسة}}'**
+  String mergeSessions(num count, String digits);
+
+  /// No description provided for @mergeFavorites.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{ذكراً محفوظاً} =2{ذكرين محفوظين} few{{digits} أذكار محفوظة} many{{digits} ذكراً محفوظاً} other{{digits} ذكر محفوظ}}'**
+  String mergeFavorites(num count, String digits);
+
+  /// No description provided for @sessionsChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{جلسة واحدة} =2{جلستان} few{{digits} جلسات} many{{digits} جلسة} other{{digits} جلسة}}'**
+  String sessionsChip(num count, String digits);
+
+  /// No description provided for @favoritesChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{ذكر محفوظ} =2{ذكران محفوظان} few{{digits} أذكار محفوظة} many{{digits} ذكراً محفوظاً} other{{digits} ذكر محفوظ}}'**
+  String favoritesChip(num count, String digits);
+
+  /// No description provided for @currentStreakLine.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتابعك الحالي: {days}'**
+  String currentStreakLine(String days);
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get continueLabel;
+
+  /// No description provided for @viaProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'عبر {provider}'**
+  String viaProvider(String provider);
+
+  /// No description provided for @syncSynced.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت المزامنة'**
+  String get syncSynced;
+
+  /// No description provided for @syncSyncing.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ المزامنة…'**
+  String get syncSyncing;
+
+  /// No description provided for @syncSyncingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك متابعة القراءة'**
+  String get syncSyncingBody;
+
+  /// No description provided for @syncOffline.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متصل'**
+  String get syncOffline;
+
+  /// No description provided for @syncOfflineBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستتم المزامنة عند الاتصال'**
+  String get syncOfflineBody;
+
+  /// No description provided for @syncError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّرت المزامنة'**
+  String get syncError;
+
+  /// No description provided for @syncErrorBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'بياناتك آمنة على هذا الجهاز'**
+  String get syncErrorBody;
+
+  /// No description provided for @syncNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'زامن الآن'**
+  String get syncNow;
+
+  /// No description provided for @signOut.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get signOut;
+
+  /// No description provided for @signOutBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تبقى بياناتك على هذا الجهاز'**
+  String get signOutBody;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف حسابك؟'**
+  String get deleteTitle;
+
+  /// No description provided for @deleteSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن التراجع عن هذا.'**
+  String get deleteSubtitle;
+
+  /// No description provided for @deleteRemovedHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُحذف من حسابك'**
+  String get deleteRemovedHeading;
+
+  /// No description provided for @deleteItemProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقدّم والتتابع المتزامن'**
+  String get deleteItemProgress;
+
+  /// No description provided for @deleteItemMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسائلك مع فريق مشكاة'**
+  String get deleteItemMessages;
+
+  /// No description provided for @deleteKeptHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'يبقى على هذا الجهاز'**
+  String get deleteKeptHeading;
+
+  /// No description provided for @deleteKeptBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل ما هو محفوظ هنا يبقى، وتستمر في استخدام التطبيق بدون حساب.'**
+  String get deleteKeptBody;
+
+  /// No description provided for @deleteConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الحساب نهائياً'**
+  String get deleteConfirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get cancel;
+
+  /// No description provided for @deleteFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حذف الحساب. تحقق من الاتصال وحاول مرة أخرى.'**
+  String get deleteFailed;
+
+  /// No description provided for @deleteFailedTryLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حذف الحساب الآن. حاول مرة أخرى بعد قليل.'**
+  String get deleteFailedTryLater;
+
+  /// No description provided for @appleAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب Apple'**
+  String get appleAccount;
+
+  /// No description provided for @rateApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم التطبيق'**
+  String get rateApp;
+
+  /// No description provided for @thikrSources.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصادر الأذكار'**
+  String get thikrSources;
+
+  /// No description provided for @sourcesIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'نصوص الأذكار مأخوذة من كتب السنة التالية، وكل ذكر يذكر مصدره تحته.'**
+  String get sourcesIntro;
+
+  /// No description provided for @sourcesReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخريج قيد المراجعة من مختص قبل الإصدار. إن وجدت خطأً فأبلغنا من قائمة الذكر.'**
+  String get sourcesReview;
+
+  /// No description provided for @contentVersionLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار المحتوى'**
+  String get contentVersionLabel;
+
+  /// No description provided for @accountDeletedToast.
+  ///
+  /// In ar, this message translates to:
+  /// **'حُذف حسابك'**
+  String get accountDeletedToast;
+
+  /// No description provided for @nudgeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'احفظ تتابعك'**
+  String get nudgeTitle;
+
+  /// No description provided for @nudgeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول ليبقى تتابعك محفوظاً إذا غيّرت جهازك.'**
+  String get nudgeBody;
+
+  /// No description provided for @signIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get signIn;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء'**
+  String get dismiss;
+
+  /// No description provided for @more.
+  ///
+  /// In ar, this message translates to:
+  /// **'المزيد'**
+  String get more;
+
+  /// No description provided for @reportThikr.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن خطأ في هذا الذكر'**
+  String get reportThikr;
+
+  /// No description provided for @copyText.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسخ النص'**
+  String get copyText;
+
+  /// No description provided for @copied.
+  ///
+  /// In ar, this message translates to:
+  /// **'نُسخ النص'**
+  String get copied;
+
+  /// No description provided for @feedbackIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقرأ كل رسالة، ويصلك الرد في «ملاحظات واقتراحات».'**
+  String get feedbackIntro;
+
+  /// No description provided for @typeFeature.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراح ميزة'**
+  String get typeFeature;
+
+  /// No description provided for @typeThikr.
+  ///
+  /// In ar, this message translates to:
+  /// **'خطأ في ذكر'**
+  String get typeThikr;
+
+  /// No description provided for @typeBug.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكلة في التطبيق'**
+  String get typeBug;
+
+  /// No description provided for @yourMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالتك'**
+  String get yourMessage;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالتك…'**
+  String get messageHint;
+
+  /// No description provided for @charCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} / {max}'**
+  String charCount(String count, String max);
+
+  /// No description provided for @replyEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'بريدك للرد (اختياري)'**
+  String get replyEmail;
+
+  /// No description provided for @replyEmailNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'نرد داخل التطبيق، والبريد احتياطي فقط.'**
+  String get replyEmailNote;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد غير صحيح'**
+  String get invalidEmail;
+
+  /// No description provided for @attachDevice.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرفاق معلومات الجهاز'**
+  String get attachDevice;
+
+  /// No description provided for @attachDeviceBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار التطبيق، النظام، اللغة'**
+  String get attachDeviceBody;
+
+  /// No description provided for @send.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get send;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن خطأ في ذكر'**
+  String get reportTitle;
+
+  /// No description provided for @whatsWrong.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما الخطأ؟'**
+  String get whatsWrong;
+
+  /// No description provided for @issueText.
+  ///
+  /// In ar, this message translates to:
+  /// **'النص'**
+  String get issueText;
+
+  /// No description provided for @issueSource.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخريج'**
+  String get issueSource;
+
+  /// No description provided for @issueCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد المرات'**
+  String get issueCount;
+
+  /// No description provided for @issueTranslation.
+  ///
+  /// In ar, this message translates to:
+  /// **'الترجمة'**
+  String get issueTranslation;
+
+  /// No description provided for @details.
+  ///
+  /// In ar, this message translates to:
+  /// **'التفاصيل'**
+  String get details;
+
+  /// No description provided for @sendReport.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال البلاغ'**
+  String get sendReport;
+
+  /// No description provided for @sentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلتنا رسالتك'**
+  String get sentTitle;
+
+  /// No description provided for @sentBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستجد الرد في «ملاحظات واقتراحات». ستظهر نقطة على الإعدادات عند وصوله.'**
+  String get sentBody;
+
+  /// No description provided for @viewMyMessages.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض رسائلي'**
+  String get viewMyMessages;
+
+  /// No description provided for @queuedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستُرسل عند الاتصال'**
+  String get queuedTitle;
+
+  /// No description provided for @queuedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظناها على جهازك وسنرسلها تلقائياً.'**
+  String get queuedBody;
+
+  /// No description provided for @sendFailedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الإرسال'**
+  String get sendFailedTitle;
+
+  /// No description provided for @sendFailedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالتك محفوظة كمسودة.'**
+  String get sendFailedBody;
+
+  /// No description provided for @statusNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديدة'**
+  String get statusNew;
+
+  /// No description provided for @statusInReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get statusInReview;
+
+  /// No description provided for @statusAnswered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الرد'**
+  String get statusAnswered;
+
+  /// No description provided for @statusClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلقة'**
+  String get statusClosed;
+
+  /// No description provided for @statusQueued.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الاتصال'**
+  String get statusQueued;
+
+  /// No description provided for @repliesInAppOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'الردود تظهر هنا فقط، ولا تصل كإشعارات.'**
+  String get repliesInAppOnly;
+
+  /// No description provided for @newMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة جديدة'**
+  String get newMessage;
+
+  /// No description provided for @noMessagesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا رسائل بعد'**
+  String get noMessagesTitle;
+
+  /// No description provided for @noMessagesBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'إذا أرسلت اقتراحاً أو أبلغت عن خطأ، ستجد الرد هنا.'**
+  String get noMessagesBody;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل ملاحظة'**
+  String get sendFeedback;
+
+  /// No description provided for @startedOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدأت {date}'**
+  String startedOn(String date);
+
+  /// No description provided for @mishkatTeam.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق مشكاة'**
+  String get mishkatTeam;
+
+  /// No description provided for @writeReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رداً…'**
+  String get writeReply;
+
+  /// No description provided for @sendReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الرد'**
+  String get sendReply;
+
+  /// No description provided for @closedOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُغلقت في {date}'**
+  String closedOn(String date);
+
+  /// No description provided for @threadClosedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه المحادثة مغلقة'**
+  String get threadClosedTitle;
+
+  /// No description provided for @threadClosedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحتاج مساعدة أخرى؟ ابدأ محادثة جديدة.'**
+  String get threadClosedBody;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get filterAll;
+
+  /// No description provided for @filterIdeas.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراحات'**
+  String get filterIdeas;
+
+  /// No description provided for @filterAthkar.
+  ///
+  /// In ar, this message translates to:
+  /// **'أذكار'**
+  String get filterAthkar;
+
+  /// No description provided for @filterApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكلات'**
+  String get filterApp;
+
+  /// No description provided for @inboxEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا جديد هنا'**
+  String get inboxEmptyTitle;
+
+  /// No description provided for @inboxEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا رسائل تطابق هذا الاختيار.'**
+  String get inboxEmptyBody;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح التصفية'**
+  String get clearFilters;
+
+  /// No description provided for @messageNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة #{number}'**
+  String messageNumber(String number);
+
+  /// No description provided for @messageUnnumbered.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة'**
+  String get messageUnnumbered;
+
+  /// No description provided for @metaType.
+  ///
+  /// In ar, this message translates to:
+  /// **'النوع'**
+  String get metaType;
+
+  /// No description provided for @metaVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار'**
+  String get metaVersion;
+
+  /// No description provided for @metaPlatform.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنصة'**
+  String get metaPlatform;
+
+  /// No description provided for @metaDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'التاريخ'**
+  String get metaDate;
+
+  /// No description provided for @metaEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد'**
+  String get metaEmail;
+
+  /// No description provided for @notAttached.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مرفق'**
+  String get notAttached;
+
+  /// No description provided for @openThikr.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتح الذكر'**
+  String get openThikr;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get statusLabel;
+
+  /// No description provided for @theUser.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستخدم'**
+  String get theUser;
+
+  /// No description provided for @adminReplyNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يظهر ردّك لدى المستخدم في «ملاحظات واقتراحات»، ويتحول الوضع إلى «تم الرد».'**
+  String get adminReplyNote;
+
+  /// No description provided for @writeReplyToUser.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رداً للمستخدم…'**
+  String get writeReplyToUser;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{قبل دقيقة} =2{قبل دقيقتين} few{قبل {digits} دقائق} many{قبل {digits} دقيقة} other{قبل {digits} دقيقة}}'**
+  String minutesAgo(num count, String digits);
+
+  /// No description provided for @minutesAgoShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبل {digits} د'**
+  String minutesAgoShort(String digits);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{قبل ساعة} =2{قبل ساعتين} few{قبل {digits} ساعات} many{قبل {digits} ساعة} other{قبل {digits} ساعة}}'**
+  String hoursAgo(num count, String digits);
+
+  /// No description provided for @yesterday.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس'**
+  String get yesterday;
+
+  /// No description provided for @justNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'الآن'**
+  String get justNow;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث جديد متاح'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحسينات صغيرة تجعل وِردك أيسر.'**
+  String get updateAvailableBody;
+
+  /// No description provided for @updateVersionChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار {version}'**
+  String updateVersionChip(String version);
+
+  /// No description provided for @updateNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث الآن'**
+  String get updateNow;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In ar, this message translates to:
+  /// **'لاحقاً'**
+  String get updateLater;
+
+  /// No description provided for @updateFromAppStore.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحديث من App Store'**
+  String get updateFromAppStore;
+
+  /// No description provided for @updateFromPlay.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحديث من Google Play'**
+  String get updateFromPlay;
+
+  /// No description provided for @updateMetaInApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُنزَّل في الخلفية'**
+  String get updateMetaInApp;
+
+  /// No description provided for @updateMetaStore.
+  ///
+  /// In ar, this message translates to:
+  /// **'يفتح صفحة التطبيق في المتجر'**
+  String get updateMetaStore;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ تنزيل التحديث'**
+  String get updateDownloading;
+
+  /// No description provided for @updateDownloadingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك متابعة وِردك أثناء التنزيل.'**
+  String get updateDownloadingHint;
+
+  /// No description provided for @updateReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحديث جاهز'**
+  String get updateReady;
+
+  /// No description provided for @updateReadyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يستغرق ثوانيَ، وتقدّمك محفوظ.'**
+  String get updateReadyHint;
+
+  /// No description provided for @updateRestart.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعد التشغيل'**
+  String get updateRestart;
+
+  /// No description provided for @updateApplying.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ تطبيق التحديث…'**
+  String get updateApplying;
+
+  /// No description provided for @updatedTo.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحديث إلى {version}'**
+  String updatedTo(String version);
+
+  /// No description provided for @whatsNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما الجديد'**
+  String get whatsNew;
+
+  /// No description provided for @whatsNewVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما الجديد في {version}'**
+  String whatsNewVersion(String version);
+
+  /// No description provided for @updateRequiredTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يلزم تحديث مشكاة'**
+  String get updateRequiredTitle;
+
+  /// No description provided for @updateRequiredBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الإصدار لم يعد يدعم المزامنة والتذكيرات الجديدة. تقدّمك ومفضلتك محفوظة على جهازك ولن تتأثر.'**
+  String get updateRequiredBody;
+
+  /// No description provided for @updateVersions.
+  ///
+  /// In ar, this message translates to:
+  /// **'من الإصدار {from} إلى {to}'**
+  String updateVersions(String from, String to);
+
+  /// No description provided for @keepReadingOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة القراءة فقط'**
+  String get keepReadingOnly;
+
+  /// No description provided for @updateUpdating.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ التحديث…'**
+  String get updateUpdating;
+
+  /// No description provided for @updateAutoRestart.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُعاد تشغيل التطبيق تلقائياً عند الانتهاء.'**
+  String get updateAutoRestart;
+
+  /// No description provided for @updateOfflineTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد اتصال'**
+  String get updateOfflineTitle;
+
+  /// No description provided for @updateOfflineBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل بالإنترنت لتنزيل التحديث.'**
+  String get updateOfflineBody;
+
+  /// No description provided for @updateLockedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يلزم تحديث التطبيق'**
+  String get updateLockedTitle;
+
+  /// No description provided for @updateLockedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث مشكاة لتعديل التذكيرات أو المزامنة. تذكيراتك الحالية تصل كما هي.'**
+  String get updateLockedBody;
+
+  /// No description provided for @updateAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث'**
+  String get updateAction;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

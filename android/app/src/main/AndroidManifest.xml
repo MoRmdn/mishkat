@@ -38,6 +38,22 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Shared thikr links (https://mishkatalwird.com/t/<id>) open here
+                 once assetlinks.json on that domain names this app's signing
+                 keys. Without verification Android offers a chooser instead. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"/>
+                <data android:host="mishkatalwird.com"/>
+                <data android:pathPrefix="/t/"/>
+            </intent-filter>
+            <!-- app_links receives the link; Flutter's own handler would also
+                 push it onto the navigator as a route. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false"/>
         </activity>
         <!-- flutter_local_notifications: delivers scheduled alarms, restores
              them after a reboot, and handles the notification action buttons. -->
@@ -73,6 +89,15 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- url_launcher: the privacy policy and terms open in a Custom Tab,
+             which Android 11+ package visibility hides unless declared. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService"/>
         </intent>
     </queries>
 </manifest>

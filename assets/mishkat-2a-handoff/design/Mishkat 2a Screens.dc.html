@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200;300;400;500;600&amp;family=Scheherazade+New:wght@400;500&amp;family=Amiri+Quran&amp;display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#E6E2DE}
+  a{color:#8E4E5A;text-decoration:none}
+  a:hover{color:#4A2A4D}
+</style>
+</helmet>
+<div style="padding:56px 56px 120px;background:#E6E2DE;font-family:'Alexandria',sans-serif;color:#2A1B2C;display:flex;flex-direction:column;gap:64px">
+
+  <div style="max-width:980px;display:flex;flex-direction:column;gap:14px">
+    <div style="font-size:12.5px;font-weight:500;letter-spacing:1.8px;color:#8E4E5A">MISHKAT AL-WIRD · 2a DUSK GRID · FULL SCREEN SET</div>
+    <div style="font-size:40px;font-weight:500;line-height:1.25">Every screen and state, ready to build</div>
+    <div style="font-size:15px;font-weight:300;line-height:1.85;color:#55474F">This board is the visual source of truth for the Flutter redesign. Screens are 340×720, grouped by flow, Arabic-first with English (LTR) and dark variants where the layout changes. Colours, type and spacing come from <span style="font-family:ui-monospace,monospace;font-size:13px">tokens/mishkat.tokens.json</span>, and icons from <span style="font-family:ui-monospace,monospace;font-size:13px">icons/svg</span>. Athkar text is the repo's placeholder corpus and is not changed.</div>
+  </div>
+
+  <section data-screen-label="Onboarding" style="display:flex;flex-direction:column;gap:18px">
+    <div style="font-size:13px;font-weight:500;letter-spacing:1.4px;color:#6E5F6B">01 · ONBOARDING &amp; PERMISSIONS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">1.1 Welcome</div>
+        <div dir="rtl" data-screen-label="1.1 Welcome" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="height:370px;background:#4A2A4D;color:#fff;display:flex;flex-direction:column;padding:14px 26px 24px;border-radius:0 0 34px 34px">
+            <div style="font-size:13px;font-weight:500">٩:٤٠</div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center"><svg width="140" height="140" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#5A3A5E" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#F6EEF2" /><circle cx="60" cy="84" r="9" fill="#E5B3B9" /></svg></div>
+            <div style="display:flex;gap:6px"><div style="width:18px;height:6px;border-radius:3px;background:#E5B3B9"></div><div style="width:6px;height:6px;border-radius:3px;background:#7A5A7D"></div><div style="width:6px;height:6px;border-radius:3px;background:#7A5A7D"></div><div style="width:6px;height:6px;border-radius:3px;background:#7A5A7D"></div></div>
+          </div>
+          <div style="flex:1;padding:28px 26px 0">
+            <div style="font-size:30px;font-weight:500;line-height:1.4">اذكر الله في وقته</div>
+            <div style="margin-top:12px;font-size:14.5px;font-weight:300;line-height:1.9;color:#4F4250">تذكيرات لأذكار الصباح والمساء والنوم والاستيقاظ، تُجدول على جهازك وتعمل دون إنترنت. بلا حساب.</div>
+          </div>
+          <div style="padding:0 22px 30px;display:flex;gap:10px">
+            <div style="height:52px;flex:1;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">لنبدأ</div>
+            <div style="height:52px;padding:0 20px;border-radius:26px;background:#F9F7F4;display:flex;align-items:center;font-size:14px;color:#6E5F6B">تخطي</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">1.2 Notifications rationale</div>
+        <div dir="rtl" data-screen-label="1.2 Notifications" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤٠</div>
+          <div style="padding:22px 26px 0;display:flex;gap:6px"><div style="width:6px;height:6px;border-radius:3px;background:#4A2A4D"></div><div style="width:18px;height:6px;border-radius:3px;background:#C9939A"></div><div style="width:6px;height:6px;border-radius:3px;background:#CFC5BE"></div><div style="width:6px;height:6px;border-radius:3px;background:#CFC5BE"></div></div>
+          <div style="flex:1;padding:0 26px;display:flex;flex-direction:column;justify-content:center">
+            <div style="width:72px;height:72px;border-radius:22px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4" /></svg></div>
+            <div style="margin-top:26px;font-size:28px;font-weight:500;line-height:1.4">نحتاج إذن التنبيهات</div>
+            <div style="margin-top:12px;font-size:14.5px;font-weight:300;line-height:1.9;color:#4F4250">التذكيرات تُجدول على جهازك مباشرة، فلا بد من السماح بالتنبيهات — بدونها لن يصل أي تذكير.</div>
+            <div style="margin-top:20px;padding:14px 16px;border-radius:18px;background:#F9F7F4;font-size:13px;font-weight:300;line-height:1.8;color:#6E5F6B">يمكنك السماح لاحقاً من الإعدادات، لكن التذكيرات ستبقى معطّلة حتى ذلك الحين.</div>
+          </div>
+          <div style="padding:0 22px 30px;display:flex;flex-direction:column;gap:6px">
+            <div style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">السماح بالتنبيهات</div>
+            <div style="height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#6E5F6B">ليس الآن</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">1.3 Exact alarms (Android 12+ only)</div>
+        <div dir="rtl" data-screen-label="1.3 Exact alarms" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤١</div>
+          <div style="padding:22px 26px 0;display:flex;gap:6px"><div style="width:6px;height:6px;border-radius:3px;background:#4A2A4D"></div><div style="width:6px;height:6px;border-radius:3px;background:#4A2A4D"></div><div style="width:18px;height:6px;border-radius:3px;background:#C9939A"></div><div style="width:6px;height:6px;border-radius:3px;background:#CFC5BE"></div></div>
+          <div style="flex:1;padding:0 26px;display:flex;flex-direction:column;justify-content:center">
+            <div style="width:72px;height:72px;border-radius:22px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg></div>
+            <div style="margin-top:26px;font-size:28px;font-weight:500;line-height:1.4">وقت دقيق للتذكير</div>
+            <div style="margin-top:12px;font-size:14.5px;font-weight:300;line-height:1.9;color:#4F4250">ليصل التذكير في دقيقته، يحتاج التطبيق إذن «التنبيهات الدقيقة» من أندرويد.</div>
+            <div style="margin-top:20px;padding:14px 16px;border-radius:18px;background:#F9F7F4;font-size:13px;font-weight:300;line-height:1.8;color:#6E5F6B">إن رفضت، يستمر التطبيق في العمل لكن قد يتأخر التذكير بضع دقائق — وسنوضح ذلك في التذكيرات.</div>
+          </div>
+          <div style="padding:0 22px 30px;display:flex;flex-direction:column;gap:6px">
+            <div style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">السماح</div>
+            <div style="height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#6E5F6B">المتابعة بدون دقة</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">1.4 Battery exemption</div>
+        <div dir="rtl" data-screen-label="1.4 Battery" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤١</div>
+          <div style="padding:22px 26px 0;display:flex;gap:6px"><div style="width:6px;height:6px;border-radius:3px;background:#4A2A4D"></div><div style="width:6px;height:6px;border-radius:3px;background:#4A2A4D"></div><div style="width:6px;height:6px;border-radius:3px;background:#4A2A4D"></div><div style="width:18px;height:6px;border-radius:3px;background:#C9939A"></div></div>
+          <div style="flex:1;padding:0 26px;display:flex;flex-direction:column;justify-content:center">
+            <div style="width:72px;height:72px;border-radius:22px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="16" height="9" rx="2" /><path d="M21 11v3M6 11v3M9 11v3" /></svg></div>
+            <div style="margin-top:26px;font-size:28px;font-weight:500;line-height:1.4">استثناء من موفّر البطارية</div>
+            <div style="margin-top:12px;font-size:14.5px;font-weight:300;line-height:1.9;color:#4F4250">بعض الأجهزة تُغلق التطبيقات في الخلفية فتُلغى التذكيرات. استثناء واحد يكفي.</div>
+            <div style="margin-top:20px;padding:14px 16px;border-radius:18px;background:#F9F7F4;display:flex;gap:10px;align-items:center;font-size:13px;color:#6E5F6B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E5F6B" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="3" width="12" height="18" rx="2" /><path d="M11 18h2" /></svg><span style="font-weight:300">جهازك: Xiaomi · سنفتح الشاشة الصحيحة</span></div>
+          </div>
+          <div style="padding:0 22px 30px;display:flex;flex-direction:column;gap:6px">
+            <div style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">استثناء التطبيق</div>
+            <div style="height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#6E5F6B">لاحقاً</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">1.5 Splash · light / dark</div>
+        <div style="display:flex;gap:14px">
+          <div data-screen-label="1.5 Splash light" style="width:160px;height:340px;border-radius:24px;background:#EFEBE7;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.1)"><svg width="72" height="72" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#4A2A4D" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#EFEBE7" /><circle cx="60" cy="84" r="9" fill="#C9939A" /></svg></div>
+          <div data-screen-label="1.5 Splash dark" style="width:160px;height:340px;border-radius:24px;background:#1B1320;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.18)"><svg width="72" height="72" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#3A2C40" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#F1E9EE" /><circle cx="60" cy="84" r="9" fill="#E5B3B9" /></svg></div>
+        </div>
+        <div style="width:334px;font-size:12px;font-weight:300;line-height:1.7;color:#55474F">Mark only, with no wordmark or spinner. Android 12+ crops the splash icon to a circle, so the tile sits at ½ size in <span style="font-family:ui-monospace,monospace">splash-mark-1152.png</span> and its corners stay inside.</div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home" style="display:flex;flex-direction:column;gap:18px">
+    <div style="font-size:13px;font-weight:500;letter-spacing:1.4px;color:#6E5F6B">02 · HOME &amp; NAVIGATION</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">2.1 Home · routine due · AR light</div>
+        <div dir="rtl" data-screen-label="2.1 Home" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤١</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:14px;min-height:0">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px"><svg width="26" height="26" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#4A2A4D" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#EFEBE7" /><circle cx="60" cy="84" r="9" fill="#C9939A" /></svg><span style="font-size:18px;font-weight:500">مشكاة</span></div>
+              <div style="display:flex;align-items:center;gap:10px"><div style="font-size:12px;font-weight:300;color:#6E5F6B;white-space:nowrap">٩ أيام متتالية</div><div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10" /><circle cx="16" cy="8" r="2" /><circle cx="8" cy="16" r="2" /></svg></div></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;padding:14px 14px 12px">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#4A2A4D"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">استيقاظ</div><div style="font-size:12.5px;white-space:nowrap">٥:٠٠ ✓</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#C9939A"></div><div style="font-size:11px;font-weight:500">صباح</div><div style="font-size:12.5px;font-weight:500;white-space:nowrap">٦:٣٠</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#DDD5CE"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">مساء</div><div style="font-size:12.5px;color:#6E5F6B;white-space:nowrap">٥:٣٠</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#DDD5CE"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">نوم</div><div style="font-size:12.5px;color:#6E5F6B;white-space:nowrap">١٠:٣٠</div></div>
+              </div>
+            </div>
+            <div style="background:#4A2A4D;color:#fff;border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:18px">
+              <div><div style="font-size:12px;color:#E5B3B9">الآن</div><div style="margin-top:4px;font-size:30px;font-weight:500;line-height:1.35">أذكار الصباح</div><div style="margin-top:4px;font-size:13px;font-weight:300;color:#E3D2DC">٦ أذكار · نحو ٤ دقائق</div></div>
+              <div style="height:52px;border-radius:26px;background:#E5B3B9;color:#2A1B2C;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">ابدأ</div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #E7E0DA"><div style="width:34px;height:34px;border-radius:17px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round"><path d="M6 20V11a6 6 0 0 1 12 0v9" /><path d="M4 20h16" /></svg></div><div style="flex:1;font-size:14px">بعد الصلاة</div><div style="font-size:12px;color:#6E5F6B">٥</div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #E7E0DA"><div style="width:34px;height:34px;border-radius:17px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h9" /></svg></div><div style="flex:1;font-size:14px">متفرقة</div><div style="font-size:12px;color:#6E5F6B">٣</div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px"><div style="width:34px;height:34px;border-radius:17px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="7" /><circle cx="12" cy="5" r="1.6" fill="#4A2A4D" /></svg></div><div style="flex:1;font-size:14px">السبحة</div><div style="font-size:12px;color:#6E5F6B">٠</div></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:8px 10px 22px;font-size:10.5px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#2A1B2C;min-width:56px"><div style="width:56px;height:30px;border-radius:15px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z" /></svg></div>الرئيسية</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4" /></svg></div>التذكيرات</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>المفضلة</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 19v-6M12 19V6M19 19v-9" /></svg></div>التقدّم</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">2.2 Home · EN (LTR) · dark</div>
+        <div dir="ltr" data-screen-label="2.2 Home EN dark" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#1B1320;color:#F1E9EE;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.22)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">5:22</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:14px;min-height:0">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px"><svg width="26" height="26" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#3A2C40" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#F1E9EE" /><circle cx="60" cy="84" r="9" fill="#E5B3B9" /></svg><span style="font-size:18px;font-weight:500">Mishkat</span></div>
+              <div style="display:flex;align-items:center;gap:10px"><div style="font-size:12px;font-weight:300;color:#BBA9B6;white-space:nowrap">9-day streak</div><div style="width:44px;height:44px;border-radius:22px;background:#261B2C;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F1E9EE" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10" /><circle cx="16" cy="8" r="2" /><circle cx="8" cy="16" r="2" /></svg></div></div>
+            </div>
+            <div style="background:#261B2C;border-radius:18px;padding:14px 14px 12px">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#F1E9EE"></div><div style="font-size:11px;font-weight:300;color:#BBA9B6">Waking</div><div style="font-size:12px;white-space:nowrap">5:00 ✓</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#F1E9EE"></div><div style="font-size:11px;font-weight:300;color:#BBA9B6">Morning</div><div style="font-size:12px;white-space:nowrap">6:30 ✓</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#E5B3B9"></div><div style="font-size:11px;font-weight:500">Evening</div><div style="font-size:12px;font-weight:500;white-space:nowrap">5:30</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#3A2C40"></div><div style="font-size:11px;font-weight:300;color:#BBA9B6">Sleep</div><div style="font-size:12px;color:#BBA9B6;white-space:nowrap">10:30</div></div>
+              </div>
+            </div>
+            <div style="background:#261B2C;border:1px solid #4A3552;border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:18px">
+              <div><div style="font-size:12px;color:#E5B3B9">Now</div><div style="margin-top:4px;font-size:28px;font-weight:500;line-height:1.3">Evening athkar</div><div style="margin-top:4px;font-size:13px;font-weight:300;color:#BBA9B6">4 athkar · about 3 minutes</div></div>
+              <div style="height:52px;border-radius:26px;background:#E5B3B9;color:#1B1320;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">Begin</div>
+            </div>
+            <div style="background:#261B2C;border-radius:18px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #332539"><div style="width:34px;height:34px;border-radius:17px;background:#3A2C40;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E5B3B9" stroke-width="1.5" stroke-linecap="round"><path d="M6 20V11a6 6 0 0 1 12 0v9" /><path d="M4 20h16" /></svg></div><div style="flex:1;font-size:14px">After prayer</div><div style="font-size:12px;color:#BBA9B6">5</div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #332539"><div style="width:34px;height:34px;border-radius:17px;background:#3A2C40;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E5B3B9" stroke-width="1.5" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h9" /></svg></div><div style="flex:1;font-size:14px">Assorted</div><div style="font-size:12px;color:#BBA9B6">3</div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 14px"><div style="width:34px;height:34px;border-radius:17px;background:#3A2C40;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E5B3B9" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="7" /><circle cx="12" cy="5" r="1.6" fill="#E5B3B9" /></svg></div><div style="flex:1;font-size:14px">Tasbih</div><div style="font-size:12px;color:#BBA9B6">0</div></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:8px 10px 22px;font-size:10.5px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#F1E9EE;min-width:56px"><div style="width:56px;height:30px;border-radius:15px;background:#3A2C40;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z" /></svg></div>Home</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9C8A98;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4" /></svg></div>Reminders</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9C8A98;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>Saved</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#9C8A98;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 19v-6M12 19V6M19 19v-9" /></svg></div>Progress</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">2.3 Home · all done + notifications off</div>
+        <div dir="rtl" data-screen-label="2.3 Home states" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٢٢:٥٠</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:14px;min-height:0">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px"><svg width="26" height="26" viewBox="0 0 120 120"><path d="M34 6h52a28 28 0 0 1 28 28v52a28 28 0 0 1-28 28H34A28 28 0 0 1 6 86V34A28 28 0 0 1 34 6z" fill="#4A2A4D" /><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#EFEBE7" /><circle cx="60" cy="84" r="9" fill="#C9939A" /></svg><span style="font-size:18px;font-weight:500">مشكاة</span></div>
+              <div style="font-size:12px;font-weight:300;color:#6E5F6B;white-space:nowrap">١٠ أيام متتالية</div>
+            </div>
+            <div style="padding:14px 16px;border-radius:18px;background:#FBF1E1;border:1px solid #EBD6AE;display:flex;gap:12px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A6820" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><path d="M12 4l9 16H3z" /><path d="M12 10v4M12 17v.5" /></svg>
+              <div style="flex:1"><div style="font-size:13.5px;font-weight:500;color:#5E4712">التنبيهات معطّلة</div><div style="margin-top:4px;font-size:12.5px;font-weight:300;line-height:1.7;color:#5E4712">لن تصل أي تذكيرات حتى تسمح بها.</div><div style="margin-top:10px;display:inline-flex;height:40px;padding:0 16px;border-radius:20px;background:#8A6820;color:#fff;align-items:center;font-size:13px;font-weight:500">فتح الإعدادات</div></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:24px;padding:26px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+              <div style="width:56px;height:56px;border-radius:28px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></svg></div>
+              <div style="font-size:20px;font-weight:500">أتممت أذكار اليوم</div>
+              <div style="font-size:13px;font-weight:300;line-height:1.8;color:#6E5F6B">أذكار الاستيقاظ غداً <span style="white-space:nowrap">٥:٠٠ ص</span></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;padding:14px 14px 12px">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#4A2A4D"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">استيقاظ ✓</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#4A2A4D"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">صباح ✓</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#4A2A4D"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">مساء ✓</div></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="height:4px;border-radius:2px;background:#4A2A4D"></div><div style="font-size:11px;font-weight:300;color:#6E5F6B">نوم ✓</div></div>
+              </div>
+            </div>
+          </div>
+          <div dir="ltr" style="padding:14px 22px 26px;font-size:11.5px;font-weight:300;line-height:1.7;color:#55474F;border-top:1px solid #DDD5CE">Zero-streak copy: <span style="font-weight:500">«ابدأ تتابعك اليوم»</span> — never «· يوم» without a number (current bug).</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">2.4 Tasbih · free counter</div>
+        <div dir="rtl" data-screen-label="2.4 Tasbih" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٥٠</div>
+          <div style="padding:14px 18px 0;display:flex;align-items:center;justify-content:space-between">
+            <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></div>
+            <div style="font-size:15px;font-weight:500">السبحة</div>
+            <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5" /><path d="M3.6 13A8.5 8.5 0 1 0 5.5 6L3 8" /></svg></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px">
+            <div style="font-family:'Scheherazade New',serif;font-size:32px;line-height:2">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</div>
+            <div style="width:230px;height:230px;border-radius:50%;background:#F9F7F4;border:1px solid #DDD5CE;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <div style="font-size:76px;font-weight:300;line-height:1">٤٧</div>
+              <div style="margin-top:8px;font-size:12.5px;font-weight:300;color:#6E5F6B">الدورة ١ · من ١٠٠</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <div style="padding:9px 16px;border-radius:18px;background:#4A2A4D;color:#fff;font-size:13px">١٠٠</div>
+              <div style="padding:9px 16px;border-radius:18px;background:#F9F7F4;font-size:13px">٣٣</div>
+              <div style="padding:9px 16px;border-radius:18px;background:#F9F7F4;font-size:13px">بلا حد</div>
+            </div>
+          </div>
+          <div style="padding:0 22px 28px;text-align:center;font-size:12px;font-weight:300;color:#6E5F6B">المس أي مكان للعد · اهتزاز خفيف عند كل ٣٣</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Reader" style="display:flex;flex-direction:column;gap:18px">
+    <div style="font-size:13px;font-weight:500;letter-spacing:1.4px;color:#6E5F6B">03 · READER, COUNTER, COMPLETION, SHARE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">3.1 Reader · AR light</div>
+        <div dir="rtl" data-screen-label="3.1 Reader" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤٣</div>
+          <div style="padding:14px 18px 0;display:flex;align-items:center;justify-content:space-between">
+            <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></div>
+            <div style="text-align:center"><div style="font-size:15px;font-weight:500;white-space:nowrap">أذكار الصباح</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">٣ من ٦</div></div>
+            <div style="display:flex;gap:6px">
+              <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" /></svg></div>
+              <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>
+            </div>
+          </div>
+          <div style="margin:14px 18px 0;display:flex;gap:4px"><div style="flex:1;height:3px;border-radius:2px;background:#4A2A4D"></div><div style="flex:1;height:3px;border-radius:2px;background:#4A2A4D"></div><div style="flex:1;height:3px;border-radius:2px;background:#C9939A"></div><div style="flex:1;height:3px;border-radius:2px;background:#DDD5CE"></div><div style="flex:1;height:3px;border-radius:2px;background:#DDD5CE"></div><div style="flex:1;height:3px;border-radius:2px;background:#DDD5CE"></div></div>
+          <div style="flex:1;margin:16px 18px 0;background:#F9F7F4;border-radius:26px;padding:28px 22px;display:flex;flex-direction:column;justify-content:center">
+            <div style="font-family:'Scheherazade New',serif;font-size:29px;line-height:2;text-align:center">بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ</div>
+            <div style="margin-top:16px;text-align:center;font-size:12px;font-weight:300;color:#6E5F6B">رواه أبو داود ٥٠٨٨</div>
+          </div>
+          <div style="padding:20px 18px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="width:52px;height:52px;border-radius:26px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:60px;font-weight:300;line-height:1">٢</div><div style="display:flex;gap:8px"><div style="width:12px;height:12px;border-radius:50%;background:#C9939A"></div><div style="width:12px;height:12px;border-radius:50%;border:1.5px solid #4A2A4D"></div><div style="width:12px;height:12px;border-radius:50%;border:1.5px solid #4A2A4D"></div></div></div>
+            <div style="width:52px;height:52px;border-radius:26px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">3.2 Long thikr · dark · scrolls, never shrinks</div>
+        <div dir="rtl" data-screen-label="3.2 Reader long dark" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#1B1320;color:#F1E9EE;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.22)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٦:٤٤</div>
+          <div style="padding:14px 18px 0;display:flex;align-items:center;justify-content:space-between">
+            <div style="width:44px;height:44px;border-radius:22px;background:#261B2C;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F1E9EE" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></div>
+            <div style="text-align:center"><div style="font-size:15px;font-weight:500;white-space:nowrap">أذكار الصباح</div><div style="font-size:11.5px;font-weight:300;color:#BBA9B6">٢ من ٦</div></div>
+            <div style="width:44px;height:44px;border-radius:22px;background:#261B2C;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#E5B3B9" stroke="#E5B3B9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>
+          </div>
+          <div style="margin:14px 18px 0;display:flex;gap:4px"><div style="flex:1;height:3px;border-radius:2px;background:#F1E9EE"></div><div style="flex:1;height:3px;border-radius:2px;background:#E5B3B9"></div><div style="flex:1;height:3px;border-radius:2px;background:#3A2C40"></div><div style="flex:1;height:3px;border-radius:2px;background:#3A2C40"></div><div style="flex:1;height:3px;border-radius:2px;background:#3A2C40"></div><div style="flex:1;height:3px;border-radius:2px;background:#3A2C40"></div></div>
+          <div style="flex:1;margin:16px 18px 0;background:#261B2C;border-radius:26px;position:relative;overflow:hidden">
+            <div style="padding:26px 22px 60px">
+              <div style="font-family:'Scheherazade New',serif;font-size:29px;line-height:2;text-align:center">اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي</div>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(to bottom,rgba(38,27,44,0),#261B2C);display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px"><div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#BBA9B6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BBA9B6" stroke-width="1.5" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg>مرّر للمتابعة</div></div>
+          </div>
+          <div style="padding:20px 18px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="width:52px;height:52px;border-radius:26px;background:#261B2C;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F1E9EE" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="font-size:60px;font-weight:300;line-height:1">١</div><div style="font-size:11.5px;font-weight:300;color:#BBA9B6">مرة واحدة · سيّد الاستغفار</div></div>
+            <div style="width:52px;height:52px;border-radius:26px;background:#261B2C;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F1E9EE" stroke-width="1.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">3.3 Reader · EN (LTR) · meaning below Arabic</div>
+        <div dir="ltr" data-screen-label="3.3 Reader EN" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">9:43</div>
+          <div style="padding:14px 18px 0;display:flex;align-items:center;justify-content:space-between">
+            <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></div>
+            <div style="text-align:center"><div style="font-size:15px;font-weight:500">Morning athkar</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">3 of 6</div></div>
+            <div style="width:44px;height:44px;border-radius:22px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>
+          </div>
+          <div style="margin:14px 18px 0;display:flex;gap:4px"><div style="flex:1;height:3px;border-radius:2px;background:#4A2A4D"></div><div style="flex:1;height:3px;border-radius:2px;background:#4A2A4D"></div><div style="flex:1;height:3px;border-radius:2px;background:#C9939A"></div><div style="flex:1;height:3px;border-radius:2px;background:#DDD5CE"></div><div style="flex:1;height:3px;border-radius:2px;background:#DDD5CE"></div><div style="flex:1;height:3px;border-radius:2px;background:#DDD5CE"></div></div>
+          <div style="flex:1;margin:16px 18px 0;background:#F9F7F4;border-radius:26px;padding:24px 22px;display:flex;flex-direction:column;justify-content:center">
+            <div dir="rtl" style="font-family:'Scheherazade New',serif;font-size:27px;line-height:2;text-align:center">بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ</div>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid #E7E0DA;font-size:14px;font-weight:300;line-height:1.75;color:#4F4250;text-align:center">In the name of Allah, with whose name nothing on earth or in heaven can cause harm; He is the All-Hearing, the All-Knowing.</div>
+            <div style="margin-top:12px;text-align:center;font-size:12px;font-weight:300;color:#6E5F6B">Abu Dawud 5088</div>
+          </div>
+          <div style="padding:20px 18px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="width:52px;height:52px;border-radius:26px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:60px;font-weight:300;line-height:1">2</div><div style="display:flex;gap:8px"><div style="width:12px;height:12px;border-radius:50%;background:#C9939A"></div><div style="width:12px;height:12px;border-radius:50%;border:1.5px solid #4A2A4D"></div><div style="width:12px;height:12px;border-radius:50%;border:1.5px solid #4A2A4D"></div></div></div>
+            <div style="width:52px;height:52px;border-radius:26px;background:#F9F7F4;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6" /></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">3.4 Session complete</div>
+        <div dir="rtl" data-screen-label="3.4 Complete" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤٨</div>
+          <div style="flex:1;padding:0 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+            <div style="width:120px;height:120px;border-radius:60px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="64" height="64" viewBox="0 0 120 120"><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#4A2A4D" /><circle cx="60" cy="84" r="9" fill="#C9939A" /></svg></div>
+            <div style="margin-top:28px;font-size:28px;font-weight:500;line-height:1.4">تمّت أذكار الصباح</div>
+            <div style="margin-top:10px;font-size:14.5px;font-weight:300;line-height:1.9;color:#4F4250">تتابعك الآن ١٠ أيام. التذكير القادم أذكار المساء ٥:٣٠ م.</div>
+          </div>
+          <div style="padding:0 22px 30px;display:flex;flex-direction:column;gap:10px">
+            <div style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">العودة للرئيسية</div>
+            <div style="height:52px;border-radius:26px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" /></svg>مشاركة كصورة</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">3.5 Share image · 1080×1080 (shown at ⅓)</div>
+        <div dir="rtl" data-screen-label="3.5 Share card" style="width:360px;height:360px;background:#4A2A4D;color:#F6EEF2;display:flex;flex-direction:column;justify-content:space-between;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.12)">
+          <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:baseline;gap:5px"><span style="font-size:13px;font-weight:500">مشكاة</span><span style="font-size:10px;font-weight:300;color:#E3D2DC">الورد</span></div><svg width="22" height="22" viewBox="0 0 120 120"><path fill-rule="evenodd" d="M32 100V58a28 28 0 0 1 56 0v42z M44 100V60a16 16 0 0 1 32 0v40z" fill="#F6EEF2" /><circle cx="60" cy="84" r="9" fill="#E5B3B9" /></svg></div>
+          <div style="font-family:'Scheherazade New',serif;font-size:21px;line-height:2;text-align:center">اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:10.5px;font-weight:300;color:#E3D2DC"><div style="width:16px;height:1px;background:#7A5A7D"></div>رواه البخاري ٦٣٠٦<div style="width:16px;height:1px;background:#7A5A7D"></div></div>
+        </div>
+        <div style="width:360px;font-size:12px;font-weight:300;line-height:1.7;color:#55474F">The reference always travels with the text. For long athkar, render the card taller (1080×1350) rather than shrinking the text. A light variant uses the stone background with aubergine ink.</div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Reminders" style="display:flex;flex-direction:column;gap:18px">
+    <div style="font-size:13px;font-weight:500;letter-spacing:1.4px;color:#6E5F6B">04 · REMINDERS, TIME, PRAYER TIMES, OEM GUIDE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">4.1 Fixed times · exact alarms denied</div>
+        <div dir="rtl" data-screen-label="4.1 Reminders fixed" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٥٥</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:12px;min-height:0">
+            <div style="font-size:24px;font-weight:500">التذكيرات</div>
+            <div style="display:flex;padding:4px;background:#E4DDD7;border-radius:24px">
+              <div style="flex:1;height:40px;border-radius:20px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:500">وقت ثابت</div>
+              <div style="flex:1;height:40px;display:flex;align-items:center;justify-content:center;font-size:13.5px;color:#6E5F6B">حسب الصلاة</div>
+            </div>
+            <div style="padding:12px 14px;border-radius:18px;background:#FBF1E1;border:1px solid #EBD6AE;display:flex;gap:10px;align-items:flex-start">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A6820" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><path d="M12 4l9 16H3z" /><path d="M12 10v4M12 17v.5" /></svg>
+              <div style="flex:1;font-size:12.5px;line-height:1.7;color:#5E4712">قد تتأخر التذكيرات بضع دقائق — التنبيهات الدقيقة غير مسموحة. <span style="font-weight:500;text-decoration:underline">السماح</span></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:62px;border-bottom:1px solid #E7E0DA"><div style="flex:1"><div style="font-size:14.5px">الاستيقاظ</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">يومياً</div></div><div style="height:38px;padding:0 12px;border-radius:19px;background:#EFEBE7;display:flex;align-items:center;font-size:14px;font-weight:500;white-space:nowrap">٥:٠٠ ص</div><div style="width:46px;height:28px;border-radius:14px;background:#4A2A4D;position:relative"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:62px;border-bottom:1px solid #E7E0DA"><div style="flex:1"><div style="font-size:14.5px">الصباح</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">يومياً</div></div><div style="height:38px;padding:0 12px;border-radius:19px;background:#EFEBE7;display:flex;align-items:center;font-size:14px;font-weight:500;white-space:nowrap">٦:٣٠ ص</div><div style="width:46px;height:28px;border-radius:14px;background:#4A2A4D;position:relative"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:62px;border-bottom:1px solid #E7E0DA"><div style="flex:1"><div style="font-size:14.5px">المساء</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">يومياً</div></div><div style="height:38px;padding:0 12px;border-radius:19px;background:#EFEBE7;display:flex;align-items:center;font-size:14px;font-weight:500;white-space:nowrap">٥:٣٠ م</div><div style="width:46px;height:28px;border-radius:14px;background:#4A2A4D;position:relative"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:62px"><div style="flex:1"><div style="font-size:14.5px;color:#6E5F6B">النوم</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">معطّل</div></div><div style="height:38px;padding:0 12px;border-radius:19px;border:1px solid #DDD5CE;display:flex;align-items:center;font-size:14px;color:#7E6F7B;white-space:nowrap">١٠:٣٠ م</div><div style="width:46px;height:28px;border-radius:14px;background:#CFC5BE;position:relative"><div style="position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:0 4px;font-size:12px;font-weight:300;color:#6E5F6B"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6E5F6B" stroke-width="1.8" stroke-linecap="round"><path d="M20 6L9 17l-5-5" /></svg>مجدولة يومياً — لا تحتاج فتح التطبيق · ٣ معلّقة</div>
+            <div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:#F9F7F4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="8" width="16" height="9" rx="2" /><path d="M21 11v3M6 11v3M9 11v3" /></svg><div style="flex:1;font-size:13.5px">التذكيرات لا تصل؟</div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E5F6B" stroke-width="1.5" stroke-linecap="round"><path d="M15 6l-6 6 6 6" /></svg></div>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:8px 10px 22px;font-size:10.5px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z" /></svg></div>الرئيسية</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#2A1B2C;min-width:56px"><div style="width:56px;height:30px;border-radius:15px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4" /></svg></div>التذكيرات</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>المفضلة</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#7E6F7B;min-width:56px"><div style="height:30px;display:flex;align-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 19v-6M12 19V6M19 19v-9" /></svg></div>التقدّم</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">4.2 Prayer-time mode · manual city</div>
+        <div dir="rtl" data-screen-label="4.2 Reminders prayer" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٥٥</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:12px;min-height:0">
+            <div style="font-size:24px;font-weight:500">التذكيرات</div>
+            <div style="display:flex;padding:4px;background:#E4DDD7;border-radius:24px">
+              <div style="flex:1;height:40px;display:flex;align-items:center;justify-content:center;font-size:13.5px;color:#6E5F6B">وقت ثابت</div>
+              <div style="flex:1;height:40px;border-radius:20px;background:#F9F7F4;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:500">حسب الصلاة</div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;padding:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:12.5px;font-weight:500">مواقيت اليوم</div><div style="display:flex;align-items:center;gap:4px;font-size:12px;color:#8E4E5A"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8E4E5A" stroke-width="1.5" stroke-linecap="round"><path d="M12 21s-6.5-5.5-6.5-11a6.5 6.5 0 0 1 13 0c0 5.5-6.5 11-6.5 11z" /><circle cx="12" cy="10" r="2.5" /></svg>مكة المكرمة · يدوي</div></div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                <div style="background:#EFEBE7;border-radius:14px;padding:10px;text-align:center"><div style="font-size:11px;font-weight:300;color:#6E5F6B">الفجر</div><div style="margin-top:3px;font-size:15px;font-weight:500;white-space:nowrap">٤:٥٦ ص</div></div>
+                <div style="background:#EFEBE7;border-radius:14px;padding:10px;text-align:center"><div style="font-size:11px;font-weight:300;color:#6E5F6B">العصر</div><div style="margin-top:3px;font-size:15px;font-weight:500;white-space:nowrap">٣:٣٨ م</div></div>
+                <div style="background:#EFEBE7;border-radius:14px;padding:10px;text-align:center"><div style="font-size:11px;font-weight:300;color:#6E5F6B">المغرب</div><div style="margin-top:3px;font-size:15px;font-weight:500;white-space:nowrap">٦:٣٢ م</div></div>
+              </div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:58px;border-bottom:1px solid #E7E0DA"><div style="flex:1"><div style="font-size:14px">الاستيقاظ</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">قبل الفجر بـ ١٥ د · ٤:٤١ ص</div></div><div style="width:46px;height:28px;border-radius:14px;background:#4A2A4D;position:relative"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:58px;border-bottom:1px solid #E7E0DA"><div style="flex:1"><div style="font-size:14px">الصباح</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">بعد الفجر بـ ٣٠ د · ٥:٢٦ ص</div></div><div style="width:46px;height:28px;border-radius:14px;background:#4A2A4D;position:relative"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:58px;border-bottom:1px solid #E7E0DA"><div style="flex:1"><div style="font-size:14px">المساء</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">بعد العصر بـ ٤٥ د · ٤:٢٣ م</div></div><div style="width:46px;height:28px;border-radius:14px;background:#4A2A4D;position:relative"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+              <div style="display:flex;align-items:center;gap:12px;padding:0 14px;height:58px"><div style="flex:1"><div style="font-size:14px">النوم</div><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">وقت ثابت دائماً</div></div><div style="height:36px;padding:0 12px;border-radius:18px;background:#EFEBE7;display:flex;align-items:center;font-size:13.5px;font-weight:500;white-space:nowrap">١٠:٣٠ م</div></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;overflow:hidden;font-size:13.5px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 14px;height:50px;border-bottom:1px solid #E7E0DA"><span>طريقة الحساب</span><span style="color:#8E4E5A">أم القرى</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 14px;height:50px"><span>مذهب العصر</span><span style="color:#8E4E5A">الجمهور</span></div>
+            </div>
+            <div style="padding:0 4px">
+              <div style="height:4px;border-radius:2px;background:#DDD5CE;overflow:hidden"><div style="width:78%;height:100%;background:#4A2A4D"></div></div>
+              <div style="margin-top:6px;font-size:11.5px;font-weight:300;color:#6E5F6B">مجدولة حتى ٧ أكتوبر · ٥٦ من ٦٤ معلّقة</div>
+            </div>
+          </div>
+          <div style="height:30px"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">4.3 Time sheet</div>
+        <div dir="rtl" data-screen-label="4.3 Time sheet" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;justify-content:flex-end;position:relative;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="position:absolute;inset:0;background:rgba(42,27,44,0.6)"></div>
+          <div style="position:relative;background:#F9F7F4;border-radius:28px 28px 0 0;padding:10px 22px 30px">
+            <div style="width:40px;height:4px;border-radius:2px;background:#DDD5CE;margin:0 auto 18px"></div>
+            <div style="font-size:19px;font-weight:500">وقت أذكار الصباح</div>
+            <div dir="ltr" style="margin-top:22px;display:flex;align-items:center;justify-content:center;gap:14px">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:56px;height:48px;border-radius:24px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.8" stroke-linecap="round"><path d="M6 15l6-6 6 6" /></svg></div><div style="font-size:44px;font-weight:300;line-height:1.1">٦</div><div style="width:56px;height:48px;border-radius:24px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.8" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg></div></div>
+              <div style="font-size:36px;font-weight:200;color:#CFC5BE;padding-bottom:4px">:</div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:56px;height:48px;border-radius:24px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.8" stroke-linecap="round"><path d="M6 15l6-6 6 6" /></svg></div><div style="font-size:44px;font-weight:300;line-height:1.1">٣٠</div><div style="width:56px;height:48px;border-radius:24px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.8" stroke-linecap="round"><path d="M6 9l6 6 6-6" /></svg></div></div>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-left:8px"><div style="height:40px;padding:0 14px;border-radius:20px;background:#4A2A4D;color:#fff;display:flex;align-items:center;font-size:13px">ص</div><div style="height:40px;padding:0 14px;border-radius:20px;background:#EFEBE7;display:flex;align-items:center;font-size:13px">م</div></div>
+            </div>
+            <div style="margin-top:18px;text-align:center;font-size:12.5px;font-weight:300;color:#6E5F6B">يتكرر يومياً · خطوات ٥ دقائق</div>
+            <div style="margin-top:18px;height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">حفظ وإعادة الجدولة</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">4.4 OEM battery guide · sheet</div>
+        <div dir="rtl" data-screen-label="4.4 OEM sheet" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;justify-content:flex-end;position:relative;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="position:absolute;inset:0;background:rgba(42,27,44,0.6)"></div>
+          <div style="position:relative;background:#F9F7F4;border-radius:28px 28px 0 0;padding:10px 22px 30px">
+            <div style="width:40px;height:4px;border-radius:2px;background:#DDD5CE;margin:0 auto 18px"></div>
+            <div style="font-size:19px;font-weight:500">إعدادات Xiaomi</div>
+            <div style="margin-top:8px;font-size:13px;font-weight:300;line-height:1.85;color:#6E5F6B">بعض الأجهزة توقف التطبيقات في الخلفية فتُلغى التذكيرات. اتبع الخطوات مرة واحدة.</div>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;gap:12px;padding:12px 14px;border-radius:16px;background:#EFEBE7"><div style="flex:none;width:24px;height:24px;border-radius:12px;background:#4A2A4D;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">١</div><div style="font-size:13px;line-height:1.7">الإعدادات ← التطبيقات ← مشكاة</div></div>
+              <div style="display:flex;gap:12px;padding:12px 14px;border-radius:16px;background:#EFEBE7"><div style="flex:none;width:24px;height:24px;border-radius:12px;background:#4A2A4D;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">٢</div><div style="font-size:13px;line-height:1.7">فعّل «التشغيل التلقائي»</div></div>
+              <div style="display:flex;gap:12px;padding:12px 14px;border-radius:16px;background:#EFEBE7"><div style="flex:none;width:24px;height:24px;border-radius:12px;background:#4A2A4D;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">٣</div><div style="font-size:13px;line-height:1.7">موفّر البطارية ← «لا قيود»</div></div>
+            </div>
+            <div style="margin-top:18px;height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:500">فتح إعدادات البطارية<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)"><path d="M14 4h6v6M20 4l-9 9" /><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></div>
+            <div style="margin-top:10px;text-align:center;font-size:12px;font-weight:300;color:#6E5F6B">التطبيق غير مستثنى حالياً</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Library" style="display:flex;flex-direction:column;gap:18px">
+    <div style="font-size:13px;font-weight:500;letter-spacing:1.4px;color:#6E5F6B">05 · FAVOURITES, PROGRESS, SETTINGS, ERRORS, NOTIFICATIONS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">5.1 Favourites</div>
+        <div dir="rtl" data-screen-label="5.1 Favourites" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">١٠:٠٢</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:12px;min-height:0">
+            <div style="font-size:24px;font-weight:500">المفضلة</div>
+            <div style="background:#F9F7F4;border-radius:22px;padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:12px;font-weight:500;color:#8E4E5A">أذكار الصباح</div><svg width="20" height="20" viewBox="0 0 24 24" fill="#4A2A4D" stroke="#4A2A4D" stroke-width="1.5" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>
+              <div style="margin-top:8px;font-family:'Scheherazade New',serif;font-size:22px;line-height:2">اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ…</div>
+              <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">رواه البخاري ٦٣٠٦</div><div style="display:flex;gap:4px"><div style="width:40px;height:40px;border-radius:20px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" /></svg></div></div></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:22px;padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:12px;font-weight:500;color:#8E4E5A">أذكار المساء</div><svg width="20" height="20" viewBox="0 0 24 24" fill="#4A2A4D" stroke="#4A2A4D" stroke-width="1.5" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>
+              <div style="margin-top:8px;font-family:'Scheherazade New',serif;font-size:22px;line-height:2">أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</div>
+              <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:11.5px;font-weight:300;color:#6E5F6B">رواه مسلم ٢٧٠٩ · ٣ مرات</div><div style="width:40px;height:40px;border-radius:20px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5" /><path d="M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" /></svg></div></div>
+            </div>
+            <div style="font-size:11.5px;font-weight:300;color:#6E5F6B;padding:0 4px">اضغط على الذكر لقراءته · اسحب لإزالته</div>
+          </div>
+          <div style="height:86px;border-top:1px solid #DDD5CE"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">5.2 Favourites · empty</div>
+        <div dir="rtl" data-screen-label="5.2 Favourites empty" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">١٠:٠٢</div>
+          <div style="padding:18px 20px 0;font-size:24px;font-weight:500">المفضلة</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 40px;text-align:center">
+            <div style="width:88px;height:88px;border-radius:44px;background:#F2E1DF;display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4A2A4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5c0 5.1-7 9.5-7 9.5z" /></svg></div>
+            <div style="margin-top:20px;font-size:18px;font-weight:500">لا شيء محفوظ بعد</div>
+            <div style="margin-top:8px;font-size:13.5px;font-weight:300;line-height:1.85;color:#6E5F6B">اضغط على القلب أثناء القراءة ليُحفظ الذكر هنا.</div>
+            <div style="margin-top:20px;height:48px;padding:0 24px;border-radius:24px;background:#F9F7F4;display:flex;align-items:center;font-size:14px">تصفّح الأذكار</div>
+          </div>
+          <div style="height:86px;border-top:1px solid #DDD5CE"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">5.3 Progress</div>
+        <div dir="rtl" data-screen-label="5.3 Progress" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">١٠:٠٤</div>
+          <div style="flex:1;padding:18px 20px 0;display:flex;flex-direction:column;gap:12px;min-height:0">
+            <div style="font-size:24px;font-weight:500">التقدّم</div>
+            <div style="background:#4A2A4D;color:#fff;border-radius:24px;padding:22px;display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:12px;color:#E5B3B9">التتابع الحالي</div><div style="margin-top:4px;display:flex;align-items:baseline;gap:6px"><span style="font-size:52px;font-weight:300;line-height:1">١٠</span><span style="font-size:15px;font-weight:300;color:#E3D2DC">أيام</span></div></div>
+              <div style="text-align:left"><div style="font-size:11.5px;font-weight:300;color:#E3D2DC">الأطول</div><div style="font-size:18px;font-weight:500">٣١ يوماً</div><div style="margin-top:6px;font-size:11.5px;font-weight:300;color:#E3D2DC">الجلسات</div><div style="font-size:18px;font-weight:500">١٤٨</div></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;padding:16px">
+              <div style="font-size:13px;font-weight:500">آخر ١٤ يوماً</div>
+              <div style="margin-top:12px;display:grid;grid-template-columns:repeat(7,1fr);gap:6px">
+                <div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#EFEBE7;border:1px solid #DDD5CE"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#C9939A"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div>
+                <div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#C9939A"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#4A2A4D"></div><div style="aspect-ratio:1;border-radius:10px;background:#EFEBE7;border:1.5px solid #4A2A4D"></div>
+              </div>
+              <div style="margin-top:10px;display:flex;gap:14px;font-size:11px;font-weight:300;color:#6E5F6B"><span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:#4A2A4D"></span>كامل</span><span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:#C9939A"></span>جزئي</span><span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;border:1px solid #DDD5CE"></span>لا شيء</span></div>
+            </div>
+            <div style="background:#F9F7F4;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px">
+              <div style="font-size:13px;font-weight:500">هذا الأسبوع</div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>الصباح</span><span style="color:#6E5F6B">٧ / ٧</span></div><div style="margin-top:6px;height:6px;border-radius:3px;background:#E7E0DA"><div style="width:100%;height:100%;border-radius:3px;background:#4A2A4D"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>المساء</span><span style="color:#6E5F6B">٦ / ٧</span></div><div style="margin-top:6px;height:6px;border-radius:3px;background:#E7E0DA"><div style="width:86%;height:100%;border-radius:3px;background:#4A2A4D;margin-inline-start:0"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>النوم</span><span style="color:#6E5F6B">٤ / ٧</span></div><div style="margin-top:6px;height:6px;border-radius:3px;background:#E7E0DA"><div style="width:57%;height:100%;border-radius:3px;background:#4A2A4D"></div></div></div>
+            </div>
+          </div>
+          <div style="height:86px;border-top:1px solid #DDD5CE"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">5.4 Settings sheet</div>
+        <div dir="rtl" data-screen-label="5.4 Settings" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;justify-content:flex-end;position:relative;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="position:absolute;inset:0;background:rgba(42,27,44,0.6)"></div>
+          <div style="position:relative;background:#F9F7F4;border-radius:28px 28px 0 0;padding:10px 22px 28px;display:flex;flex-direction:column;gap:16px">
+            <div style="width:40px;height:4px;border-radius:2px;background:#DDD5CE;margin:0 auto 2px"></div>
+            <div style="font-size:19px;font-weight:500">الإعدادات</div>
+            <div><div style="font-size:12px;font-weight:500;color:#6E5F6B">اللغة</div><div style="margin-top:8px;display:flex;padding:4px;background:#EFEBE7;border-radius:24px"><div style="flex:1;height:40px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:500">العربية</div><div style="flex:1;height:40px;display:flex;align-items:center;justify-content:center;font-size:13.5px;color:#6E5F6B">English</div></div></div>
+            <div><div style="font-size:12px;font-weight:500;color:#6E5F6B">المظهر</div><div style="margin-top:8px;display:flex;padding:4px;background:#EFEBE7;border-radius:24px"><div style="flex:1;height:40px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;color:#6E5F6B"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E5F6B" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>فاتح</div><div style="flex:1;height:40px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;color:#6E5F6B"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E5F6B" stroke-width="1.5" stroke-linecap="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" /></svg>غامق</div><div style="flex:1;height:40px;border-radius:20px;background:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="3" width="12" height="18" rx="2" /><path d="M11 18h2" /></svg>النظام</div></div></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:12px;font-weight:500;color:#6E5F6B">حجم نص الذكر</div><div style="display:flex;align-items:center;gap:8px"><div style="width:44px;height:44px;border-radius:22px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14" /></svg></div><div style="min-width:52px;text-align:center;font-size:13.5px;font-weight:500">متوسط</div><div style="width:44px;height:44px;border-radius:22px;background:#EFEBE7;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A1B2C" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg></div></div></div>
+            <div style="padding:14px 16px;border-radius:18px;background:#EFEBE7;display:flex;align-items:center;justify-content:space-between;gap:12px"><div><div style="font-size:14px;font-weight:500">الخط القرآني</div><div style="margin-top:4px;font-family:'Amiri Quran',serif;font-size:17px;color:#6E5F6B">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</div></div><div style="width:46px;height:28px;border-radius:14px;background:#CFC5BE;position:relative;flex:none"><div style="position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:11px;background:#fff"></div></div></div>
+            <div style="height:52px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15.5px;font-weight:500">تم</div>
+          </div>
+        </div>
+        <div style="width:340px;font-size:12px;font-weight:300;line-height:1.7;color:#55474F">The colour-theme picker is removed. There is one identity with light, dark and system appearance.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">5.5 Error · content failed to load</div>
+        <div dir="rtl" data-screen-label="5.5 Error" style="width:340px;height:720px;border-radius:38px;overflow:hidden;background:#EFEBE7;color:#2A1B2C;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,0.12)">
+          <div style="padding:14px 26px 0;font-size:13px;font-weight:500">٩:٤١</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 40px;text-align:center">
+            <div style="width:88px;height:88px;border-radius:44px;background:#F7E3E1;display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A13A3A" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8v.5" /></svg></div>
+            <div style="margin-top:20px;font-size:18px;font-weight:500">تعذّر تحميل الأذكار</div>
+            <div style="margin-top:8px;font-size:13.5px;font-weight:300;line-height:1.85;color:#6E5F6B">حدث خطأ غير متوقع. تذكيراتك المجدولة لم تتأثر.</div>
+            <div style="margin-top:20px;height:52px;padding:0 30px;border-radius:26px;background:#4A2A4D;color:#fff;display:flex;align-items:center;font-size:15px;font-weight:500">إعادة المحاولة</div>
+          </div>
+          <div dir="ltr" style="padding:0 22px 26px;font-size:11.5px;font-weight:300;line-height:1.7;color:#55474F">Never show a raw exception (the current <span style="font-family:ui-monospace,monospace">'$error'</span> text). Log it to Diagnostics instead.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;font-weight:500;color:#55474F">5.6 Notifications · what the app controls</div>
+        <div data-screen-label="5.6 Notifications" style="width:360px;background:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px">
+          <div style="font-size:11.5px;font-weight:500;letter-spacing:0.6px;color:#6E5F6B">ANDROID (system layout, our content)</div>
+          <div dir="rtl" style="border-radius:22px;padding:14px 16px;background:#F2F0F4;border:1px dashed #B9ADB8">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#55474F"><div style="width:20px;height:20px;border-radius:10px;background:#4A2A4D;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 120 120"><path fill-rule="evenodd" d="M24 112V56a36 36 0 0 1 72 0v56z M60 72a14 14 0 1 1 0 28a14 14 0 1 1 0-28z" fill="#fff" /></svg></div>مشكاة · الآن</div>
+            <div style="margin-top:8px;font-size:14px;font-weight:500">وقت أذكار الصباح</div>
+            <div style="margin-top:3px;font-size:13px;color:#55474F">أصبحنا وأصبح الملك لله · ٦ أذكار</div>
+            <div style="margin-top:10px;display:flex;gap:18px;font-size:13px;font-weight:500;color:#4A2A4D"><span>ابدأ</span><span>تأجيل ١٥ د</span></div>
+          </div>
+          <div style="font-size:11.5px;font-weight:300;line-height:1.7;color:#55474F">We control: the small icon (<span style="font-family:ui-monospace,monospace">ic_stat_mishkat</span>), the accent tint #4A2A4D, the title, body, action labels, channel name and sound. The OS controls the font, layout, background and button styling.</div>
+          <div style="height:1px;background:#EEE"></div>
+          <div style="font-size:11.5px;font-weight:500;letter-spacing:0.6px;color:#6E5F6B">iOS (system layout, app icon)</div>
+          <div dir="rtl" style="border-radius:20px;padding:12px 14px;background:#F2F0F4;border:1px dashed #B9ADB8;display:flex;gap:10px">
+            <img src="../brand/png/app-icon-192.png" alt="" style="width:36px;height:36px;border-radius:9px;flex:none" />
+            <div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500"><span>وقت أذكار الصباح</span><span style="font-weight:300;color:#6E5F6B">الآن</span></div><div style="margin-top:2px;font-size:13px;color:#55474F">أصبحنا وأصبح الملك لله · ٦ أذكار</div></div>
+          </div>
+          <div style="font-size:11.5px;font-weight:300;line-height:1.7;color:#55474F">On iOS the app icon is always shown. We control the title, body, sound and category actions, which appear on long-press. Custom colours and fonts are not possible.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</x-dc>
+</body>
+</html>

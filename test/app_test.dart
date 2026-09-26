@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mishkat/core/theme/app_theme.dart';
-import 'package:mishkat/core/widgets/app_icons.dart';
+import 'package:mishkat/core/theme/mishkat_tokens.dart';
+import 'package:mishkat/core/widgets/mishkat_icon.dart';
 
 import 'support/app_harness.dart';
 
@@ -15,7 +15,7 @@ void main() {
     await harness.pump(tester);
 
     expect(shellDirection(tester), TextDirection.rtl);
-    expect(find.text('الأذكار'), findsOneWidget);
+    expect(find.text('مِشْكَاة'), findsOneWidget);
     expect(find.text('الرئيسية'), findsOneWidget);
   });
 
@@ -23,25 +23,23 @@ void main() {
     await harness.pump(tester, language: 'en');
 
     expect(shellDirection(tester), TextDirection.ltr);
-    expect(find.text('Athkar'), findsOneWidget);
+    expect(find.text('Mishkat'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
   });
 
-  testWidgets('a stored palette and appearance drive the theme', (
-    tester,
-  ) async {
-    await harness.pump(tester, palette: 'indigo', appearance: 'dark');
+  testWidgets('a stored appearance drives the theme', (tester) async {
+    await harness.pump(tester, appearance: 'dark');
 
     final tokens = tester.element(find.byType(Scaffold).first).tokens;
     expect(tokens.isDark, isTrue);
-    expect(tokens.accent, const Color(0xFF5A8FB8));
+    expect(tokens.bg, MishkatTokens.dark.bg);
   });
 
   testWidgets('the settings sheet switches language live', (tester) async {
     await harness.pump(tester);
     expect(shellDirection(tester), TextDirection.rtl);
 
-    await tester.tap(find.byType(GearIcon));
+    await tester.tap(findIcon(MIcon.settings));
     await tester.pumpAndSettle();
     expect(find.text('الإعدادات'), findsOneWidget);
 
@@ -53,38 +51,35 @@ void main() {
     expect(find.text('Settings'), findsOneWidget);
   });
 
-  testWidgets('the settings sheet switches palette live', (tester) async {
+  testWidgets('the settings sheet switches appearance live', (tester) async {
     await harness.pump(tester);
-    expect(
-      tester.element(find.byType(Scaffold).first).tokens.accent,
-      const Color(0xFF1C6B58),
-    );
+    expect(tester.element(find.byType(Scaffold).first).tokens.isDark, isFalse);
 
-    await tester.tap(find.byType(GearIcon));
+    await tester.tap(findIcon(MIcon.settings));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('زيتوني'));
+    await tester.tap(find.text('غامق'));
     await tester.pumpAndSettle();
 
-    expect(
-      tester.element(find.byType(Scaffold).first).tokens.accent,
-      const Color(0xFF6B7440),
-    );
+    expect(tester.element(find.byType(Scaffold).first).tokens.isDark, isTrue);
   });
 
   testWidgets('settings survive a restart', (tester) async {
     await harness.pump(tester);
-    await tester.tap(find.byType(GearIcon));
+    await tester.tap(findIcon(MIcon.settings));
     await tester.pumpAndSettle();
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Done'));
+    // The settings sheet has no «تم»: changes apply live, and a tap on the
+    // scrim closes it.
+    await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
+    expect(findIcon(MIcon.settings), findsOneWidget);
 
     // Cold launch again against the same backing store. resetPrefs: false is
     // the whole point — with a fresh store this would prove nothing.
     await harness.pump(tester, resetPrefs: false);
 
     expect(shellDirection(tester), TextDirection.ltr);
-    expect(find.text('Athkar'), findsOneWidget);
+    expect(find.text('Mishkat'), findsOneWidget);
   });
 }
