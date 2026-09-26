@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mishkat/core/widgets/segmented_control.dart';
 import 'package:mishkat/core/widgets/surfaces.dart';
@@ -181,6 +183,61 @@ void main() {
     await tester.tap(find.text('فتح إعدادات البطارية'));
     await tester.pumpAndSettle();
     expect(harness.permissions.batteryExempt, isTrue);
+    expect(harness.permissions.openedBatterySettings, 0);
+    expect(find.text('التطبيق مستثنى حالياً'), findsOneWidget);
+  });
+
+  Future<void> tapOpenBattery(WidgetTester tester) async {
+    await harness.pump(tester);
+    await openReminders(tester);
+    await tester.scrollUntilVisible(find.text('التذكيرات لا تصل؟'), 200);
+    await tester.tap(find.text('التذكيرات لا تصل؟'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('فتح إعدادات البطارية'));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('once exempt, the battery button opens the app settings', (
+    tester,
+  ) async {
+    // The exemption dialog shows nothing when already granted, so the
+    // button used to do nothing at all.
+    harness = AppHarness(
+      permissions: FakePermissionService(batteryExempt: true),
+    );
+    await tapOpenBattery(tester);
+
+    expect(harness.permissions.openedBatterySettings, 1);
+  });
+
+  testWidgets('a refused exemption falls through to the app settings', (
+    tester,
+  ) async {
+    harness = AppHarness(
+      permissions: FakePermissionService(
+        batteryExempt: false,
+        grantBattery: false,
+      ),
+    );
+    await tapOpenBattery(tester);
+
+    expect(harness.permissions.batteryExempt, isFalse);
+    expect(harness.permissions.openedBatterySettings, 1);
+  });
+
+  testWidgets('iOS has no vendor battery guidance', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    try {
+      await harness.pump(tester);
+      await openReminders(tester);
+      await tester.scrollUntilVisible(find.byType(GroupCard).last, 200);
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
+      await tester.pumpAndSettle();
+
+      expect(find.text('التذكيرات لا تصل؟'), findsNothing);
+    } finally {
+      debugDefaultTargetPlatformOverride = null;
+    }
   });
 
   testWidgets('an unknown vendor still gets generic steps', (tester) async {

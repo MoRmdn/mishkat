@@ -92,10 +92,15 @@ class FakePermissionService implements PermissionService {
     this.exactAlarms = true,
     this.batteryExempt = true,
     this.vendor = 'Xiaomi',
+    this.grantBattery = true,
   });
 
   bool notifications, exactAlarms, batteryExempt;
   String vendor;
+
+  /// Whether the exemption dialog is accepted when shown.
+  bool grantBattery;
+  int openedBatterySettings = 0;
 
   @override
   Future<PermissionState> read() async => PermissionState(
@@ -112,7 +117,11 @@ class FakePermissionService implements PermissionService {
   Future<bool> requestExactAlarms() async => exactAlarms = true;
 
   @override
-  Future<bool> requestBatteryExemption() async => batteryExempt = true;
+  Future<bool> requestBatteryExemption() async =>
+      batteryExempt = batteryExempt || grantBattery;
+
+  @override
+  Future<void> openBatterySettings() async => openedBatterySettings++;
 
   @override
   Future<String> manufacturer() async => vendor;

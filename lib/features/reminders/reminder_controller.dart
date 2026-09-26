@@ -132,6 +132,14 @@ class PermissionController extends Notifier<PermissionState> {
     await refresh();
     return granted;
   }
+
+  /// «فتح إعدادات البطارية»: the exemption dialog while it can still help,
+  /// otherwise the app's settings page for the vendor steps. Never a no-op.
+  /// Coming back refreshes [state] through `ReminderSyncScope`'s resume hook.
+  Future<void> openBatterySettings() async {
+    if (!state.batteryExempt && await requestBatteryExemption()) return;
+    await ref.read(permissionServiceProvider).openBatterySettings();
+  }
 }
 
 final permissionsProvider =

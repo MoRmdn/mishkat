@@ -90,7 +90,7 @@ class OemSheet extends ConsumerWidget {
           icon: MIcon.external,
           trailingIcon: true,
           onPressed: () =>
-              ref.read(permissionsProvider.notifier).requestBatteryExemption(),
+              ref.read(permissionsProvider.notifier).openBatterySettings(),
         ),
         const SizedBox(height: 10),
         Text(

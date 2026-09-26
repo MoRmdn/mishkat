@@ -1,4 +1,5 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // `show` because intl also exports a TextDirection that shadows Flutter's.
@@ -93,8 +94,12 @@ class RemindersTab extends ConsumerWidget {
           const PrayerWindow(),
         ] else
           const _ScheduleState(),
-        const SizedBox(height: 12),
-        const _OemRow(),
+        // Vendor battery killers are an Android problem: iOS delivers
+        // scheduled local notifications on time, so there is nothing to fix.
+        if (defaultTargetPlatform == TargetPlatform.android) ...[
+          const SizedBox(height: 12),
+          const _OemRow(),
+        ],
       ],
     );
   }
