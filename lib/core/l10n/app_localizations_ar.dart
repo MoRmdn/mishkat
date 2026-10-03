@@ -1200,7 +1200,7 @@ class LAr extends L {
   String get statusQueued => 'بانتظار الاتصال';
 
   @override
-  String get repliesInAppOnly => 'الردود تظهر هنا فقط، ولا تصل كإشعارات.';
+  String get repliesNotice => 'تصلك الردود كإشعار، وتبقى هنا.';
 
   @override
   String get newMessage => 'رسالة جديدة';
@@ -1448,4 +1448,69 @@ class LAr extends L {
 
   @override
   String get updateAction => 'حدّث';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get unreadAnnouncement => 'إعلان جديد';
+
+  @override
+  String get messagesChannelName => 'رسائل مشكاة';
+
+  @override
+  String get noAnnouncementsTitle => 'لا إشعارات بعد';
+
+  @override
+  String get noAnnouncementsBody =>
+      'ستجد هنا ما نرسله من أخبار وتحديثات، حتى لو فاتك الإشعار.';
+
+  @override
+  String get announcementPushLabel => 'إشعارات الإعلانات';
+
+  @override
+  String get announcementPushBody =>
+      'التذكيرات تصل دائماً، مهما كان هذا الخيار.';
+
+  @override
+  String get sendAnnouncement => 'إرسال إعلان';
+
+  @override
+  String get announcementTitleAr => 'العنوان بالعربية';
+
+  @override
+  String get announcementBodyAr => 'النص بالعربية';
+
+  @override
+  String get announcementTitleEn => 'العنوان بالإنجليزية';
+
+  @override
+  String get announcementBodyEn => 'النص بالإنجليزية';
+
+  @override
+  String get announcementConfirmTitle => 'إرسال لكل المستخدمين؟';
+
+  @override
+  String get announcementConfirmBody =>
+      'يصل الإشعار إلى كل من فعّل الإعلانات، ولا يمكن سحبه بعد إرساله.';
+
+  @override
+  String get announcementSent => 'أُرسل الإعلان';
+
+  @override
+  String get announcementFailed =>
+      'تعذّر الإرسال. تحقق من الاتصال وحاول مرة أخرى.';
+
+  @override
+  String get sentAnnouncements => 'الإعلانات المرسلة';
+
+  @override
+  String get removeAnnouncement => 'حذف من الصفحة';
+
+  @override
+  String get removeAnnouncementBody =>
+      'يُحذف من صفحة الإشعارات، أما الإشعار الذي وصل فيبقى.';
+
+  @override
+  String get remove => 'حذف';
 }

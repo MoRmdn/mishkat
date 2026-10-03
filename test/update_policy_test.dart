@@ -236,9 +236,7 @@ void main() {
     );
     expect(
       storePageUri(TargetPlatform.iOS),
-      kStoreLinksReady
-          ? Uri.parse('https://apps.apple.com/app/id$kAppStoreId')
-          : Uri.parse('https://mishkatalwird.com/'),
+      Uri.parse('https://apps.apple.com/app/id6815677954'),
     );
   });
 }

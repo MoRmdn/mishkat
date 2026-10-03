@@ -147,6 +147,17 @@ class SettingsStore {
   Future<void> dismissStreakNudge(DateTime at) =>
       _prefs.setInt(_kNudgeDismissed, at.millisecondsSinceEpoch);
 
+  // ---- store review ----
+
+  static const _kReviewAskedAt = 'review.askedAt';
+
+  /// When the native rating sheet was last requested (`review_policy.dart`).
+  /// Per device, never synced: each store counts its own quota.
+  DateTime? get reviewAskedAt => _date(_prefs.getInt(_kReviewAskedAt));
+
+  Future<void> markReviewAsked(DateTime at) =>
+      _prefs.setInt(_kReviewAskedAt, at.millisecondsSinceEpoch);
+
   // ---- app updates ----
 
   static const _kUpdatePromptedVersion = 'update.prompted.version';

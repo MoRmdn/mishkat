@@ -23,6 +23,11 @@ export 'reminder_content.dart' show ReminderContent;
 
 /// Keep this ID stable: Android binds user sound/importance settings to it.
 const String kReminderChannelId = 'athkar_reminders';
+
+/// The owner's announcements and feedback replies, pushed through FCM. Its
+/// own channel, so a user can mute them on Android without muting reminders.
+/// `functions/` and the manifest's default channel name the same ID.
+const String kMessagesChannelId = 'mishkat_messages';
 const String kStartActionId = 'start';
 const String kSnoozeActionId = 'snooze';
 const Duration kSnoozeDuration = Duration(minutes: 15);
@@ -144,6 +149,23 @@ class NotificationService {
         unawaited(handleResponse(response).catchError(_onError));
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+  }
+
+  /// Creates (or renames, after a language change) the channel FCM posts
+  /// pushes to. Android shows a push on a channel that does not exist yet
+  /// under a generic "Miscellaneous" one instead.
+  Future<void> ensureMessagesChannel(String name) async {
+    final android = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    await android?.createNotificationChannel(
+      AndroidNotificationChannel(
+        kMessagesChannelId,
+        name,
+        importance: Importance.defaultImportance,
+      ),
     );
   }
 

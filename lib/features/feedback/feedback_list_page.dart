@@ -24,7 +24,7 @@ Future<void> pushFeedbackList(NavigatorState navigator) =>
     navigator.push(MaterialPageRoute(builder: (_) => const FeedbackListPage()));
 
 /// Board AF 11: the sender's conversations, newest first, with drafts still
-/// waiting to send on top. Replies only ever appear here.
+/// waiting to send on top. Replies land here, and are pushed too.
 class FeedbackListPage extends ConsumerWidget {
   const FeedbackListPage({super.key});
 
@@ -87,7 +87,7 @@ class FeedbackListPage extends ConsumerWidget {
               ),
             const SizedBox(height: 12),
             Text(
-              l.repliesInAppOnly,
+              l.repliesNotice,
               textAlign: TextAlign.center,
               style: MishkatType.caption(t).copyWith(fontSize: 11.5),
             ),

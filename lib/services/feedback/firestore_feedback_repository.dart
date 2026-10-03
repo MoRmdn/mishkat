@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/foundation.dart';
 
 import 'feedback_models.dart';
 import 'feedback_repository.dart';
@@ -6,9 +8,13 @@ import 'feedback_repository.dart';
 /// [FeedbackRepository] on Cloud Firestore. `firestore.rules` enforces who
 /// may do what; this class only follows those rules.
 class FirestoreFeedbackRepository implements FeedbackRepository {
-  FirestoreFeedbackRepository(this._db);
+  FirestoreFeedbackRepository(this._db, {this._functions});
 
   final FirebaseFirestore _db;
+
+  /// Sends an owner's reply as a push (`notifyReply` in `functions/`). Null
+  /// in tests: the reply is still written and the in-app dot still shows.
+  final FirebaseFunctions? _functions;
 
   CollectionReference<Map<String, dynamic>> get _threads =>
       _db.collection('feedback');
@@ -105,15 +111,12 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
     String threadId, {
     required MessageAuthor from,
     required String body,
-  }) => _guard(() {
+  }) => _guard(() async {
     final thread = _threads.doc(threadId);
+    final message = thread.collection('messages').doc();
     final now = FieldValue.serverTimestamp();
     final batch = _db.batch()
-      ..set(thread.collection('messages').doc(), {
-        'from': from.name,
-        'body': body,
-        'createdAt': now,
-      })
+      ..set(message, {'from': from.name, 'body': body, 'createdAt': now})
       ..update(thread, {
         'updatedAt': now,
         if (from == MessageAuthor.admin) ...{
@@ -122,8 +125,23 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
         } else
           'unreadForAdmin': true,
       });
-    return batch.commit();
+    await batch.commit();
+    if (from == MessageAuthor.admin) await _push(threadId, message.id);
   });
+
+  /// Best-effort: the reply is saved and the sender's dot shows either way.
+  Future<void> _push(String threadId, String messageId) async {
+    final functions = _functions;
+    if (functions == null) return;
+    try {
+      await functions.httpsCallable('notifyReply').call<Object?>({
+        'threadId': threadId,
+        'messageId': messageId,
+      });
+    } catch (e) {
+      debugPrint('Reply saved, push not sent: $e');
+    }
+  }
 
   @override
   Future<void> markRead(String threadId, {required MessageAuthor reader}) =>

@@ -1174,8 +1174,7 @@ class LEn extends L {
   String get statusQueued => 'Waiting to send';
 
   @override
-  String get repliesInAppOnly =>
-      'Replies appear here only, never as notifications.';
+  String get repliesNotice => 'Replies arrive as a notification and stay here.';
 
   @override
   String get newMessage => 'New message';
@@ -1421,4 +1420,68 @@ class LEn extends L {
 
   @override
   String get updateAction => 'Update';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get unreadAnnouncement => 'new announcement';
+
+  @override
+  String get messagesChannelName => 'Mishkat messages';
+
+  @override
+  String get noAnnouncementsTitle => 'No notifications yet';
+
+  @override
+  String get noAnnouncementsBody =>
+      'News and updates we send will be here, even if you missed the notification.';
+
+  @override
+  String get announcementPushLabel => 'Announcement notifications';
+
+  @override
+  String get announcementPushBody => 'Reminders arrive either way.';
+
+  @override
+  String get sendAnnouncement => 'Send announcement';
+
+  @override
+  String get announcementTitleAr => 'Title (Arabic)';
+
+  @override
+  String get announcementBodyAr => 'Message (Arabic)';
+
+  @override
+  String get announcementTitleEn => 'Title (English)';
+
+  @override
+  String get announcementBodyEn => 'Message (English)';
+
+  @override
+  String get announcementConfirmTitle => 'Send to everyone?';
+
+  @override
+  String get announcementConfirmBody =>
+      'It reaches everyone with announcements on, and can\'t be recalled once sent.';
+
+  @override
+  String get announcementSent => 'Announcement sent';
+
+  @override
+  String get announcementFailed =>
+      'Couldn\'t send. Check your connection and try again.';
+
+  @override
+  String get sentAnnouncements => 'Sent announcements';
+
+  @override
+  String get removeAnnouncement => 'Remove from page';
+
+  @override
+  String get removeAnnouncementBody =>
+      'It leaves the notifications page; notifications already delivered stay.';
+
+  @override
+  String get remove => 'Remove';
 }

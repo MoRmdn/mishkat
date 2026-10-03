@@ -8,25 +8,17 @@ import 'support/app_harness.dart';
 void main() {
   setUpAll(AppHarness.loadLibrary);
 
-  test('until the App Store ID exists, release builds hide the row', () {
-    expect(kStoreLinksReady, kAppStoreId.isNotEmpty);
-    // Tests run in debug, where the row shows with a placeholder link.
-    expect(kShowRateApp, isTrue);
-    if (!kStoreLinksReady) {
-      expect(
-        rateAppUri(TargetPlatform.iOS),
-        Uri.parse('https://mishkatalwird.com/'),
-      );
-    } else {
-      expect(
-        rateAppUri(TargetPlatform.iOS).toString(),
-        contains('action=write-review'),
-      );
-      expect(
-        rateAppUri(TargetPlatform.android).queryParameters['id'],
-        kPlayPackage,
-      );
-    }
+  test('the links point at the live listings', () {
+    expect(
+      rateAppUri(TargetPlatform.iOS),
+      Uri.parse('https://apps.apple.com/app/id6815677954?action=write-review'),
+    );
+    expect(
+      rateAppUri(TargetPlatform.android),
+      Uri.parse(
+        'https://play.google.com/store/apps/details?id=com.mormdn.mishkat',
+      ),
+    );
   });
 
   testWidgets('«قيّم التطبيق» opens the store page', (tester) async {

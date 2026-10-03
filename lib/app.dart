@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/l10n/app_localizations.dart';
 import 'core/theme/mishkat_tokens.dart';
 import 'features/account/cloud_scope.dart';
+import 'features/notifications/push_scope.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/reminders/reminder_sync_scope.dart';
 import 'features/settings/settings_controller.dart';
@@ -40,7 +41,9 @@ class MishkatApp extends ConsumerWidget {
       home: settings.onboardingComplete
           ? const ReminderSyncScope(
               child: CloudScope(
-                child: UpdatePrompts(child: ShareLinkScope(child: AppShell())),
+                child: UpdatePrompts(
+                  child: ShareLinkScope(child: PushScope(child: AppShell())),
+                ),
               ),
             )
           : const OnboardingScreen(),

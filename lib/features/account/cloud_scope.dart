@@ -5,12 +5,13 @@ import '../../core/clock.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/feedback/feedback_outbox.dart';
 import '../../services/feedback/feedback_providers.dart';
+import '../../services/push/push_providers.dart';
 import '../../services/sync/sync_service.dart';
 import 'account_actions.dart';
 
 /// Brings the account and feedback up to date on launch and on resume:
 /// pulls what other devices changed, retries feedback still in the outbox,
-/// and re-reads the unread-reply badges.
+/// and re-reads the unread-reply badges and the announcements.
 ///
 /// Does nothing visible, and nothing at all when Firebase did not start.
 class CloudScope extends ConsumerStatefulWidget {
@@ -62,6 +63,7 @@ class _CloudScopeState extends ConsumerState<CloudScope>
     }
     ref.read(feedbackOutboxProvider.notifier).flush();
     refreshFeedbackFromWidget(ref);
+    refreshAnnouncements(ref);
   }
 
   @override

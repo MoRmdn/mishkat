@@ -59,13 +59,11 @@ class AboutPage extends ConsumerWidget {
                   ],
                   GroupCard(
                     children: [
-                      if (kShowRateApp)
-                        NavRow(
-                          label: l.rateApp,
-                          external: true,
-                          onTap: () =>
-                              launch(rateAppUri(defaultTargetPlatform)),
-                        ),
+                      NavRow(
+                        label: l.rateApp,
+                        external: true,
+                        onTap: () => launch(rateAppUri(defaultTargetPlatform)),
+                      ),
                       for (final page in LegalPage.values)
                         NavRow(
                           label: switch (page) {

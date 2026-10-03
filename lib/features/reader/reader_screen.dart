@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../core/clock.dart';
 import '../../core/format/numerals.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/l10n/labels.dart';
@@ -19,6 +20,8 @@ import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/diagnostics.dart';
+import '../../services/review/app_reviewer.dart';
+import '../../services/review/review_policy.dart';
 import '../feedback/feedback_sheet.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
@@ -732,7 +735,7 @@ class _Counter extends ConsumerWidget {
 }
 
 /// Board 3.4: the session is complete.
-class _DoneView extends ConsumerWidget {
+class _DoneView extends ConsumerStatefulWidget {
   const _DoneView({
     required this.category,
     required this.items,
@@ -744,9 +747,61 @@ class _DoneView extends ConsumerWidget {
   final VoidCallback onHome;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_DoneView> createState() => _DoneViewState();
+}
+
+class _DoneViewState extends ConsumerState<_DoneView> {
+  /// Lets the done screen settle before the OS sheet covers it.
+  static const _reviewDelay = Duration(milliseconds: 1500);
+
+  Timer? _reviewTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _maybeAskForReview(ref.read(progressStatsProvider).currentStreak);
+    });
+  }
+
+  @override
+  void dispose() {
+    _reviewTimer?.cancel();
+    super.dispose();
+  }
+
+  /// The streak arrives after the completion is written, so this runs on the
+  /// first frame and again whenever the streak changes while the screen is up.
+  void _maybeAskForReview(int streak) {
+    if (_reviewTimer != null) return;
+    final store = ref.read(settingsStoreProvider);
+    final clock = ref.read(clockProvider);
+    if (!shouldAskForReview(
+      streak: streak,
+      lastAsked: store.reviewAskedAt,
+      now: clock(),
+    )) {
+      return;
+    }
+    final reviewer = ref.read(appReviewerProvider);
+    _reviewTimer = Timer(_reviewDelay, () {
+      store.markReviewAsked(clock());
+      reviewer.requestReview();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final category = widget.category;
+    final items = widget.items;
+    final onHome = widget.onHome;
     final t = context.tokens;
     final l = L.of(context);
+    ref.listen(
+      progressStatsProvider.select((s) => s.currentStreak),
+      (_, streak) => _maybeAskForReview(streak),
+    );
     final lang = ref.watch(settingsProvider).language.name;
     final streak = ref.watch(progressStatsProvider).currentStreak;
     final next = ref.watch(currentScheduleProvider).entries.firstOrNull;

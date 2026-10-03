@@ -20,6 +20,9 @@ import 'package:mishkat/features/share/share_link_scope.dart';
 import 'package:mishkat/services/app_info.dart';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_repository.dart';
+import 'package:mishkat/services/push/announcement_repository.dart';
+import 'package:mishkat/services/push/push_service.dart';
+import 'package:mishkat/services/review/app_reviewer.dart';
 import 'package:mishkat/services/sync/sync_remote.dart';
 import 'package:mishkat/services/update/app_updater.dart';
 import 'package:mishkat/services/update/release_notes.dart';
@@ -54,6 +57,12 @@ class FakeNotificationService implements NotificationService {
 
   @override
   Future<void> syncTimeZone() async {}
+
+  String? messagesChannel;
+
+  @override
+  Future<void> ensureMessagesChannel(String name) async =>
+      messagesChannel = name;
 
   @override
   String get currentTimeZone => 'UTC';
@@ -127,6 +136,13 @@ class FakePermissionService implements PermissionService {
   Future<String> manufacturer() async => vendor;
 }
 
+class FakeAppReviewer implements AppReviewer {
+  int requests = 0;
+
+  @override
+  Future<void> requestReview() async => requests++;
+}
+
 class FakeWakelock extends WakelockPlusPlatformInterface
     with MockPlatformInterfaceMixin {
   /// Read synchronously by tests; the plugin API is async.
@@ -162,11 +178,18 @@ class AppHarness {
   final FakeFeedbackRepository feedback = FakeFeedbackRepository();
   final bool cloud;
 
+  /// FCM and the owner's announcements.
+  final FakePushService push = FakePushService();
+  final FakeAnnouncementRepository announcements = FakeAnnouncementRepository();
+
   /// Published versions, and Play / the store. Nothing is published unless
   /// a test says so.
   final FakeUpdateConfigSource updateConfig;
   final FakeAppUpdater updater = FakeAppUpdater();
   final FakeWakelock wakelock = FakeWakelock();
+
+  /// Native rating sheets the app asked the OS for.
+  final FakeAppReviewer reviewer = FakeAppReviewer();
 
   /// A fresh in-memory database per test; nothing touches the real file.
   final AppDatabase db = AppDatabase.memory();
@@ -269,8 +292,11 @@ class AppHarness {
           authServiceProvider.overrideWithValue(auth),
           syncRemoteProvider.overrideWithValue(syncRemote),
           feedbackRepositoryProvider.overrideWithValue(feedback),
+          announcementRepositoryProvider.overrideWithValue(announcements),
+          pushServiceProvider.overrideWithValue(push),
           updateConfigSourceProvider.overrideWithValue(updateConfig),
           appUpdaterProvider.overrideWithValue(updater),
+          appReviewerProvider.overrideWithValue(reviewer),
           appInfoProvider.overrideWith(
             (ref) => const AppInfo(
               version: '1.2.0 (34)',

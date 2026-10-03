@@ -7,6 +7,7 @@ import 'package:mishkat/features/account/sign_in_sheet.dart';
 import 'package:mishkat/features/feedback/feedback_widgets.dart';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_models.dart';
+import 'package:mishkat/services/push/push_models.dart';
 import 'package:mishkat/data/models/thikr.dart';
 import 'package:mishkat/features/reader/reader_screen.dart';
 import 'package:mishkat/features/share/share_card.dart';
@@ -332,6 +333,49 @@ void main() {
       await tester.tap(inbox);
       await AppHarness.settleWithDatabase(tester);
       await tester.tap(find.byType(ThreadRow).first);
+      await AppHarness.settleWithDatabase(tester);
+    });
+
+    testWidgets('notifications and the announcement composer fit — $name', (
+      tester,
+    ) async {
+      final h = AppHarness(
+        auth: FakeAuthService(
+          initialUser: const AppUser(uid: 'me', isAnonymous: false),
+        ),
+      );
+      h.feedback.admins.add('me');
+      h.announcements.seed(
+        Announcement(
+          id: 'a1',
+          titleAr:
+              'أضفنا أذكار الإفطار والسحور إلى مكتبة الأذكار في هذا التحديث',
+          titleEn: 'We added the iftar and suhoor athkar to the library today',
+          bodyAr:
+              'تجدها في صفحة الأذكار المتفرقة، مع تخريج كل ذكر ومصدره. '
+              'وإن وجدت خطأ فأبلغنا من القارئ مباشرة.',
+          bodyEn:
+              'They are under miscellaneous athkar, each with its source. '
+              'If you find a mistake, report it straight from the reader.',
+          createdAt: DateTime(2026, 9, 6, 18),
+        ),
+      );
+      await start(tester, v, harness: h);
+      await tester.tap(findIcon(MIcon.inbox));
+      await AppHarness.settleWithDatabase(tester);
+      await tester.tap(find.bySemanticsLabel(tab(v.$1, 'رجوع', 'Back')).last);
+      await AppHarness.settleWithDatabase(tester);
+
+      await openAboutPage(tester);
+      final announce = find.text(tab(v.$1, 'إرسال إعلان', 'Send announcement'));
+      await tester.scrollUntilVisible(
+        announce,
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.ensureVisible(announce);
+      await tester.pumpAndSettle();
+      await tester.tap(announce);
       await AppHarness.settleWithDatabase(tester);
     });
 

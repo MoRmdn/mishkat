@@ -4,6 +4,7 @@ import '../../services/app_info.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/feedback/feedback_providers.dart';
 import '../../services/feedback/feedback_repository.dart';
+import '../../services/push/push_providers.dart';
 import '../../services/sync/merge.dart';
 import '../../services/sync/sync_remote.dart';
 import '../../services/sync/sync_service.dart';
@@ -61,7 +62,9 @@ class AccountActions {
   }
 
   /// Everything stays on this device; it simply stops mirroring the account.
+  /// Replies to the account stop reaching this phone.
   Future<void> signOut() async {
+    await _ref.read(pushRegistrationProvider).unregisterDevice();
     await _auth.signOut();
     await _ref.read(syncProvider.notifier).reset();
     refreshFeedback(_ref);

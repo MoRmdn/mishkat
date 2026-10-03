@@ -236,7 +236,13 @@ class FirestoreSyncRemote implements SyncRemote {
   Future<void> deleteAll(String uid) => _guard(() async {
     const server = GetOptions(source: Source.server);
     final user = _user(uid);
-    for (final name in ['completions', 'data', 'favorites', 'settings']) {
+    for (final name in [
+      'completions',
+      'data',
+      'favorites',
+      'settings',
+      'devices',
+    ]) {
       final docs = (await user.collection(name).get(server)).docs;
       await _chunked(docs, (batch, doc) => batch.delete(doc.reference));
     }

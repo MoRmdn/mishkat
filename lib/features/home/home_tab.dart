@@ -15,7 +15,10 @@ import '../../data/local/app_database.dart' show dayKey;
 import '../../data/models/thikr.dart';
 import '../../data/repositories/athkar_repository.dart';
 import '../../data/repositories/progress_providers.dart';
+import '../../services/auth/auth_service.dart';
 import '../../services/diagnostics.dart';
+import '../../services/push/push_providers.dart';
+import '../notifications/notifications_page.dart';
 import '../reader/reader_screen.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings_controller.dart';
@@ -118,6 +121,8 @@ class _Header extends ConsumerWidget {
     final lang = ref.watch(settingsProvider).language.name;
     final streak = ref.watch(progressStatsProvider).currentStreak;
     final unread = ref.watch(feedbackBadgesProvider).value?.any ?? false;
+    final cloud = ref.watch(cloudAvailableProvider);
+    final announcements = cloud && ref.watch(announcementsUnreadProvider);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,6 +132,11 @@ class _Header extends ConsumerWidget {
         Text(
           l.brandShort,
           style: MishkatType.headline(t).copyWith(fontSize: 18),
+          // A wordmark, not reading text: at 200% it would leave no room for
+          // the notifications and settings buttons on a 320px phone.
+          textScaler: MediaQuery.textScalerOf(
+            context,
+          ).clamp(maxScaleFactor: 1.3),
         ),
         Expanded(
           child: Row(
@@ -147,6 +157,16 @@ class _Header extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 6),
+              // The owner's announcements. MIcon.bell is the Reminders tab.
+              if (cloud)
+                IconCircleButton(
+                  icon: MIcon.inbox,
+                  showDot: announcements,
+                  semanticLabel: announcements
+                      ? l.withUnread(l.notifications, l.unreadAnnouncement)
+                      : l.notifications,
+                  onPressed: () => openNotifications(context),
+                ),
               IconCircleButton(
                 icon: MIcon.settings,
                 // One dot, no count: an unread reply, or for the owner new

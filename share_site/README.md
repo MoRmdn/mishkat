@@ -15,14 +15,13 @@ Served by Firebase Hosting on the `mishkat-al-wird` project (`firebase.json`,
 
 ## Before the first release deploy
 
-1. **App Store ID.** Replace `APP_STORE_ID` in `public/t/index.html` with the
-   numeric ID from App Store Connect → App Information → Apple ID. Put the
-   same ID in `kAppStoreId` (`lib/core/store_links.dart`): release builds hide
-   Settings' «قيّم التطبيق» until it is set.
-2. **Android fingerprints.** `assetlinks.json` holds only the local debug key.
-   Add the SHA‑256 of the **app signing key** and of the **upload key** from
-   Play Console → Test and release → App integrity. Play re-signs every
-   install, so without the app signing key no store build verifies.
+1. ~~**App Store ID.**~~ Done: `6815677954` is in `public/t/index.html` and
+   `kAppStoreId` (`lib/core/store_links.dart`).
+2. **Android fingerprints.** `assetlinks.json` holds the local debug key and
+   the **upload key** (`E7:33:EA:…:FE:97:E4`, from `android/app/mishkat-upload.jks`).
+   Still owed: the SHA‑256 of the **app signing key**, from Play Console →
+   Test and release → App integrity → *App signing key certificate*. Play
+   re-signs every install, so without it no store build verifies.
 3. **Domain.** Firebase console → Hosting → Add custom domain
    `mishkatalwird.com`, add the records it shows at the registrar, and let it
    redirect `www.` to the bare domain. The app only claims the bare domain.

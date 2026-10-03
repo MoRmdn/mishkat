@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:mishkat/services/auth/auth_service.dart';
 import 'package:mishkat/services/feedback/feedback_models.dart';
 import 'package:mishkat/services/feedback/feedback_repository.dart';
+import 'package:mishkat/services/push/announcement_repository.dart';
+import 'package:mishkat/services/push/push_models.dart';
+import 'package:mishkat/services/push/push_service.dart';
 import 'package:mishkat/services/sync/sync_models.dart';
 import 'package:mishkat/services/sync/sync_remote.dart';
 import 'package:mishkat/services/sync/user_profile.dart';
@@ -421,4 +424,113 @@ class FakeAppUpdater implements AppUpdater {
 
   @override
   Future<void> openStorePage() async => storeOpens++;
+}
+
+/// FCM without Firebase: tests push messages in through [foreground] and
+/// [opened], and read back the topics and token the app asked for.
+class FakePushService implements PushService {
+  FakePushService({this.initialToken = 'token-1'});
+
+  String? initialToken;
+
+  /// The push that "launched" the app, handed out once.
+  PushMessage? launchMessage;
+
+  final foreground = StreamController<PushMessage>.broadcast();
+  final opened = StreamController<PushMessage>.broadcast();
+  final tokenRefresh = StreamController<String>.broadcast();
+  final Set<String> topics = {};
+  bool started = false;
+
+  @override
+  Future<void> start() async => started = true;
+
+  @override
+  Future<String?> token() async => initialToken;
+
+  @override
+  Stream<String> get onTokenRefresh => tokenRefresh.stream;
+
+  @override
+  Future<void> subscribe(String topic) async => topics.add(topic);
+
+  @override
+  Future<void> unsubscribe(String topic) async => topics.remove(topic);
+
+  @override
+  Stream<PushMessage> get onForeground => foreground.stream;
+
+  @override
+  Stream<PushMessage> get onOpened => opened.stream;
+
+  @override
+  Future<PushMessage?> initialMessage() async {
+    final m = launchMessage;
+    launchMessage = null;
+    return m;
+  }
+
+  @override
+  String get platform => 'android';
+}
+
+/// Announcements and device registrations held in memory.
+class FakeAnnouncementRepository implements AnnouncementRepository {
+  FakeAnnouncementRepository({this.clock});
+
+  final DateTime Function()? clock;
+  final List<Announcement> announcements = [];
+
+  /// `users/{uid}/devices/{deviceId}` → token and language.
+  final Map<String, Map<String, ({String token, String lang})>> devices = {};
+  bool online = true;
+  int _next = 0;
+
+  void seed(Announcement a) => announcements.add(a);
+
+  @override
+  Future<List<Announcement>> latest({int limit = 50}) async {
+    if (!online) throw StateError('offline');
+    final sorted = [...announcements]
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return sorted.take(limit).toList();
+  }
+
+  @override
+  Future<void> publish(AnnouncementDraft draft, {required String uid}) async {
+    if (!online) throw StateError('offline');
+    final d = draft.trimmed;
+    announcements.add(
+      Announcement(
+        id: 'an-${_next++}',
+        titleAr: d.titleAr,
+        titleEn: d.titleEn,
+        bodyAr: d.bodyAr,
+        bodyEn: d.bodyEn,
+        createdAt: (clock ?? DateTime.now)(),
+      ),
+    );
+  }
+
+  @override
+  Future<void> delete(String id) async =>
+      announcements.removeWhere((a) => a.id == id);
+
+  @override
+  Future<void> registerDevice(
+    String uid,
+    String deviceId, {
+    required String token,
+    required String languageCode,
+    required String platform,
+  }) async {
+    if (!online) throw StateError('offline');
+    (devices[uid] ??= {})[deviceId] = (token: token, lang: languageCode);
+  }
+
+  @override
+  Future<void> removeDevice(String uid, String deviceId) async {
+    devices[uid]?.remove(deviceId);
+    if (devices[uid]?.isEmpty ?? false) devices.remove(uid);
+  }
 }

@@ -1951,11 +1951,11 @@ abstract class L {
   /// **'بانتظار الاتصال'**
   String get statusQueued;
 
-  /// No description provided for @repliesInAppOnly.
+  /// No description provided for @repliesNotice.
   ///
   /// In ar, this message translates to:
-  /// **'الردود تظهر هنا فقط، ولا تصل كإشعارات.'**
-  String get repliesInAppOnly;
+  /// **'تصلك الردود كإشعار، وتبقى هنا.'**
+  String get repliesNotice;
 
   /// No description provided for @newMessage.
   ///
@@ -2346,6 +2346,126 @@ abstract class L {
   /// In ar, this message translates to:
   /// **'حدّث'**
   String get updateAction;
+
+  /// No description provided for @notifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get notifications;
+
+  /// No description provided for @unreadAnnouncement.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان جديد'**
+  String get unreadAnnouncement;
+
+  /// No description provided for @messagesChannelName.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسائل مشكاة'**
+  String get messagesChannelName;
+
+  /// No description provided for @noAnnouncementsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا إشعارات بعد'**
+  String get noAnnouncementsTitle;
+
+  /// No description provided for @noAnnouncementsBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستجد هنا ما نرسله من أخبار وتحديثات، حتى لو فاتك الإشعار.'**
+  String get noAnnouncementsBody;
+
+  /// No description provided for @announcementPushLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعارات الإعلانات'**
+  String get announcementPushLabel;
+
+  /// No description provided for @announcementPushBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'التذكيرات تصل دائماً، مهما كان هذا الخيار.'**
+  String get announcementPushBody;
+
+  /// No description provided for @sendAnnouncement.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال إعلان'**
+  String get sendAnnouncement;
+
+  /// No description provided for @announcementTitleAr.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان بالعربية'**
+  String get announcementTitleAr;
+
+  /// No description provided for @announcementBodyAr.
+  ///
+  /// In ar, this message translates to:
+  /// **'النص بالعربية'**
+  String get announcementBodyAr;
+
+  /// No description provided for @announcementTitleEn.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان بالإنجليزية'**
+  String get announcementTitleEn;
+
+  /// No description provided for @announcementBodyEn.
+  ///
+  /// In ar, this message translates to:
+  /// **'النص بالإنجليزية'**
+  String get announcementBodyEn;
+
+  /// No description provided for @announcementConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال لكل المستخدمين؟'**
+  String get announcementConfirmTitle;
+
+  /// No description provided for @announcementConfirmBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يصل الإشعار إلى كل من فعّل الإعلانات، ولا يمكن سحبه بعد إرساله.'**
+  String get announcementConfirmBody;
+
+  /// No description provided for @announcementSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسل الإعلان'**
+  String get announcementSent;
+
+  /// No description provided for @announcementFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الإرسال. تحقق من الاتصال وحاول مرة أخرى.'**
+  String get announcementFailed;
+
+  /// No description provided for @sentAnnouncements.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات المرسلة'**
+  String get sentAnnouncements;
+
+  /// No description provided for @removeAnnouncement.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف من الصفحة'**
+  String get removeAnnouncement;
+
+  /// No description provided for @removeAnnouncementBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُحذف من صفحة الإشعارات، أما الإشعار الذي وصل فيبقى.'**
+  String get removeAnnouncementBody;
+
+  /// No description provided for @remove.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف'**
+  String get remove;
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

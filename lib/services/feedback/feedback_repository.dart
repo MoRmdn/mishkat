@@ -12,7 +12,8 @@ import 'feedback_models.dart';
 /// ```
 ///
 /// Reads are one-off gets, refreshed on launch, resume, pull-to-refresh and
-/// after the user acts — replies appear in the app, never as a push.
+/// after the user acts. An owner's reply is also pushed to the sender by
+/// `functions/`; the in-app dot does not depend on it.
 abstract class FeedbackRepository {
   /// Creates the thread, its first message and the sender's rate-limit stamp
   /// in one transaction. Transactions need the server, so this fails fast

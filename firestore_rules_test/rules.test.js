@@ -406,3 +406,107 @@ describe('deleting the account', () => {
     await assertFails(deleteDoc(doc(as('alice'), 'feedback/b1')));
   });
 });
+
+/** What FirestoreAnnouncementRepository.publish writes. */
+function announcement(uid, overrides = {}) {
+  return {
+    titleAr: 'رمضان مبارك',
+    titleEn: 'Ramadan Mubarak',
+    bodyAr: 'أضفنا أذكار الإفطار.',
+    bodyEn: 'We added the iftar athkar.',
+    createdAt: serverTimestamp(),
+    createdBy: uid,
+    ...overrides,
+  };
+}
+
+describe('announcements', () => {
+  test('the owner publishes one', async () => {
+    await assertSucceeds(
+      setDoc(doc(as('owner'), 'announcements/a1'), announcement('owner')),
+    );
+  });
+
+  test('nobody else can', async () => {
+    await assertFails(
+      setDoc(doc(as('alice'), 'announcements/a1'), announcement('alice')),
+    );
+    await assertFails(setDoc(doc(anon(), 'announcements/a1'), announcement('x')));
+  });
+
+  test('its shape is checked', async () => {
+    const db = as('owner');
+    await assertFails(
+      setDoc(doc(db, 'announcements/a1'), announcement('owner', { titleAr: '' })),
+    );
+    await assertFails(
+      setDoc(
+        doc(db, 'announcements/a2'),
+        announcement('owner', { bodyEn: 'x'.repeat(501) }),
+      ),
+    );
+    await assertFails(
+      setDoc(doc(db, 'announcements/a3'), announcement('owner', { link: 'x' })),
+    );
+    await assertFails(
+      setDoc(doc(db, 'announcements/a4'), announcement('owner', { createdBy: 'alice' })),
+    );
+  });
+
+  test('anyone reads them, signed in or not', async () => {
+    await setDoc(doc(as('owner'), 'announcements/a1'), announcement('owner'));
+    await assertSucceeds(getDocs(collection(anon(), 'announcements')));
+    await assertSucceeds(getDoc(doc(as('alice'), 'announcements/a1')));
+  });
+
+  test('a sent one never changes; only the owner deletes it', async () => {
+    await setDoc(doc(as('owner'), 'announcements/a1'), announcement('owner'));
+    await assertFails(
+      updateDoc(doc(as('owner'), 'announcements/a1'), { titleEn: 'Edited' }),
+    );
+    await assertFails(deleteDoc(doc(as('alice'), 'announcements/a1')));
+    await assertSucceeds(deleteDoc(doc(as('owner'), 'announcements/a1')));
+  });
+});
+
+/** What FirestoreAnnouncementRepository.registerDevice writes. */
+function device(overrides = {}) {
+  return {
+    token: 'fcm-token-123',
+    lang: 'ar',
+    platform: 'android',
+    updatedAt: serverTimestamp(),
+    ...overrides,
+  };
+}
+
+describe('users/{uid}/devices', () => {
+  test('a user registers, refreshes and removes their device', async () => {
+    const db = as('alice');
+    const ref = doc(db, 'users/alice/devices/device_abc123');
+    await assertSucceeds(setDoc(ref, device()));
+    await assertSucceeds(setDoc(ref, device({ token: 'fcm-token-456', lang: 'en' })));
+    await assertSucceeds(getDoc(ref));
+    await assertSucceeds(deleteDoc(ref));
+  });
+
+  test("nobody touches someone else's", async () => {
+    await setDoc(doc(as('bob'), 'users/bob/devices/device_abc123'), device());
+    await assertFails(getDoc(doc(as('alice'), 'users/bob/devices/device_abc123')));
+    await assertFails(
+      setDoc(doc(as('alice'), 'users/bob/devices/device_abc123'), device()),
+    );
+    await assertFails(deleteDoc(doc(as('alice'), 'users/bob/devices/device_abc123')));
+  });
+
+  test('its fields are checked', async () => {
+    const db = as('alice');
+    const ref = doc(db, 'users/alice/devices/device_abc123');
+    await assertFails(setDoc(ref, device({ token: '' })));
+    await assertFails(setDoc(ref, device({ lang: 'fr' })));
+    await assertFails(setDoc(ref, device({ platform: 'web' })));
+    await assertFails(setDoc(ref, device({ updatedAt: new Date(0) })));
+    await assertFails(setDoc(ref, device({ uid: 'alice' })));
+    await assertFails(setDoc(doc(db, 'users/alice/devices/x'), device()));
+  });
+});

@@ -17,7 +17,7 @@
 </header>
 
 <h1>Privacy Policy</h1>
-<p class="updated">Last updated: 25 September 2026</p>
+<p class="updated">Last updated: 27 September 2026</p>
 
 <p>Mishkat Al-Wird is an athkar app with timed reminders. It is designed to work
 entirely on your device. An account is optional, and nothing in the app requires one.</p>
@@ -31,8 +31,11 @@ entirely on your device. An account is optional, and nothing in the app requires
   <li><strong>No advertising</strong>, and no data sold or shared with anyone for their
     own use.</li>
 </ul>
-<p>Two things change this, and both happen only if you choose them: signing in, and
-sending feedback.</p>
+<p>The one exception is announcements (see Notifications): so that our news can reach
+you, the app registers with Firebase Cloud Messaging, which gives this installation a
+random token. You can turn announcements off in the app.</p>
+<p>Two other things change this, and both happen only if you choose them: signing in,
+and sending feedback.</p>
 
 <h2>If you sign in (optional)</h2>
 <p>You can sign in with Apple or Google so that your progress, favourites and settings
@@ -76,7 +79,10 @@ store:</p>
 <p>If you are not signed in, sending feedback creates an anonymous identifier so our
 reply can reach you in the app. Feedback is read only by the developer, is never used
 for marketing, and is deleted with your account or on request by email. Replies appear
-in the app only; we never send push notifications.</p>
+in the app and, if you allow notifications, also arrive as a notification. For that we
+store, under your account or anonymous identifier, this device's notification token,
+the app language and whether it is iOS or Android. It is removed when you sign out or
+delete your account.</p>
 <p>To protect this service from abuse, Firebase App Check confirms that requests come
 from the genuine app, using Google Play Integrity or Apple App Attest.</p>
 
@@ -104,6 +110,11 @@ needed for a reminder to arrive.</p>
 <p>To deliver them the app may ask for permission to post notifications, to schedule
 exact alarms and to be exempt from battery optimisation. Each is optional; refusing
 any of them may make reminders less punctual but does not disable the app.</p>
+<p>Two kinds of notification do come from us, through Firebase Cloud Messaging:
+announcements about the app, and replies to your feedback. Announcements are sent to
+everyone who has them on in a given language; we do not know who receives them. You can
+turn them off on the app's Notifications page, which also lists every announcement.
+Reminders never go through this service.</p>
 
 <h2>Shared links</h2>
 <p>When you share a thikr, the app adds a link such as

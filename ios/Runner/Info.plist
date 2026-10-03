@@ -35,6 +35,10 @@
 	<string>Your location is used only on this device, to calculate prayer times for the athkar reminders. It is never sent anywhere.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Your location is used only on this device, to calculate prayer times for the athkar reminders. It is never sent anywhere.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

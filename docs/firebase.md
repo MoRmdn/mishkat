@@ -1,13 +1,15 @@
 # Firebase
 
-Project `mishkat-al-wird`. Firebase does five jobs here, and reminders are none
-of them — they stay local notifications, with no Cloud Messaging:
+Project `mishkat-al-wird`. Firebase does six jobs here, and reminders are none
+of them — they stay local notifications; Cloud Messaging carries only the
+owner's announcements and feedback replies:
 
 | Service | Used for | State |
 |---|---|---|
 | Hosting | `share_site/`: share links, privacy and terms | live |
 | Auth + Firestore + App Check | the optional account (sync) and feedback | code done; console setup below |
 | Remote Config | optional and required app updates | code done; parameters below |
+| Cloud Messaging + Functions | announcements and feedback-reply pushes | code done; Blaze, APNs key and deploy below |
 | Crashlytics + Analytics | `lib/services/diagnostics.dart` | not wired |
 
 The app starts Firebase in `lib/services/cloud_bootstrap.dart`. If that fails —
@@ -109,7 +111,60 @@ build does not know shows ⓘ:
 - Android installs through Play In-App Updates, which only works for a build
   installed from Play — test it from an internal-testing track. Everywhere
   else the buttons open the store page (`storePageUri` in
-  `lib/core/store_links.dart`; iOS needs `kAppStoreId`).
+  `lib/core/store_links.dart`).
+
+## Push notifications: announcements and replies
+
+Reminders never use this. FCM carries two things only:
+
+Both are **callable** functions that the owner's app calls right after its
+Firestore write. The database is in `me-central2`, where neither Cloud
+Functions nor Firestore's Eventarc triggers are offered, so nothing can fire
+on the write itself; the functions run in `europe-west1`. Each checks
+`admins/{uid}` and stamps the document `pushedAt` in a transaction, so a
+retried call never pushes twice.
+
+- **Announcements.** The owner writes one from «عن التطبيق» → «إرسال إعلان»
+  (`lib/features/admin/announce_page.dart`), which creates
+  `announcements/{id}` and calls `sendAnnouncement` with its id. That pushes it
+  to the topics `announcements_ar` and `announcements_en`, each in its own
+  language. If the call fails and nothing was pushed, the app deletes the
+  document and reports the failure, so a retry does not list it twice. The app
+  subscribes to its language's topic only, and to none when the switch on the
+  notifications page is off. The page reads the collection, so an announcement
+  missed as a push is still there.
+- **Feedback replies.** After the owner's reply is saved, the app calls
+  `notifyReply` with the thread and message ids. It reads the thread's `uid`
+  and pushes to every `users/{uid}/devices/{deviceId}` in that device's
+  language. This call is best-effort: if it fails, the reply is still saved. Tokens FCM
+  reports dead are deleted. The in-app dot is unchanged and does not depend
+  on the push.
+
+A tap opens the notifications page or the thread (`PushScope`). With the app
+open, the OS shows nothing and the bell or settings dot updates instead.
+
+Owner steps, once:
+
+1. **Blaze plan.** Cloud Functions needs it, and the project must be linked
+   to an *open* billing account (`gcloud billing projects describe
+   mishkat-al-wird` shows `billingEnabled: true`).
+2. **APNs.** Apple Developer → Keys → create a key with Apple Push
+   Notifications service, download the `.p8`, and upload it in the Firebase
+   console → Project settings → Cloud Messaging → Apple app configuration
+   (with the Key ID and Team ID). In Xcode, confirm the Runner target has the
+   Push Notifications capability; `Runner.entitlements` already carries
+   `aps-environment` (`development`, which App Store export switches to
+   production). Background Modes → Remote notifications is in `Info.plist`.
+3. **Deploy.**
+
+   ```bash
+   cd functions && npm install && npm test
+   firebase deploy --only functions,firestore:rules --project mishkat-al-wird
+   ```
+
+Android needs nothing more: `NotificationService` creates the
+`mishkat_messages` channel (named in the app's language), and the manifest
+makes it FCM's default, with `ic_stat_mishkat` and the brand tint.
 
 ## Rules tests
 
@@ -126,7 +181,7 @@ cd firestore_rules_test && npm install && npm test
 ## Trying it against the emulator
 
 ```bash
-firebase emulators:start --only auth,firestore
+firebase emulators:start --only auth,firestore,functions
 flutter run --dart-define=FIREBASE_EMULATOR=10.0.2.2   # Android emulator; use localhost on iOS
 ```
 
@@ -147,7 +202,12 @@ users/{uid}/data/settings          {app|reminders|prayer: {…values, updatedAt}
 users/{uid}/data/favorites         {items: {thikrId: {addedAt, deletedAt}}, updatedAt}
 users/{uid}/completions/{yyyy-MM}  {days: {'2026-09-25': {morning: at, …}}, updatedAt}
 feedback/{id}                      thread (FeedbackThread)
+users/{uid}/devices/{deviceId}     {token, lang, platform, updatedAt}: where
+                                    a feedback reply is pushed
 feedback/{id}/messages/{mid}       {from: user|admin, body, createdAt}
+announcements/{id}                 {titleAr, titleEn, bodyAr, bodyEn,
+                                    createdAt, createdBy, pushedAt}: public
+                                    to read; pushedAt is set by functions/
 admins/{uid}                       console only
 counters/feedback                  {next}: the owner's message numbers
 ```

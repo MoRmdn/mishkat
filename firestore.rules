@@ -9,6 +9,10 @@ rules_version = '2';
 //                       (admins/{uid}) reads all and alone changes status.
 // admins/{uid}          written from the console only.
 // counters/feedback     the owner's running message number.
+// announcements/{id}    the owner's messages to everyone: public to read,
+//                       and a Cloud Function pushes each new one.
+// users/{uid}/devices   a push token per device, so a reply reaches its
+//                       sender's phone.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -84,6 +88,21 @@ service cloud.firestore {
           && doc in ['settings', 'favorites'];
       }
 
+      // One per install: where functions/ sends this account's feedback
+      // replies. The id is a random one the device keeps.
+      match /devices/{deviceId} {
+        allow read, delete: if isSelf(uid);
+        allow create, update: if isSelf(uid)
+          && deviceId.matches('^[A-Za-z0-9_-]{8,64}$')
+          && request.resource.data.keys().hasOnly(['token', 'lang', 'platform', 'updatedAt'])
+          && request.resource.data.token is string
+          && request.resource.data.token.size() > 0
+          && request.resource.data.token.size() <= 4096
+          && request.resource.data.lang in ['ar', 'en']
+          && request.resource.data.platform in ['ios', 'android']
+          && request.resource.data.updatedAt == request.time;
+      }
+
       // The first layout's collections: cleared on account deletion.
       match /favorites/{id} {
         allow read, delete: if isSelf(uid);
@@ -91,6 +110,27 @@ service cloud.firestore {
       match /settings/{id} {
         allow read, delete: if isSelf(uid);
       }
+    }
+
+    // Public by nature: anyone with the app reads them, signed in or not.
+    match /announcements/{id} {
+      function text(s, max) {
+        return s is string && s.size() > 0 && s.size() <= max;
+      }
+
+      allow read: if true;
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['titleAr', 'titleEn',
+            'bodyAr', 'bodyEn', 'createdAt', 'createdBy'])
+        && text(request.resource.data.titleAr, 80)
+        && text(request.resource.data.titleEn, 80)
+        && text(request.resource.data.bodyAr, 500)
+        && text(request.resource.data.bodyEn, 500)
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.createdBy == request.auth.uid;
+      // A sent push cannot be recalled, so neither can its text change.
+      allow update: if false;
+      allow delete: if isAdmin();
     }
 
     match /feedback/{id} {

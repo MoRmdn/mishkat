@@ -15,6 +15,7 @@ import '../../services/feedback/feedback_providers.dart';
 import '../../services/sync/sync_service.dart';
 import '../account/account_screen.dart';
 import '../account/sign_in_sheet.dart';
+import '../admin/announce_page.dart';
 import '../admin/inbox_page.dart';
 import '../feedback/feedback_list_page.dart';
 import 'settings_controller.dart';
@@ -160,7 +161,8 @@ class AccountCard extends ConsumerWidget {
   }
 }
 
-/// «الدعم»: the sender's conversations, and for the owner the inbox.
+/// «الدعم»: the sender's conversations, and for the owner the inbox and the
+/// announcement composer.
 class SupportGroup extends ConsumerWidget {
   const SupportGroup({super.key});
 
@@ -188,6 +190,12 @@ class SupportGroup extends ConsumerWidget {
                 ? l.unreadCount(badges.adminUnread, '${badges.adminUnread}')
                 : null,
             onTap: () => openInbox(context),
+          ),
+        if (admin)
+          NavRow(
+            icon: MIcon.send,
+            label: l.sendAnnouncement,
+            onTap: () => openAnnounce(context),
           ),
       ],
     );

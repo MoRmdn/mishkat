@@ -1,0 +1,21 @@
+{
+  "name": "mishkat-functions",
+  "private": true,
+  "description": "Sends the owner's announcements and feedback replies as FCM pushes. Reminders never go through here: they are local notifications.",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && node --test 'lib/**/*.test.js'",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

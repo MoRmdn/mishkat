@@ -1,6 +1,6 @@
 # Privacy Policy — مِشْكَاةُ الوِرْدِ / Mishkat Al-Wird
 
-_Last updated: 25 September 2026_
+_Last updated: 27 September 2026_
 
 Published at https://mishkatalwird.com/en/privacy (Arabic: `/privacy`) from
 `share_site/public/`. Change both together.
@@ -15,8 +15,12 @@ on your device. An account is optional, and nothing in the app requires one.
   and are deleted when you uninstall the app.
 - **No advertising, and no data sold or shared** with anyone for their own use.
 
-Two things change this, and both happen only if you choose them: signing in, and
-sending feedback.
+The one exception is announcements (see Notifications): so that our news can
+reach you, the app registers with Firebase Cloud Messaging, which gives this
+installation a random token. You can turn announcements off in the app.
+
+Two other things change this, and both happen only if you choose them: signing
+in, and sending feedback.
 
 ## If you sign in (optional)
 
@@ -60,7 +64,10 @@ You can send a suggestion, a bug report or a report of a mistake in a thikr. We 
 If you are not signed in, sending feedback creates an anonymous identifier so our reply
 can reach you in the app. Feedback is read only by the developer, is never used for
 marketing, and is deleted with your account or on request by email. Replies appear in
-the app only; we never send push notifications.
+the app and, if you allow notifications, also arrive as a notification. For that we
+store, under your account or anonymous identifier, this device's notification token,
+the app language and whether it is iOS or Android. It is removed when you sign out or
+delete your account.
 
 To protect this service from abuse, Firebase App Check confirms that requests come from
 the genuine app, using Google Play Integrity or Apple App Attest.
@@ -94,6 +101,12 @@ To deliver them the app may ask for permission to post notifications, to
 schedule exact alarms, and to be exempt from battery optimisation. Each is
 optional; refusing any of them degrades reminder timing but does not disable
 the app.
+
+Two kinds of notification do come from us, through Firebase Cloud Messaging:
+announcements about the app, and replies to your feedback. Announcements are
+sent to everyone who has them on in a given language; we do not know who
+receives them. You can turn them off on the app's Notifications page, which
+also lists every announcement. Reminders never go through this service.
 
 ## Shared links
 

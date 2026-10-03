@@ -3,7 +3,8 @@
 Arabic/English athkar app whose headline feature is **reminders that actually
 arrive**: أذكار الصباح، المساء، النوم، الاستيقاظ. An optional Apple/Google
 account syncs progress, favourites and settings, and users can send feedback
-that the owner answers from an in-app inbox.
+that the owner answers from an in-app inbox. The owner can also push
+announcements, listed on a notifications page behind Home's inbox button.
 
 Design source of truth: Claude Design project `733cc592-656e-4253-808b-b813f6dca024`.
 The approved visual design is **2a "Dusk Grid"**: `Mishkat 2a Screens.dc.html`
@@ -33,16 +34,31 @@ superseded. `ios-frame.jsx` / `android-frame.jsx` are canvas device bezels,
 
 **Reminders are local notifications, never FCM.** FCM needs internet, gives no
 delivery-time guarantee, and cannot fire at a device-local wall-clock time.
-Feedback replies do not change this: they show as an in-app dot, refreshed on
-launch, resume and pull-to-refresh, never as a push. Firebase is Hosting for
-the share-link site, Auth + Firestore + App Check for the optional account and
-feedback, and (not yet wired) Crashlytics + Analytics — see `docs/firebase.md`.
+FCM carries exactly two things, both sent by callables in `functions/` that the
+owner's app calls right after its Firestore write — the database is in
+`me-central2`, which has no Functions or Firestore triggers, so the functions
+run in `europe-west1` and nothing fires on its own: the owner's
+**announcements** (`announcements/{id}` → `sendAnnouncement`, to the topics
+`announcements_ar`/`announcements_en`) and **feedback replies**
+(`notifyReply`, to the tokens in `users/{uid}/devices`). Each checks
+`admins/{uid}` and stamps `pushedAt`, so a retry never pushes twice. Neither replaces the in-app state: the settings dot for
+a reply and the Home dot for an announcement are still refreshed on launch,
+resume and pull-to-refresh, and the notifications page reads the collection,
+so a missed push loses nothing. `PushService` is a seam like the others
+(`FakePushService` in tests); `PushScope` subscribes the topic for the app
+language, registers the device under any uid (anonymous included) and routes
+taps. Pushes post on their own Android channel, `mishkat_messages` — never
+touch `athkar_reminders` for them. Firebase is Hosting for the share-link site,
+Auth + Firestore + App Check for the optional account and feedback, Cloud
+Messaging + Functions for pushes, and (not yet wired) Crashlytics + Analytics —
+see `docs/firebase.md`.
 
 **The account is optional and never gates anything.** There is no login screen
 and nothing waits on Firebase: `startCloud()` (`lib/services/cloud_bootstrap.dart`)
 returns no overrides when Firebase cannot start, and every account and feedback
 surface then hides (`cloudAvailableProvider`). All of it sits behind seams —
-`AuthService`, `SyncRemote`, `FeedbackRepository` — whose defaults do nothing,
+`AuthService`, `SyncRemote`, `FeedbackRepository`, `AnnouncementRepository`,
+`PushService` — whose defaults do nothing,
 so widget tests use the fakes in `test/support/cloud_fakes.dart` and never
 touch Firebase. An anonymous Firebase user exists only to receive feedback
 replies; everywhere in the UI it counts as signed out.
@@ -212,9 +228,10 @@ catches an error here.
 | M6 | `feat/favorites-progress-share` | drift, favourites, progress, 1080² share card | ✅ done |
 | M7 | `feat/firebase` | Icons, splash, diagnostics seam, store prep | ✅ done (Firebase config pending — see `docs/firebase.md`) |
 | 2a | `feat/redesign-2a` | Dusk Grid redesign: tokens, fonts, icons, brand, every screen | ✅ done |
-| SL | `feat/share-links` | Share links: app_links, entitlements, App Links, store-redirect site | 🚧 app side done; store IDs + deploy pending |
+| SL | `feat/share-links` | Share links: app_links, entitlements, App Links, store-redirect site | 🚧 app side and store IDs done; deploy + Play app-signing fingerprint pending |
 | AF | `feat/accounts-feedback` | Optional Apple/Google account and sync, feedback, owner inbox, Settings sheet (16b) + «عن التطبيق» page (16a) | 🚧 code done; console setup in `docs/firebase.md` |
 | UP | `feat/app-update` | Optional/required updates (Remote Config, Play In-App Updates), «ما الجديد» changelog | 🚧 code done; Remote Config parameters in `docs/firebase.md` |
+| PN | `feat/push-announcements` | FCM: owner announcements + feedback-reply pushes, notifications page, `functions/` | 🚧 code done; Blaze, APNs key and deploy in `docs/firebase.md`; no board screen yet |
 
 Prayer-mode offsets: **Fajr −15** (wake), **Fajr +30** (morning),
 **Asr +45** (evening); sleep stays a fixed clock time.
@@ -235,10 +252,12 @@ lib/core/       theme (MishkatTokens, BrandColors), l10n (ARB ar/en, labels), fo
 lib/data/       models, local (prefs, drift), repositories
 lib/services/   notification, scheduler, prayer times, permissions,
                 auth, sync (pure merge + controller), feedback (repository, outbox),
-                update (versions, pure policy, Remote Config, Play updater)
+                update (versions, pure policy, Remote Config, Play updater),
+                push (FCM seam, announcements, device registration)
 lib/features/   onboarding home reader tasbih reminders favorites progress settings share shell
-                account feedback admin update
+                account feedback admin update notifications
 firestore.rules, firestore.indexes.json, firestore_rules_test/
+functions/      Cloud Functions (TypeScript, europe-west1): the two FCM callables
 ```
 
 ## Commands
@@ -251,6 +270,7 @@ flutter test
 flutter test test/golden --update-goldens   # after an intended visual change
 flutter run -d <device>
 cd firestore_rules_test && npm install && npm test   # rules vs the emulator; JAVA_HOME = Android Studio's jbr
+cd functions && npm install && npm test              # push payloads; deploy: firebase deploy --only functions
 ```
 
 Golden files in `test/golden/images/` are one per 2a board screen, rendered at
