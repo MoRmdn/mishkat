@@ -46,3 +46,7 @@ app.*.map.json
 
 # Golden test diff artifacts
 test/**/failures/
+
+# Node & Firebase dependencies and build artifacts
+**/node_modules/
+functions/lib/
